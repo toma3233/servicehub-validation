@@ -1,0 +1,628 @@
+{
+    "$schema": "https://dataexplorer.azure.com/static/d/schema/52/dashboard.json",
+    "id": "ac219e43-b480-4ebb-a0ba-a7e6f2a5d720",
+    "eTag": "b220c0ec-c483-4fe4-86f9-01f2b3728f2a",
+    "schema_version": "52",
+    "title": "Internal mygreeterv3 Dashboard",
+    "autoRefresh": {
+        "enabled": true,
+        "defaultInterval": "30m",
+        "minInterval": "5m"
+    },
+    "tiles": [
+        {
+            "id": "21e6efd2-6c31-456c-b1fe-d1bd290ba2df",
+            "title": "mygreeterv3 Dashboard",
+            "visualType": "markdownCard",
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "layout": {
+                "x": 5,
+                "y": 0,
+                "width": 10,
+                "height": 2
+            },
+            "markdownText": "# mygreeterv3 Metrics",
+            "visualOptions": {}
+        },
+        {
+            "id": "4f889491-3d94-4db0-a195-464d0eecca71",
+            "title": "Overall QoS",
+            "visualType": "markdownCard",
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "layout": {
+                "x": 0,
+                "y": 2,
+                "width": 10,
+                "height": 3
+            },
+            "markdownText": "Overall QoS (% of incoming successful requests) is not affected by the filter _containerRequestType and _method. Aggregated across all incoming methods.",
+            "visualOptions": {}
+        },
+        {
+            "id": "30d40880-fd49-4bef-bcde-c59b41484a2f",
+            "layout": {
+                "x": 0,
+                "y": 3,
+                "width": 10,
+                "height": 2
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "Overall QoS Metric",
+            "visualType": "markdown",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "97918fec-ef8f-49db-bf82-42ac276e61fa"
+            },
+            "visualOptions": {
+                "xColumn": null
+            }
+        },
+        {
+            "id": "d8249eef-3f16-433a-ace3-f1a8a2f7f463",
+            "layout": {
+                "x": 0,
+                "y": 5,
+                "width": 20,
+                "height": 5
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "Overall QoS by Incoming Method",
+            "visualType": "table",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "9b7ce86f-2d28-4a18-8705-f62a5e57933b"
+            },
+            "visualOptions": {
+                "table__enableRenderLinks": true,
+                "colorRulesDisabled": false,
+                "colorStyle": "light",
+                "crossFilterDisabled": false,
+                "drillthroughDisabled": false,
+                "crossFilter": [],
+                "drillthrough": [],
+                "table__renderLinks": [],
+                "colorRules": []
+            }
+        },
+        {
+            "id": "48f95091-bf63-4ac7-8dfb-2adff934d5c4",
+            "layout": {
+                "x": 10,
+                "y": 2,
+                "width": 10,
+                "height": 5
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "Error Ratio (for All Methods (%)",
+            "visualType": "timechart",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "d37ebc9c-98f8-467f-8e14-10ebbea19093"
+            },
+            "visualOptions": {
+                "multipleYAxes": {
+                    "additional": [],
+                    "base": {
+                        "columns": [],
+                        "horizontalLines": [],
+                        "id": "-1",
+                        "label": "Ratio",
+                        "yAxisMaximumValue": null,
+                        "yAxisMinimumValue": null,
+                        "yAxisScale": "linear"
+                    },
+                    "showMultiplePanels": false
+                },
+                "hideLegend": false,
+                "legendLocation": "bottom",
+                "xColumnTitle": "Timestamp",
+                "xColumn": "PreciseTimeStamp",
+                "yColumns": [
+                    "ratio"
+                ],
+                "seriesColumns": null,
+                "xAxisScale": "linear",
+                "verticalLine": "",
+                "crossFilterDisabled": false,
+                "drillthroughDisabled": false,
+                "crossFilter": [],
+                "drillthrough": []
+            }
+        },
+        {
+            "id": "b0f00599-8e2e-4656-910b-9526de2a0d70",
+            "title": "Metrics by Method (Select _method and _containerRequestType to filter)",
+            "visualType": "markdown",
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "layout": {
+                "x": 0,
+                "y": 12,
+                "width": 20,
+                "height": 2
+            },
+            "queryRef": {
+                "kind": "query",
+                "queryId": "1718177b-a358-4ea2-8075-88d9d0414b6e"
+            },
+            "visualOptions": {
+                "xColumn": "method_fmt"
+            }
+        },
+        {
+            "id": "df4deeb4-d4b1-4050-9f9c-89f74ea4dc8a",
+            "layout": {
+                "x": 0,
+                "y": 14,
+                "width": 10,
+                "height": 10
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "Error Ratio (%)",
+            "visualType": "scatter",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "a9efb186-e844-4ecd-a62a-d3a8bde685dd"
+            },
+            "visualOptions": {
+                "crossFilterDisabled": false,
+                "drillthroughDisabled": false,
+                "hideLegend": false,
+                "multipleYAxes": {
+                    "additional": [],
+                    "base": {
+                        "columns": [],
+                        "horizontalLines": [],
+                        "id": "-1",
+                        "label": "Ratio",
+                        "yAxisMaximumValue": null,
+                        "yAxisMinimumValue": null,
+                        "yAxisScale": "linear"
+                    },
+                    "showMultiplePanels": false
+                },
+                "seriesColumns": null,
+                "verticalLine": "",
+                "xAxisScale": "linear",
+                "xColumn": "PreciseTimeStamp",
+                "xColumnTitle": "Timestamp",
+                "yColumns": [
+                    "ratio"
+                ],
+                "legendLocation": "bottom",
+                "crossFilter": [],
+                "drillthrough": []
+            }
+        },
+        {
+            "id": "e92071bc-74cb-4121-86f3-bd815ed27cc3",
+            "layout": {
+                "x": 10,
+                "y": 14,
+                "width": 10,
+                "height": 10
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "Latency by Response Code (msec)",
+            "visualType": "scatter",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "dbc942d4-883a-4fd0-8ee3-b536ee58be69"
+            },
+            "visualOptions": {
+                "crossFilterDisabled": false,
+                "drillthroughDisabled": false,
+                "hideLegend": false,
+                "multipleYAxes": {
+                    "additional": [],
+                    "base": {
+                        "columns": [],
+                        "horizontalLines": [],
+                        "id": "-1",
+                        "label": "Latency (msec)",
+                        "yAxisMaximumValue": null,
+                        "yAxisMinimumValue": null,
+                        "yAxisScale": "linear"
+                    },
+                    "showMultiplePanels": false
+                },
+                "seriesColumns": null,
+                "verticalLine": "",
+                "xAxisScale": "linear",
+                "xColumn": "PreciseTimeStamp",
+                "xColumnTitle": "Timestamp",
+                "yColumns": [
+                    "latency"
+                ],
+                "legendLocation": "bottom",
+                "crossFilter": [],
+                "drillthrough": []
+            }
+        },
+        {
+            "id": "b2c5a047-365e-49c7-8437-1df2ff0e1738",
+            "layout": {
+                "x": 5,
+                "y": 24,
+                "width": 10,
+                "height": 10
+            },
+            "pageId": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "title": "QPS by Response Code",
+            "visualType": "scatter",
+            "queryRef": {
+                "kind": "query",
+                "queryId": "2540c945-7341-4778-86bf-3047ac38db4d"
+            },
+            "visualOptions": {
+                "crossFilterDisabled": false,
+                "drillthroughDisabled": false,
+                "hideLegend": false,
+                "multipleYAxes": {
+                    "additional": [],
+                    "base": {
+                        "columns": [],
+                        "horizontalLines": [],
+                        "id": "-1",
+                        "label": "Query Per Second",
+                        "yAxisMaximumValue": null,
+                        "yAxisMinimumValue": null,
+                        "yAxisScale": "linear"
+                    },
+                    "showMultiplePanels": false
+                },
+                "seriesColumns": null,
+                "verticalLine": "",
+                "xAxisScale": "linear",
+                "xColumn": "PreciseTimeStamp",
+                "xColumnTitle": "Timestamp",
+                "yColumns": [
+                    "QPS"
+                ],
+                "legendLocation": "bottom",
+                "crossFilter": [],
+                "drillthrough": []
+            }
+        }
+    ],
+    "baseQueries": [
+        {
+            "id": "99e21b1b-5aed-43e8-8071-f4a777fd2979",
+            "queryId": "b5d22ee5-8297-4adf-ab56-404c2f7158fa",
+            "variableName": "_baseQuery"
+        }
+    ],
+    "parameters": [
+        {
+            "kind": "duration",
+            "id": "ce6dd3c7-bd48-45c5-818e-5401c5ff43b2",
+            "displayName": "Time range",
+            "description": "Select the time range you wish to examine.",
+            "beginVariableName": "_startTime",
+            "endVariableName": "_endTime",
+            "defaultValue": {
+                "kind": "dynamic",
+                "count": 1,
+                "unit": "hours"
+            },
+            "showOnPages": {
+                "kind": "all"
+            }
+        },
+        {
+            "kind": "dataSource",
+            "id": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5",
+            "displayName": "_database",
+            "description": "",
+            "defaultValue": {
+                "kind": "dataSource",
+                "dataSourceId": "a0419e1a-3aca-4461-9215-b66f8c775a94"
+            },
+            "dataSource": {
+                "kind": "dataSource",
+                "values": {
+                    "kind": "all"
+                }
+            },
+            "showOnPages": {
+                "kind": "all"
+            }
+        },
+        {
+            "kind": "string",
+            "id": "17426b93-e6cf-46b3-9c36-bbf6c660fb20",
+            "displayName": "_region",
+            "description": "Select the Region from which we retrieve logs to generate the dashboard.",
+            "variableName": "_region",
+            "selectionType": "scalar",
+            "includeAllOption": false,
+            "defaultValue": {
+                "kind": "no-selection"
+            },
+            "dataSource": {
+                "kind": "query",
+                "columns": {
+                    "value": "Region",
+                    "label": "Region"
+                },
+                "queryRef": {
+                    "kind": "query",
+                    "queryId": "16e956e9-28f3-41f5-b0cd-88609133aa59"
+                }
+            },
+            "showOnPages": {
+                "kind": "selection",
+                "pageIds": [
+                    "0c7d1052-237a-4600-8cda-b45b91e5c3e5"
+                ]
+            }
+        },
+        {
+            "kind": "string",
+            "id": "77e3a7a6-7be1-421a-b6c6-7dd18c63f981",
+            "displayName": "_version",
+            "description": "Select the build version of your standalone pipeline from which we retrieve logs to generate the dashboard.",
+            "variableName": "_version",
+            "selectionType": "scalar",
+            "includeAllOption": false,
+            "defaultValue": {
+                "kind": "query-result"
+            },
+            "dataSource": {
+                "kind": "query",
+                "columns": {
+                    "value": "version",
+                    "label": "version"
+                },
+                "queryRef": {
+                    "kind": "query",
+                    "queryId": "1c91bf1c-0a33-43b3-b87a-5d201f6e1984"
+                }
+            },
+            "showOnPages": {
+                "kind": "selection",
+                "pageIds": [
+                    "9e129e14-9769-4d5d-8877-d64e47ab1999",
+                    "0c7d1052-237a-4600-8cda-b45b91e5c3e5"
+                ]
+            }
+        },
+        {
+            "kind": "string",
+            "id": "3f03d795-823e-41ac-bc09-9c575436ce8c",
+            "displayName": "_containerRequestType",
+            "description": "Select whether to examine the outgoing client requests or focus on the incoming server requests for a unique ContainerName.",
+            "variableName": "_containerRequestType",
+            "selectionType": "scalar",
+            "includeAllOption": false,
+            "defaultValue": {
+                "kind": "query-result"
+            },
+            "dataSource": {
+                "kind": "query",
+                "columns": {
+                    "value": "component"
+                },
+                "queryRef": {
+                    "kind": "query",
+                    "queryId": "b9413d5a-daf4-4e28-89eb-ac9659ff0f39"
+                },
+                "autoReset": true
+            },
+            "showOnPages": {
+                "kind": "selection",
+                "pageIds": [
+                    "0c7d1052-237a-4600-8cda-b45b91e5c3e5"
+                ]
+            }
+        },
+        {
+            "kind": "string",
+            "id": "61254001-0cfb-4b8e-a5d6-55d8f8ba1b89",
+            "displayName": "_method",
+            "description": "Select which method the dashboard will filter on.",
+            "variableName": "_method",
+            "selectionType": "scalar",
+            "includeAllOption": false,
+            "defaultValue": {
+                "kind": "query-result"
+            },
+            "dataSource": {
+                "kind": "query",
+                "columns": {
+                    "value": "method"
+                },
+                "queryRef": {
+                    "kind": "query",
+                    "queryId": "5663f641-4fb6-4d83-a59d-8c84a6f54364"
+                }
+            },
+            "showOnPages": {
+                "kind": "selection",
+                "pageIds": [
+                    "0c7d1052-237a-4600-8cda-b45b91e5c3e5"
+                ]
+            }
+        }
+    ],
+    "dataSources": [
+        {
+            "id": "a0419e1a-3aca-4461-9215-b66f8c775a94",
+            "name": "ProdAME",
+            "clusterUri": "https://servicehubvalProdAME.eastus2.kusto.windows.net/",
+            "database": "servicehubvalProdAMEdb",
+            "kind": "manual-kusto",
+            "scopeId": "kusto"
+        },
+        {
+            "id": "98521351-ebb1-4c99-b17f-cfc5bd397146",
+            "name": "TestCorp",
+            "clusterUri": "https://servicehubvalTestCorp.eastus2.kusto.windows.net/",
+            "database": "servicehubvalTestCorpdb",
+            "kind": "manual-kusto",
+            "scopeId": "kusto"
+        }
+    ],
+    "pages": [
+        {
+            "id": "0c7d1052-237a-4600-8cda-b45b91e5c3e5",
+            "name": "mygreeterv3"
+        }
+    ],
+    "queries": [
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let summarizeData = (protocolType: string, successArray: dynamic) {\n    let upperSuccessArray = range x from 0 to array_length(successArray) - 1 step 1\n    | summarize x = make_list(toupper(successArray[x]));\n    _baseQuery\n    | where version == \"na\" or version == _version\n    | where Region == \"na\" or Region == _region\n    | where protocol == protocolType\n    | where component == \"server\"\n    | extend code = toupper(tostring(code))\n    | summarize \n        total = count(),\n        numSuccess = countif(code in (upperSuccessArray))\n    | extend QoS = round(todecimal(numSuccess) / todecimal(total) * 100, 3)\n    | project protocolType, QoS, numSuccess, total\n};\n\nlet restSuccessArray = tostring(range(200, 299, 1));\nlet restData = summarizeData(\"REST\", restSuccessArray);\n\nlet grpcSuccessArray = dynamic([\"OK\"]);\nlet grpcData = summarizeData(\"grpc\", grpcSuccessArray);\nlet combinedData = union restData, grpcData;\ncombinedData\n| summarize \n    total = sum(total),\n    numSuccess = sum(numSuccess)\n| extend OverallQoS = round(todecimal(numSuccess) / todecimal(total) * 100, 3)\n| extend qos_fmt = strcat(\"## \", tostring(OverallQoS))\n| project qos_fmt",
+            "id": "97918fec-ef8f-49db-bf82-42ac276e61fa",
+            "usedVariables": [
+                "_baseQuery",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let tempQuery = _baseQuery\n    | where version == \"na\" or version == _version\n    | where Region == \"na\" or Region == _region;\n\n\nlet summarizeData = (protocolType: string, successArray: dynamic, systemErrorArray: dynamic) {\n    let upperSuccessArray = range x from 0 to array_length(successArray) - 1 step 1\n    | summarize x = make_list(toupper(successArray[x]));\n    let upperSystemErrorArray = range x from 0 to array_length(systemErrorArray) - 1 step 1\n    | summarize x = make_list(toupper(systemErrorArray[x]));\n    _baseQuery\n    | where version == \"na\" or version == _version\n    | where Region == \"na\" or Region == _region\n    | where protocol == protocolType\n    | where component == \"server\"\n    | extend code = toupper(tostring(code)), method = tostring(method)\n    | summarize \n        total = count(),\n        numSuccess = countif(code in (upperSuccessArray)),\n        numError = countif(code !in (upperSuccessArray)),\n        numUserError = countif(code !in (upperSystemErrorArray) and code !in (upperSuccessArray)),\n        numSystemError = countif(code in (upperSystemErrorArray))\n        by method, protocol\n    | extend QoS = round(todecimal(numSuccess) / todecimal(total) * 100, 3)\n    | project method, protocol, QoS, numSuccess, numError, numSystemError, numUserError, total\n};\n\nlet restSuccessArray = tostring(range(200, 299, 1));\nlet restServerErrors = tostring(range(500, 599, 1));\nlet restData = summarizeData(\"REST\", restSuccessArray, restServerErrors);\n\nlet grpcSuccessArray = dynamic([\"OK\"]);\nlet grpcServerErrors = dynamic([\"INTERNAL\", \"UNIMPLEMENTED\", \"UNKNOWN\", \"DEADLINE_EXCEEDED\", \"UNAVAILABLE\", \"DATA_LOSS\"]);\nlet grpcData = summarizeData(\"grpc\", grpcSuccessArray, grpcServerErrors);\nunion restData, grpcData",
+            "id": "9b7ce86f-2d28-4a18-8705-f62a5e57933b",
+            "usedVariables": [
+                "_baseQuery",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let summarizeData = (protocolType: string, successArray: dynamic) {\n    let upperSuccessArray = range x from 0 to array_length(successArray) - 1 step 1\n    | summarize x = make_list(toupper(successArray[x]));\n    _baseQuery\n    | where version == \"na\" or version == _version\n    | where Region == \"na\" or Region == _region\n    | where protocol == protocolType\n    | extend code = toupper(tostring(code))\n    | summarize \n        total = count(),\n        error = countif(code !in (upperSuccessArray))\n        by bin(PreciseTimeStamp, 5m), method\n    | extend ratio = round(error * 100.0 / total, 3)\n    | project PreciseTimeStamp, method, ratio, protocolType\n};\n\nlet restSuccessArray = tostring(range(200, 299, 1));\nlet restData = summarizeData(\"REST\", restSuccessArray);\nlet grpcSuccessArray = dynamic([\"OK\"]);\nlet grpcData = summarizeData(\"grpc\", grpcSuccessArray);\nunion restData, grpcData",
+            "id": "d37ebc9c-98f8-467f-8e14-10ebbea19093",
+            "usedVariables": [
+                "_baseQuery",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let ContainerNameRequestType = _containerRequestType;\nlet method_filter = _method;\n\nlet tempQuery = _baseQuery\n| where method == method_filter\n| extend splitParts = split(ContainerNameRequestType, \" \");\n\ntempQuery\n| extend method_fmt = strcat(\"## \", method, \" Metrics for \", ContainerNameRequestType)\n| project method_fmt",
+            "id": "1718177b-a358-4ea2-8075-88d9d0414b6e",
+            "usedVariables": [
+                "_baseQuery",
+                "_containerRequestType",
+                "_method"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let splitParts = split(_containerRequestType, \" \");\nlet _ContainerName = splitParts[0];\nlet _component = splitParts[1];\n\nlet summarizeData = (_ContainerName: string, _component: string, protocolType: string, successArray: dynamic, serverErrorArray: dynamic) {\n    let upperSuccessArray = range x from 0 to array_length(successArray) - 1 step 1\n    | summarize x = make_list(toupper(successArray[x]));\n    let upperServerErrorArray = range x from 0 to array_length(serverErrorArray) - 1 step 1\n    | summarize x = make_list(toupper(serverErrorArray[x]));\n    _baseQuery\n    | where version == \"na\" or version == _version\n    | where Region == \"na\" or Region == _region\n    | where method == _method\n    | where ContainerName == _ContainerName\n    | where component == _component\n    | where protocol == protocolType\n    | extend code = toupper(tostring(code))\n    | summarize \n        total = iff(_component == \"server\", countif(code in (successArray) or code in (upperServerErrorArray)), countif(code in (successArray) or code !in (upperServerErrorArray))),\n        error = iff(_component == \"server\", countif(code in (upperServerErrorArray)), countif(code !in (upperServerErrorArray)))\n        by bin(PreciseTimeStamp, 5m), method\n    | extend ratio = iff(total == 0, 0.0, round(error * 100.0 / total, 3))\n    | project PreciseTimeStamp, method, ratio, protocolType\n};\n\n\n\nlet restSuccessArray = tostring(range(200, 299, 1));\nlet restServerErrors = tostring(range(500, 599, 1));\nlet restData = summarizeData(_ContainerName, _component, \"REST\", restSuccessArray, restServerErrors);\n\nlet grpcSuccessArray = dynamic([\"OK\"]);\nlet grpcServerErrors = dynamic([\"INTERNAL\", \"UNIMPLEMENTED\", \"UNKNOWN\", \"DEADLINE_EXCEEDED\", \"UNAVAILABLE\", \"DATA_LOSS\"]);\nlet grpcData = summarizeData(_ContainerName, _component, \"grpc\", grpcSuccessArray, grpcServerErrors);\n\nunion restData, grpcData\n",
+            "id": "a9efb186-e844-4ecd-a62a-d3a8bde685dd",
+            "usedVariables": [
+                "_baseQuery",
+                "_containerRequestType",
+                "_method",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let binSizeMinute = timespan(5m);\nlet binSizeSecond = binSizeMinute / 1s;\n_baseQuery\n| where version == \"na\" or version == _version\n| where Region == \"na\" or Region == _region\n| where method == _method\n| extend splitParts = split(_containerRequestType, \" \")\n| extend og_ContainerName = splitParts[0], og_containerRequestType = splitParts[1]\n| where ContainerName == og_ContainerName\n| where component == og_containerRequestType\n| summarize latency = round(avg(todouble(time_ms)),3) by code=tostring(code), bin(PreciseTimeStamp,binSizeMinute)",
+            "id": "dbc942d4-883a-4fd0-8ee3-b536ee58be69",
+            "usedVariables": [
+                "_baseQuery",
+                "_containerRequestType",
+                "_method",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "let binSizeMinute = timespan(5m);\nlet binSizeSecond = binSizeMinute / 1s;\n_baseQuery\n| where version == \"na\" or version == _version\n| where Region == \"na\" or Region == _region\n| where method == _method\n| extend splitParts = split(_containerRequestType, \" \")\n| extend og_ContainerName = splitParts[0], og_containerRequestType = splitParts[1]\n| where ContainerName == og_ContainerName\n| where component == og_containerRequestType\n| summarize QPS = round(count()/binSizeSecond,3) by code=tostring(code), bin(PreciseTimeStamp,binSizeMinute)",
+            "id": "2540c945-7341-4778-86bf-3047ac38db4d",
+            "usedVariables": [
+                "_baseQuery",
+                "_containerRequestType",
+                "_method",
+                "_region",
+                "_version"
+            ]
+        },
+        {
+            "id": "b5d22ee5-8297-4adf-ab56-404c2f7158fa",
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "ApiRequestLog\n| where PreciseTimeStamp between (_startTime.._endTime)\n| where msg == \"finished call\"\n| where NamespaceName in (\"servicehubval-mygreeterv3-server\", \"servicehubval-mygreeterv3-demoserver\")\n| where method != \"Check\"\n| extend version = column_ifexists(\"version\", \"na\"), Region = column_ifexists(\"Region\", \"na\")",
+            "usedVariables": [
+                "_endTime",
+                "_startTime"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "_baseQuery\n| distinct Region",
+            "id": "16e956e9-28f3-41f5-b0cd-88609133aa59",
+            "usedVariables": [
+                "_baseQuery"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "_baseQuery\n| distinct version",
+            "id": "1c91bf1c-0a33-43b3-b87a-5d201f6e1984",
+            "usedVariables": [
+                "_baseQuery"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "\n_baseQuery\n| extend component = strcat(ContainerName, \" \", component)\n| distinct component",
+            "id": "b9413d5a-daf4-4e28-89eb-ac9659ff0f39",
+            "usedVariables": [
+                "_baseQuery"
+            ]
+        },
+        {
+            "dataSource": {
+                "kind": "parameter",
+                "parameterId": "9217c8f1-10ba-445b-ae6b-2fc47855d5b5"
+            },
+            "text": "_baseQuery\n| where Region == _region\n| extend splitParts = split(_containerRequestType, \" \") // Split by space\n| extend og_ContainerName = splitParts[0], og_containerRequestType = splitParts[1]\n| where ContainerName == og_ContainerName\n| where component == og_containerRequestType\n| distinct tostring(method)",
+            "id": "5663f641-4fb6-4d83-a59d-8c84a6f54364",
+            "usedVariables": [
+                "_baseQuery",
+                "_containerRequestType",
+                "_region"
+            ]
+        }
+    ]
+}

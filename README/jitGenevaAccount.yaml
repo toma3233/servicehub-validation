@@ -1,0 +1,18 @@
+# JIT Request Details for Granting Permissions to Ev2 Release Pipeline Approver For Geneva Account Creation Authentication
+# Website: https://jitaccess.security.core.windows.net/WorkFlowTempAccess.aspx
+# If this doesn't work, go to https://jitaccess.security.core.windows.net and select "Submit Request"
+# [IMPT] The APPROVER of your release pipeline must be the one to submit the JIT request. This is because they are technically designated as the "caller" of the release.
+# Why do we need this? In Ev2, we use the Geneva Logs extension to create or update our Geneva Logs account. The Geneva Logs extension requires a certificate to authenticate the request. The certificate is stored in a Key Vault, and the release pipeline needs access to the Key Vault to retrieve the certificate. Whoever the approver of the release is deemed the "caller" of the release and is the one trying to access the Key Vault and the certificate on behalf of the Ev2 release pipeline. The JIT request is used to grant temporary access to the Key Vault to the "caller", or the approver of the release pipeline such that they can access the certificate to authenticate the request to create/update the Geneva Logs account.
+# Why don't we grant the security group the permissions? The Ev2 release pipeline requires access to the certificate to authenticate the creation/update of the Geneva Logs Account. However, if you assign the security group the role permissions, this will be flagged as a security issue. This is why we require the release approver to submit the JIT request and gain temporary access to the Key Vault.
+
+# Have the release approver fill in the details below.
+Work Item Source: Other # select from dropdown
+Work Item Id: N/A # Required if Work Item Source is "IcM"
+Operations Category: Service Deployment # You can select what you think is best.
+Justification: Updating Geneva Logs Account
+Resource Type: Subscription # TODO: change this to Azure Key Vault. However, it does require more values to input
+Subscription Id: xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Please find the subscription ID that is associated with AKS Service Hub Validation Sub - global. You can find the provisioned subscription in the Ev2 Rollout Link by clicking Deployment -> Details and looking at the Subscription ID. You can also check the Azure Portal.
+Access Level: Key Vault Secrets User
+# Once the release approver fills in the details, they will need to select "Submit" at the bottom of the page. This will send a request to the release approver to approve the JIT request. Their request will need to be approved.
+# On your SAW, navigate to https://jitaccess.security.core.windows.net/PendingApproval.aspx. Find your teammate's request, select the dropdown carrot, and click "Approve".
+# You will now need to navigate back to your release in the Ev2 Portal and select "Retry" to retry the release. This will now work. If it works, the log will show "accepted".

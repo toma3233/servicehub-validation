@@ -1,0 +1,152 @@
+<MonitoringManagement eventVersion="2" version="1.0" timestamp="2019-01-28T00:00:00Z" namespace="servicehubvalev2logs">
+  <!-- Documentation: https://eng.ms/docs/products/geneva/collect/instrument/linux/overview -->
+  <!-- Documentation(Schema): https://msazure.visualstudio.com/One/_git/Compute-Runtime-Tux?path=%2Fmdsdsvc%2Fmdsd.xml&version=GBmaster -->
+  <!-- Documentation(AzSecPack): https://dev.azure.com/msazure/One/_git/Compute-Runtime-Tux-GenevaContainers?path=/azsecpack&version=GBmaster-->
+  <Accounts>
+    <Account moniker="servicehubvalev2logsaudit" alias="AuditStore" />
+    <Account moniker="servicehubvalev2logsdiag" isDefault="true" />
+    <Account moniker="servicehubvalev2logssecurity" alias="AzSecurityStore" />
+  </Accounts>
+  <Management eventVolume="Medium" defaultRetentionInDays="29">
+    <!-- Define TENANT, ROLE, ROLEINSTANCE in the container's environment -->
+    <Identity>
+      <IdentityComponent name="Tenant" envariable="TENANT" />
+      <IdentityComponent name="Role" envariable="ROLE" />
+      <IdentityComponent name="RoleInstance" envariable="ROLEINSTANCE" />
+      <IdentityComponent name="GenevaPodName" useComputerName="true" />
+      <IdentityComponent name="AKSClusterName" envariable="AKSCLUSTERNAME" />
+      <IdentityComponent name="AKSClusterResourceId" envariable="AKSCLUSTERRESOURCEID" />
+      <IdentityComponent name="ResourceGroup" envariable="RESOURCEGROUP" />
+      <IdentityComponent name="Region" envariable="REGION" />
+      <IdentityComponent name="SubscriptionId" envariable="SUBSCRIPTIONID" />
+    </Identity>
+    <AgentResourceUsage diskQuotaInMB="8000" />
+    <AgentMetrics mdmMonitoringAccount="servicehubvalev2logs" />
+  </Management>
+  <Schemas>
+    <Schema name="syslog">
+      <Column name="Facility" mdstype="mt:wstr" type="str" />
+      <Column name="Severity" mdstype="mt:int32" type="str" />
+      <Column name="EventTime" mdstype="mt:utc" type="str-rfc3339" />
+      <Column name="SendingHost" mdstype="mt:wstr" type="str" />
+      <Column name="Msg" mdstype="mt:wstr" type="str" />
+      <Column name="SyslogTag" mdstype="mt:wstr" type="str" />
+    </Schema>
+    <Schema name="azsecv1">
+      <Column name="Facility" mdstype="mt:wstr" type="str" />
+      <Column name="Severity" mdstype="mt:int32" type="str" />
+      <Column name="EventTime" mdstype="mt:utc" type="str-rfc3339" />
+      <Column name="SendingHost" mdstype="mt:wstr" type="str" />
+      <Column name="Msg" mdstype="mt:wstr" type="str" />
+    </Schema>
+    <Schema name="azsecv2">
+      <Column name="AzSecID" mdstype="mt:wstr" type="str" />
+      <Column name="ScanName" mdstype="mt:wstr" type="str" />
+      <Column name="EventTime" mdstype="mt:utc" type="str-rfc3339" />
+      <Column name="Data" mdstype="mt:wstr" type="str" />
+      <Column name="PartCount" mdstype="mt:int32" type="str" />
+      <Column name="PartIndex" mdstype="mt:int32" type="str" />
+    </Schema>
+  </Schemas>
+  <Sources>
+    <!-- K8 platform log tags. Make sure your fluentd config tags are matched here.  -->
+    <Source name="k8scontainers" dynamic_schema="true" />
+    <!-- Application log tags: currently reflects tags for the sample app. Please update/add tags for your app accordingly. Your tracing SDK should send with these tags. -->
+    <Source name="apirequestlog" dynamic_schema="true" />
+
+    <!-- AzSec log tags -->
+    <Source name="kern" schema="syslog" />
+    <Source name="auth" schema="syslog" />
+    <Source name="authpriv" schema="syslog" />
+    <Source name="cron" schema="syslog" />
+    <Source name="user" schema="syslog" />
+    <Source name="daemon" schema="syslog" />
+    <Source name="syslog" schema="syslog" />
+    <Source name="heartbeat" schema="azsecv1" />
+    <Source name="baseline" schema="azsecv1" />
+    <Source name="software" schema="azsecv1" />
+    <Source name="clamav" schema="azsecv1" />
+    <Source name="scan_event" schema="azsecv2" />
+    <Source name="alert" schema="azsecv2" />
+    <Source name="audit" dynamic_schema="true" />
+  </Sources>
+  <Events>
+    <MdsdEvents>
+      <MdsdEventSource source="k8scontainers">
+        <RouteEvent eventName="KubernetesContainers" storeType="CentralBond" priority="Normal" account="servicehubvalev2logsdiag" />
+      </MdsdEventSource>
+      <MdsdEventSource source="apirequestlog">
+        <RouteEvent eventName="ApiRequestLog" storeType="CentralBond" priority="Normal" account="servicehubvalev2logsdiag" />
+      </MdsdEventSource>
+      <MdsdEventSource source="kern">
+        <RouteEvent eventName="LinuxAsmSecurity" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="auth">
+        <RouteEvent eventName="LinuxAsmSecurity" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="authpriv">
+        <RouteEvent eventName="LinuxAsmSecurity" priority="High" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="cron">
+        <RouteEvent eventName="LinuxAsmSyslog" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="user">
+        <RouteEvent eventName="LinuxAsmSyslog" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="daemon">
+        <RouteEvent eventName="LinuxAsmSyslog" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="syslog">
+        <RouteEvent eventName="LinuxAsmSyslog" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="heartbeat">
+        <RouteEvent eventName="LinuxAsmHeartbeat" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="baseline">
+        <RouteEvent eventName="LinuxAsmBaseline" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="software">
+        <RouteEvent eventName="LinuxAsmSoftware" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="clamav">
+        <RouteEvent eventName="LinuxAsmClamav" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="scan_event">
+        <RouteEvent eventName="LinuxAsmScanEvent" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logssecurity" />
+      </MdsdEventSource>
+      <MdsdEventSource source="alert">
+        <RouteEvent eventName="LinuxAsmAlert" priority="Normal" duration="PT10S" storeType="CentralBond" />
+      </MdsdEventSource>
+      <MdsdEventSource source="audit">
+        <RouteEvent eventName="LinuxAsmAudit" priority="Normal" duration="PT1M" storeType="CentralBond" account="servicehubvalev2logsaudit" />
+      </MdsdEventSource>
+    </MdsdEvents>
+  </Events>
+  <!-- Add/Remove additional annotations to forward logs to Dgrep, Kusto or Cosmos -->
+  <EventStreamingAnnotations>
+    <!-- Add/Remove additional annotations to forward logs to Dgrep, Kusto or Cosmos -->
+    <EventStreamingAnnotation name="^LinuxAsm.*$">
+      <!-- <Cosmos>
+        <Content>
+          <![CDATA[ <Config /> ]]>
+        </Content>
+      </Cosmos>
+      <LogAnalytics>
+        <Content>LogAnalyticsContent</Content>
+      </LogAnalytics>-->
+      <LogAnalytics>
+        <Content>LogAnalyticsContent</Content>
+      </LogAnalytics>
+    </EventStreamingAnnotation>
+    <EventStreamingAnnotation name="^KubernetesContainers$">
+      <LogAnalytics>
+        <Content>LogAnalyticsContent</Content>
+      </LogAnalytics>
+    </EventStreamingAnnotation>
+    <EventStreamingAnnotation name="^ApiRequestLog$">
+      <LogAnalytics>
+        <Content>LogAnalyticsContent</Content>
+      </LogAnalytics>
+    </EventStreamingAnnotation>
+  </EventStreamingAnnotations>
+</MonitoringManagement>

@@ -1,0 +1,120 @@
+# Run a Bash script on macOS, Linux, or Windows
+jobs:
+  - job: csharpuserrpBuildImage
+    displayName: "[csharpuserrp] Build image"
+    pool:
+      vmImage: "ubuntu-latest"
+    dependsOn:
+      #This job is mentioned in main pipeline yaml file (within pipeline files directory)
+      - GenerateAndPublishEnvConfig
+    steps:
+      - template: ../pipeline-files/downloadRequirements.yaml
+      - task: Bash@3
+        displayName: Build image
+        inputs:
+          targetType: "filePath"
+          filePath: csharpuserrp/server/test/buildImage.sh
+          failOnStderr: false
+          workingDirectory: $(WORKING_DIRECTORY)
+        env:
+          READPAT: $(READPAT)
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish docker image as an artifact"
+        inputs:
+          targetPath: "$(WORKING_DIRECTORY)csharpuserrp/server/generated/csharpuserrp-image.tar"
+          artifactName: csharpuserrp-image
+  - job: csharpuserrpPushImage
+    displayName: "[csharpuserrp] Push image"
+    pool:
+      vmImage: "ubuntu-latest"
+    dependsOn:
+      #This job is mentioned in main pipeline yaml file (within pipeline files directory)
+      - ProvisionSharedResources
+      - csharpuserrpBuildImage
+    steps:
+      - template: ../pipeline-files/downloadRequirements.yaml
+      - task: DownloadPipelineArtifact@2
+        displayName: "Download docker image artifact"
+        inputs:
+          artifactName: csharpuserrp-image
+          targetPath: "$(System.DefaultWorkingDirectory)/$(WORKING_DIRECTORY)csharpuserrp/server/generated/"
+      - task: AzureCLI@2
+        displayName: Push image
+        inputs:
+          # azureSubscription corresponds to the name of the azure resource manager service
+          # connection that is supposed to be used for the pipeline task.
+          azureSubscription: ServiceHubValidation_ServiceConnection
+          scriptType: "bash"
+          scriptLocation: "scriptPath"
+          scriptPath: csharpuserrp/server/test/pushImage.sh
+          workingDirectory: $(WORKING_DIRECTORY)
+  - job: csharpuserrpProvisionServiceResources
+    displayName: "[csharpuserrp] Provision service specific resources"
+    pool:
+      vmImage: "ubuntu-latest"
+    dependsOn:
+      #This job is mentioned in main pipeline yaml file (within pipeline files directory)
+      - ProvisionSharedResources
+    steps:
+      - template: ../pipeline-files/downloadRequirements.yaml
+      - task: AzureCLI@2
+        displayName: Provision service specific resources
+        inputs:
+          # azureSubscription corresponds to the name of the azure resource manager service
+          # connection that is supposed to be used for the pipeline task.
+          azureSubscription: ServiceHubValidation_ServiceConnection
+          scriptType: "bash"
+          scriptLocation: "scriptPath"
+          scriptPath: csharpuserrp/server/test/provisionServiceResources.sh
+          workingDirectory: $(WORKING_DIRECTORY)
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish artifact directory"
+        inputs:
+          targetPath: "$(WORKING_DIRECTORY)csharpuserrp/server/artifacts"
+          artifactName: csharpuserrp_ArtifactDirectory
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish adx dashboard as an artifact"
+        inputs:
+          targetPath: "$(WORKING_DIRECTORY)csharpuserrp/server/monitoring/dashboard/adx-dashboard.json"
+          artifactName: csharpuserrp-dashboard
+      - task: Bash@3
+        displayName: Prepare all markdown files to publish
+        inputs:
+          targetType: "inline"
+          script: |
+            cd csharpuserrp/server
+            mkdir markdown_files
+            if ls resources/**/*.md 1> /dev/null 2>&1; then
+              find resources -name "*.md" -not -name "ai-summary.md" -exec mv {} markdown_files \;
+            fi
+          failOnStderr: false
+          workingDirectory: $(WORKING_DIRECTORY)
+      - task: PublishPipelineArtifact@1
+        displayName: "Publish service specific resource markdown files"
+        inputs:
+          targetPath: "$(WORKING_DIRECTORY)csharpuserrp/server/markdown_files"
+          artifactName: csharpuserrp_SpecificResourceMarkdownFiles
+  - job: csharpuserrpDeployService
+    displayName: "[csharpuserrp] Deploy Service"
+    pool:
+      vmImage: "ubuntu-latest"
+    dependsOn:
+      - csharpuserrpPushImage
+      - csharpuserrpProvisionServiceResources
+    steps:
+      - template: ../pipeline-files/downloadRequirements.yaml
+      - task: DownloadPipelineArtifact@2
+        displayName: "Download artifact directory"
+        inputs:
+          artifactName: csharpuserrp_ArtifactDirectory
+          targetPath: "$(System.DefaultWorkingDirectory)/$(WORKING_DIRECTORY)csharpuserrp/server/artifacts"
+      - task: AzureCLI@2
+        displayName: Deploy and test service
+        inputs:
+          # azureSubscription corresponds to the name of the azure resource manager service
+          # connection that is supposed to be used for the pipeline task.
+          azureSubscription: ServiceHubValidation_ServiceConnection
+          scriptType: "bash"
+          scriptLocation: "scriptPath"
+          scriptPath: csharpuserrp/server/test/deployService.sh
+          workingDirectory: $(WORKING_DIRECTORY)

@@ -1,0 +1,16 @@
+Ev2
+Ev2/Ev2Specs
+Ev2/Ev2Specs/Configurations
+Ev2/Ev2Specs/Configurations/Prod
+Ev2/Ev2Specs/Configurations/Prod/Configuration.json
+Ev2/Ev2Specs/Configurations/Test
+Ev2/Ev2Specs/Configurations/Test/Configuration.json
+Ev2/Ev2Specs/Parameters
+Ev2/Ev2Specs/Parameters/Slnm.Parameters.json
+Ev2/Ev2Specs/RolloutSpec.json
+Ev2/Ev2Specs/ScopeBinding.json
+Ev2/Ev2Specs/ServiceModel.json
+Ev2/Ev2Specs/Templates
+Ev2/Ev2Specs/Templates/Slnm.bicep
+Ev2/Ev2Specs/Version.txt
+README.md

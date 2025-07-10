@@ -1,0 +1,16 @@
+{
+    "Settings": {
+        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "backfilledSubId": "049e57e6-ff8e-4e8f-91bf-5830bf32d150",
+        "environment": "test",
+        "resourcesName": "TestCorp",
+        "genevaConfigureAccount": "ConfigureLogsTestAccount",
+        "mdsEnvironment": "Test",
+        "oneCertRegisteredDomain": "test.general.servicehubval.azure-test.net",
+        "genevaRoleDefinitionId": "9f15f5f5-77bd-413a-aa88-4b9c68b1e7bc",
+        "genevaServicePrincipalId": "3c2f3efc-0197-4fd5-b566-0e3f07a17f0c",
+        "genevaEnvironment": "test",
+        "genevaMetricsSecurityGroupId": "adcc434d-5e83-4935-8d81-af89d05aad4c"
+
+    }
+}

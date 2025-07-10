@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "tenantId": {
+      "value": "{{.tenantId}}"
+    },
+    "subscriptionId": {
+      "value": "{{.subscriptionId}}"
+    },
+    "location": {
+      "value": "{{.location}}"
+    },
+    "resourceGroupName": {
+      "value": "{{.resourceGroupName}}"
+    },
+    "networkManagerSubscriptionId": {
+      "value": "{{.networkManagerSubscriptionId}}"
+    },
+    "networkManagerResourceGroup": {
+      "value": "{{.networkManagerResourceGroup}}"
+    },
+    "networkManagerName": {
+      "value": "{{.networkManagerName}}"
+    },
+    "slnmConfigIds": {
+      "value": "{{.slnmConfigIds}}"
+    },
+    "pipelineIdentityId": {
+      "value": "{{.pipelineIdentityId}}"
+    }
+  }
+}

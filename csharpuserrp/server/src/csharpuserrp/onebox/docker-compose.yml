@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  servicerp:
+    image: ${RPAAS_ONEBOX_REGISTRY:-rpaasoneboxacr.azurecr.io}/rpaas-onebox/servicerp:${RPAAS_ONEBOX_IMAGE_TAG:-latest}
+    ports:
+      - "${RPAAS_ONEBOX_SERVICERP_PORT:-6012}:6012"
+    volumes:
+      - "filedb:/root/.local/share/rpsaas/fileDBData"
+
+  metarp:
+    image: ${RPAAS_ONEBOX_REGISTRY:-rpaasoneboxacr.azurecr.io}/rpaas-onebox/metarp:${RPAAS_ONEBOX_IMAGE_TAG:-latest}
+    ports:
+      - "${RPAAS_ONEBOX_METARP_PORT:-6010}:6010"
+    volumes:
+      - "filedb:/root/.local/share/rpsaas/fileDBData"
+
+  webserver:
+    image: ${RPAAS_ONEBOX_REGISTRY:-rpaasoneboxacr.azurecr.io}/rpaas-onebox/nginx:${RPAAS_ONEBOX_IMAGE_TAG:-latest}
+    ports:
+      - "${RPAAS_ONEBOX_PORT:-5000}:80"
+    depends_on:
+      - servicerp
+      - metarp
+
+volumes:
+  filedb:

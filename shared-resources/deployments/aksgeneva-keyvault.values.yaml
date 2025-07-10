@@ -1,0 +1,20 @@
+# Values for AKSGenevaSampleApp with support for keyvault certificates.
+
+gcs_environment: "{{.gcsEnvironment}}"
+gcs_account: servicehubvalev2logs
+gcs_region: westus2
+gcs_namespace: servicehubvalev2logs
+gcs_config_version: "2.0" # Use string here otherwise helm will convert 1.0 to 1
+azsecpack_eventversion: 1
+azsecpackmoniker: servicehubvalev2logssecurity
+# Leave metric_endpoint commented out for PROD environment. Uncomment it for INT environment.
+# metricEndpoint: https://global.ppe.microsoftmetrics.com/
+
+# Where to get the cert for mdsd, mdm and azsecpack
+cert:
+  keyvaultName: __AZURE_KEY_VAULT_NAME__ # This is the keyvault name where the cert is stored.
+  tenantId: "{{.tenantId}}" # This is MSFT AAD tenant id.
+  msi_client_id: __AKS_CLUSTER_MSI_CLIENT_ID__ # This is the User assigned identity to the pods; which needs to be authorized in AKV for list,get permissions. Can be empty, if only one identity is configured.
+  genevaCertName: servicehubval{{.resourcesName}}genevacert # This is the name of the certificate in AKV.
+  genevaCertSAN: "{{.oneCertRegisteredDomain}}" # This is the Subject Alternate Name of the cert above.
+  pemFileName: genevacert.pem # This is the file name where the cert will be stored and shared with the containers.

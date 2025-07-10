@@ -1,0 +1,221 @@
+// Source examples: https://msazure.visualstudio.com/One/_git/GenevaLogs?path=/docs/EV2Extension/ServiceGroupRootSample/RolloutParameters/2020-06-01
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "contentVersion": "1.0.0.0",
+  "extensions": [
+    // Prerequisites (we automate this for you): 
+    // A provisioned subscription.
+    // Subscription registered with resource providers (Microsoft.Storage, Microsoft.EventHub, Microsoft.Insights)
+    // Grant Geneva service principal GenevaWarmPathResourceContributor role on the subscription.
+    // register a domain in OneCert. This allows for the creation of the certificate in the provisioned subscription.
+    // Keyvault and certificate creation. This certificate allows the geneva account creation via ev2.
+    // Grant Ev2 security group permissions to the key vault. Refer to GenevaLogsSetUp.md for how to do this.
+    {
+      "name": "ProvisionGenevaAccount",
+      // For Test, Stage, Canary endpoints: the type is "Microsoft.Geneva.Logs/ConfigureLogsTestAccount
+      // For all other endpoints: the type is "Microsoft.Geneva.Logs/ConfigureLogsAccount"
+      "type": "Microsoft.Geneva.Logs/{{.genevaConfigureAccount}}",
+      "version": "2020-06-01",
+      // This sample covers using the Ev2 extension to configure and create/manage an existing Geneva logs account.
+      // When updating an existing account, there are only two required fields: The MDS environment and the account name.
+      // 
+      // Authentication (for below certificate):
+      // The certificate you declare above must be added to the "Administrator" role on the logs account.
+      "connectionProperties": {
+        "maxExecutionTime": "PT30M",
+        "authentication": {
+          "type": "CertificateAuthentication",
+          "reference": {
+            "provider": "AzureKeyVault",
+            "parameters": {
+              "secretId": "https://__AZURE_KEY_VAULT_NAME__.vault.azure.net/secrets/servicehubval{{.resourcesName}}genevaaccountcert"
+            }
+          }
+        }
+      },
+      "payloadProperties": {
+        // Required
+        // Valid endpoint values: DiagnosticsProd, BillingProd, FirstPartyProd, ExternalProd, CaFairfax, CaMooncake, UsNat, UsSec, Test, Stage, Canary.
+        "mdsEnvironment": {
+          "value": "{{.mdsEnvironment}}"
+        },
+        // Required
+        // The name of the warm path account you want to update.
+        // Logs Account name must start with a letter and can contain numbers/letters. 
+        // Should be at least 6 characters long but not exceed 32 characters.
+        "accountName": {
+          "value": "servicehubvalev2logs"
+        },
+        // Required
+        // Your service tree ID.
+        "serviceTreeId": {
+          "value": "{{.serviceTreeId}}"
+        },
+        // Optional on update
+        // The name of the MDM account. If creating a net-new account this is required.
+        "metricsAccountName": {
+          "value": "servicehubvalev2metrics"
+        }, // TODO: Update this to the correct value. We do not currently create a metrics account for geneva logs accounts. This is just a placeholder.
+        // Optional
+        // The contact email for the account.
+        "contactEmail": {
+          "value": "chamakawa@microsoft.com"
+        },
+        // Optional on update, required on create.
+        // A list of administrators for the account. These aliases are appended to those already on the account.
+        "administratorAliases": {
+          "value": [
+            "redmond\\chamakawa",
+            "redmond\\ksehgal"
+          ]
+        },
+        // Optional on update, required on create.
+        // A security group for the account. This value replaces the existing value.
+        // People that will administer your use of Geneva Logs. ​These people will have the ability to change authorization and access policy for your team's use of Geneva Logs
+        "administratorSecurityGroup": {
+          "value": "{{.prodAdminSecurityGroupId}}"
+        },
+        // Optional for existing accounts, required for new accounts.
+        // A namespace to register with MDS. Namespaces are unique prefixes. You may get conflict errors if another account owns a namespace that conflicts with
+        // what you specify here
+        "namespaceNames": {
+          "value": [
+            "servicehubvalev2logs"
+          ]
+        },
+        // Optional for existing accounts, required for new accounts.
+        // Azure subscriptions to use for GSM provisioning. We automate the preparation of these subscriptions for you.
+        // More information here: 
+        //      https://eng.ms/docs/products/geneva/logs/howtoguides/manageaccount/subscriptionpermissions
+        // While it is not required to specify a subscription when creating an account, this must be
+        // specified before a namespace can be added. Values in this field are appended to what is already
+        // listed on the account.
+        "subscriptionIds": {
+          "value": [
+            "{{.subscriptionId}}"
+          ]
+        },
+        // Optional
+        // The default region to use for provisioning new GSM resources. Defaults to westus.
+        "defaultAzureRegion": {
+          "value": "westus2"
+        },
+        // Optional
+        // The default storage replication type to be used on the account. It is an array of values based on priority. The valid values are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Standard_GZRS
+        "defaultStorageReplicationTypes": {
+          "value": [
+            "Standard_ZRS",
+            "Standard_GRS"
+          ]
+        },
+        // Optional for existing accounts but required for new accounts. Including this is recommended for clarity and consistency.
+        // Specifies a Key Vault certificate reference to be added to the MACommunication role on the account. 
+        // This certificate does not need to match the one used for invoking the extension.
+        // If Key Vault is not used, ensure another authentication method is in place for the monitoring agent.
+        // Note: The "rootCertificateThumbprint" refers to the thumbprint of the ROOT certificate, not the certificate itself.
+        // The "description" field is for informational purposes only and is not parsed.
+        "keyVaultCertificate": {
+          "value": {
+            "rootCertificateThumbprint": "", // Optional. The thumbprint of the root certificate.
+            "SAN": "{{.san}}", // Required: This is the SAN of the certificate you are adding to the MACommunication role. It should satisfy the registered wildcard domain registered in OneCert.
+            "Description": "Test certificate for servicehubval" // Required. Any value is accepted.
+          }
+        },
+        // Optional for existing accounts, required for new accounts.
+        // A new configuration to upload. 
+        // root
+        //   - main.xml (your main config file). We set this up for you.
+        //   imports/
+        //      - all imported XML files. This does not exist in our set up, but it is not needed. 
+        // 
+        // Geneva performs validation of this file after uploading. If the configuration is invalid, you will get an error.
+        // The version of the configuration is read from the configuration package. The configuration namespace (different than the namespace property above) is also read from the config.
+        "namespaceConfig": {
+          "reference": {
+            "path": "Build\\config.zip" // This contains the main.xml configuration file, which is included in a zip archive. The zip file is created during the build pipeline using the buildCustomEv2.sh script. The configuration file inside the archive must be named main.xml.
+          }
+        },
+        // Optional for existing accounts, required for new accounts.
+        // Custom Storage Group definition to add explicitly the storage groups or setup Kusto Streaming.
+        // If this is defined the default storage groups are not added.
+        // Parameters:
+        //    configNamespace - Should be the namespace of the configuation that the storage account is going to be used
+        //    storageGroupName - Should begin with the configNamespace
+        //    defaultRegion - The region where the initial monikers would be created for the storage group
+        //    storageReplicationTypes - Optional parameter to set the storage replication type to be used on the storage group. It is an array of values based on priority. The valid values are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Standard_GZRS
+        //    consumerGroups - Define custom Consumer Groups for the storage group. Defaults to  ["LogAnalyticsConsumer", "GenevaAnalyticsConsumer"]
+        //    regionBasedKustoSettingsMode: [Append/Reset] Optional parameter to set the mode to append the list in the payload to existing settings, or to reset settings to the list in the payload.
+        //                                  If the parameter is not preset, it defaults to RESET.
+        //                                  If the Append mode is chosen and the payload contains settings for pre-existing regions, they will be updated.
+        //    regionBasedKustoSettings - Definition of the Kusto instance to be used for data from each region
+        //        region - the region where the setting is applied
+        //        logAnalyticsId - the Kusto Cluster name
+        //        logAnalyticsDatabase - the Kusto Database name
+        "storageGroups": {
+          "value": [
+            {
+              "configNamespace": "servicehubvalev2logs",
+              "storageGroupName": "servicehubvalev2logsdiag",
+              "defaultRegion": "eastus",
+              "storageReplicationTypes": [
+                "Standard_ZRS"
+              ],
+              "consumerGroups": [
+                "LogAnalyticsConsumer",
+                "GenevaAnalyticsConsumer"
+              ],
+              "regionBasedKustoSettingsMode": "Append",
+              "regionBasedKustoSettings": [
+                {
+                  "region": "Default",
+                  "logAnalyticsId": "__KUSTO_CLUSTER_NAME__",
+                  "logAnalyticsDatabase": "servicehubval{{.resourcesName}}db"
+                }
+              ]
+            },
+            {
+              "configNamespace": "servicehubvalev2logs",
+              "storageGroupName": "servicehubvalev2logssecurity",
+              "defaultRegion": "eastus",
+              "storageReplicationTypes": [
+                "Standard_ZRS"
+              ],
+              "consumerGroups": [
+                "LogAnalyticsConsumer",
+                "GenevaAnalyticsConsumer"
+              ],
+              "regionBasedKustoSettingsMode": "Append",
+              "regionBasedKustoSettings": [
+                {
+                  "region": "Default",
+                  "logAnalyticsId": "__KUSTO_CLUSTER_NAME__",
+                  "logAnalyticsDatabase": "servicehubval{{.resourcesName}}db"
+                }
+              ]
+            },
+            {
+              "configNamespace": "servicehubvalev2logs",
+              "storageGroupName": "servicehubvalev2logsaudit",
+              "defaultRegion": "eastus",
+              "storageReplicationTypes": [
+                "Standard_ZRS"
+              ],
+              "consumerGroups": [
+                "LogAnalyticsConsumer",
+                "GenevaAnalyticsConsumer"
+              ],
+              "regionBasedKustoSettingsMode": "Append",
+              "regionBasedKustoSettings": [
+                {
+                  "region": "Default",
+                  "logAnalyticsId": "__KUSTO_CLUSTER_NAME__",
+                  "logAnalyticsDatabase": "servicehubval{{.resourcesName}}db"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

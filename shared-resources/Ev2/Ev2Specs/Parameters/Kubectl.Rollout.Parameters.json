@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/rolloutParameters.json",
+  "contentVersion": "1.0.0.0",
+  "applications": [
+    {
+      "ServiceResourceDefinitionName": "argorolloutsnamespace-SRDef",
+      "ApplicationDefinitionName": "argorolloutsnamespace",
+      "authentication": {
+        "armResourceName": "servicehubval-{{.resourcesName}}-cluster",
+        "type": "CertificateAuthentication",
+        "properties": {
+          "aksRole": "User"
+        }
+      }
+    },
+    {
+      "ServiceResourceDefinitionName": "argocontrollerinstall-SRDef",
+      "ApplicationDefinitionName": "argocontrollerinstall",
+      "authentication": {
+        "armResourceName": "servicehubval-{{.resourcesName}}-cluster",
+        "type": "CertificateAuthentication",
+        "properties": {
+          "aksRole": "User"
+        }
+      }
+    }
+  ]
+}

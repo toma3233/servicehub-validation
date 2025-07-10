@@ -1,0 +1,107 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-04-01/RegionAgnosticServiceModel.json",
+  "contentVersion": "1.0.0",
+  "serviceMetadata": {
+    "serviceIdentifier": "dfe3a810-861c-44da-9b00-71e57a865194",
+    "serviceGroup": "Microsoft.Azure.servicehubval.GlobalResources",
+    "environment": "$config(environment)",
+    "TenantId": "$config(tenantId)",
+    "displayName": "globalResourcesDisplayName"
+  },
+  "subscriptionProvisioning": {
+    "rolloutParametersPath": "Parameters\\SubscriptionProvisioning.Parameters.json",
+    "scopeTags": [
+      {
+        "name": "sharedInputs"
+      },
+      {
+        "name": "subscriptionInputs"
+      }
+    ]
+  },
+  "serviceResourceGroupDefinitions": [
+    {
+      "name": "globalGenevaLogsResources-SRGDef",
+      "subscriptionKey": "servicehubval-global-sub",
+      "azureResourceGroupName": "servicehubval-$config(resourcesName)-global-logs-rg",
+      "ServiceResourceDefinitions": [
+        {
+          "name": "resourceProvider-SRDef",
+          "composedOf": {
+            "extension": {
+              "rolloutParametersPath": "Parameters\\RegisterResourceProvider.Parameters.json"
+            }
+          }
+        },
+        {
+          "name": "genevaLogsResources-SRDef",
+          "composedOf": {
+            "arm": {
+              "templatePath": "Templates\\Main.GenevaLogsResources.Template.json",
+              "parametersPath": "Parameters\\Main.GenevaLogsResources.Parameters.json",
+              "deploymentLevel": "Subscription"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "subscriptionInputs"
+            },
+            {
+              "name": "sharedInputs"
+            },
+            {
+              "name": "genevaLogsResourcesInputs"
+            }
+          ]
+        },
+        {
+          "name": "genevaLogsAccount-SRDef",
+          "composedOf": {
+            "extension": {
+              "rolloutParametersPath": "Parameters\\GenevaLogsAccount.Rollout.Parameters.json"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "subscriptionInputs"
+            },
+            {
+              "name": "sharedInputs"
+            },
+            {
+              "name": "genevaLogsAccountInputs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "globalGenevaMetricsResources-SRGDef",
+      "subscriptionKey": "servicehubval-global-sub",
+      "azureResourceGroupName": "servicehubval-$config(resourcesName)-global-metrics-rg",
+      "ServiceResourceDefinitions": [
+        {
+          "name": "genevaMetricsResources-SRDef",
+          "composedOf": {
+            "arm": {
+              "templatePath": "Templates\\Main.GenevaMetricsResources.Template.json",
+              "parametersPath": "Parameters\\Main.GenevaMetricsResources.Parameters.json",
+              "deploymentLevel": "Subscription"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "subscriptionInputs"
+            },
+            {
+              "name": "sharedInputs"
+            },
+            {
+              "name": "genevaMetricsResourcesInputs"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

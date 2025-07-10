@@ -1,0 +1,1269 @@
+// Source: https://msazure.visualstudio.com/One/_git/GenevaLogs?path=/docs/EV2Extension/RolloutSchema/RolloutParameters.WithGenevaLogsExt.Schema.json
+// This file is copied DIRECTLY from the GenevaLogs repo.
+// TODO: change to reference this file (2020-06-01)
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Rollout Parameters",
+    "description": "A document that declares the parameters for an update to an Azure Service.",
+    "type": "object",
+    "properties": {
+        "contentVersion": {
+            "description": "The version of the schema that a document conforms to.",
+            "type": "string",
+            "pattern": "^([0-9]+\\.)?([0-9]+\\.)?([0-9]+\\.)?([0-9]+){1}$"
+        },
+        "applications": {
+            "description": "The list of parameters for the application deployment.",
+            "type": "array",
+            "items": {
+                "description": "The parameters for each application deployment",
+                "type": "object",
+                "properties": {
+                    "serviceResourceName": {
+                        "description": "The service resource instance name.",
+                        "type": "string"
+                    },
+                    "serviceResourceDefinitionName": {
+                        "description": "The service resource definition name.",
+                        "type": "string"
+                    },
+                    "applicationName": {
+                        "description": "The application instance name.",
+                        "type": "string"
+                    },
+                    "applicationDefinitionName": {
+                        "description": "The application definition name.",
+                        "type": "string"
+                    },
+                    "authentication": {
+                        "description": "The details of authentication information for connecting to cluster.",
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "description": "The type of authentication. Valid values are CertificateAuthentication, KubeConfig.",
+                                "type": "string"
+                            },
+                            "properties": {
+                                "description": "The properties for authentication.",
+                                "type": "object",
+                                "properties": {
+                                    "AksRole": {
+                                        "description": "The credentials to be used to get kubeconfig. Valid values are: User, Admin",
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "reference": {
+                                "type": "object",
+                                "description": "Parameter reference for authentication. Required for kubeconfig authentication.",
+                                "properties": {
+                                    "provider": {
+                                        "type": "string",
+                                        "description": "Valid value is 'AzureKeyVault'"
+                                    },
+                                    "parameters": {
+                                        "type": "object",
+                                        "description": "Parameters for provider",
+                                        "properties": {
+                                            "secretId": {
+                                                "description": "The Key vault reference to the kubeconfig secret.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    "azureContainerRegistry": {
+                        "description": "Azure Container Registry details.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of ACR",
+                                "type": "string"
+                            },
+                            "imageTag": {
+                                "description": "Image tag for the ACR image",
+                                "type": "string"
+                            },
+                            "authentication": {
+                                "description": "The authentication properties for ACR",
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "description": "The type of authentication. Valid values is AzureActiveDirectory",
+                                        "type": "string"
+                                    },
+                                    "reference": {
+                                        "type": "object",
+                                        "description": "Parameter reference for authentication. Required for AzureActiveDirectory.",
+                                        "properties": {
+                                            "provider": {
+                                                "type": "string",
+                                                "description": "Valid value is 'AzureKeyVault'"
+                                            },
+                                            "parameters": {
+                                                "type": "object",
+                                                "description": "Parameters for provider",
+                                                "properties": {
+                                                    "secretId": {
+                                                        "description": "The Key vault reference to the ACR secret.",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "properties": {
+                                        "description": "The properties for authentication.",
+                                        "type": "object",
+                                        "properties": {
+                                            "servicePrincipalId": {
+                                                "description": "The service principal id for ACR authentication.",
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "serviceResourceName",
+                    "applicationName",
+                    "authentication"
+                ]
+            }
+        },
+        "mdmHealthChecks": {
+            "description": "The enumeration of the parameters for the MDM health checks.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "The object representing of the parameters for the MDM health checks.",
+                "properties": {
+                    "name": {
+                        "description": "The name of the Mdm Health check. This name has to be referenced in the Rollout Spec to invoke this health check as part of the rollout.",
+                        "type": "string"
+                    },
+                    "mdmGlobalHealthEndpoint": {
+                        "description": "The Mdm Global endpoint URL used to dynamically resolve the mdmHealthCheckEndpoint for your Geneva monitoring account.",
+                        "type": "string"
+                    },
+                    "mdmHealthCheckEndpoint": {
+                        "description": "The Mdm Health endpoint URL to be used to check the health of the resource.",
+                        "type": "string"
+                    },
+                    "monitoringAccountName": {
+                        "description": "The monitoring account name used to query the health of the resource.",
+                        "type": "string"
+                    },
+                    "waitBeforeMonitorTimeInMinutes": {
+                        "description": "An integer value representing the time the rollout system waits before checking the health of the resource.",
+                        "type": "object",
+                        "minimum": 0
+                    },
+                    "monitorTimeInMinutes": {
+                        "description": "An integer value representing the time the rollout system monitors the health of the resource after the 'WaitBeforeMoniorTimeInMinutes' time has elapsed.",
+                        "type": "object",
+                        "minimum": 0
+                    },
+                    "maxElasticDurationInMinutes": {
+                        "description": "The duration for which the health check waits for the resource to become healthy before starting continuous monitoring on healthy state.",
+                        "type": "object",
+                        "minimum": 0
+                    },
+                    "continueOnResourceHealthUnknown": {
+                        "type": "boolean",
+                        "description": "Allows your health check to be considered healthy if the resource health returned by Geneva is 'Unknown'. Unknown health check is returned if there are no metrics emitted to Geneva. This is helpful in scenario when you are validating your service health based on a failure signal after deployment. Turning this flag on is not recommended. Use this flag with extreme caution as it can potentially hide deeper issues in monitoring and mask genuine health check gaps."
+                    },
+                    "healthResources": {
+                        "description": "A list of resources to check the health of.",
+                        "type": "array",
+                        "minimum": 0,
+                        "items": {
+                            "type": "object",
+                            "description": "The object representation of the definition of a health resource.",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The human-readable name of the health resource."
+                                },
+                                "resourceType": {
+                                    "type": "string",
+                                    "description": "The type of the health resource as defined in the Geneva health system (MDM)."
+                                },
+                                "dimensions": {
+                                    "description": "The dimensions that identify the health resource in the Geneva health system (MDM).",
+                                    "type": "object",
+                                    "minimum": 1,
+                                    "properties": {
+                                        "/^[ A-Za-z0-9_@./#&+-]*$/": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "resourceType",
+                                "dimensions"
+                            ]
+                        }
+                    }
+                },
+                "oneOf": [
+                    {
+                        "required": [
+                            "name",
+                            "monitoringAccountName",
+                            "mdmHealthCheckEndPoint",
+                            "waitBeforeMonitorTimeInMinutes",
+                            "monitorTimeInMinutes"
+                        ]
+                    },
+                    {
+                        "required": [
+                            "name",
+                            "monitoringAccountName",
+                            "mdmHealthGlobalEndPoint",
+                            "waitBeforeMonitorTimeInMinutes",
+                            "monitorTimeInMinutes"
+                        ]
+                    }
+                ]
+            }
+        },
+        "restHealthChecks": {
+            "description": "The enumeration of the parameters for REST health checks.",
+            "type": "array",
+            "items": {
+                "description": "The object representing the parameters for the REST health check action.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the health check. This name has to be referenced in the Rollout Spec to invoke this health check as part of the rollout.",
+                        "maxLength": 32
+                    },
+                    "waitDuration": {
+                        "type": "string",
+                        "description": "The initial monitoring wait time. This is the amount of time that Ev2 will wait before beginning to check for the health of resources. Should be specified in ISO 8601 format. For example, if the previous action ends at time T, this is time 'WT' for which Ev2 waits before running the health check. So, Ev2 will start checking for health of the resource at time 'T + WT'."
+                    },
+                    "maxElasticDuration": {
+                        "type": "string",
+                        "description": "The duration for which the health check waits for the resource to become healthy before starting continuous monitoring on healthy state. Should be specified in ISO 8601 format. Elastic phase begins after the 'waitDuration' ends. If wait phase is not specified or evaluates to 0 minute, Elastic phase begins immediately. The waitDuration+maxElasticDuration should be less than 24 hours."
+                    },
+                    "healthyStateDuration": {
+                        "type": "string",
+                        "description": "The monitor duration that the RP waits for the service to be healthy."
+                    },
+                    "healthChecks": {
+                        "type": "array",
+                        "description": "The enumberation of REST health check queries",
+                        "items": {
+                            "type": "object",
+                            "description": "",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name to identify this check. Choose a unique name for each check as each one allows you to check the health of a different resource."
+                                },
+                                "request": {
+                                    "type": "object",
+                                    "description": "The health check request defined as a REST request.",
+                                    "properties": {
+                                        "method": {
+                                            "type": "string",
+                                            "description": "The HTTP method to use when checking the health source.",
+                                            "enum": [
+                                                "Get",
+                                                "Post"
+                                            ]
+                                        },
+                                        "uri": {
+                                            "type": "string",
+                                            "description": "The absolute uri to use for the HTTP request."
+                                        },
+                                        "authentication": {
+                                            "type": "object",
+                                            "description": "The authentication information to be used in the request to the endpoint URI.",
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "description": "The type of the authentication to use.",
+                                                    "enum": [
+                                                        "apiKey",
+                                                        "rolloutIdentity"
+                                                    ]
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "The name of the authentication property to be sent in the request. The 'name' and the value derived from 'valueReference' property form the authentication key/value pair for the REST request."
+                                                },
+                                                "in": {
+                                                    "type": "string",
+                                                    "description": "The location where the authentication information should be sent in the request. ",
+                                                    "enum": [
+                                                        "query",
+                                                        "header"
+                                                    ]
+                                                },
+                                                "valueReference": {
+                                                    "type": "object",
+                                                    "description": "The reference from which the authentication value should be retrieved. The 'name' and the value retrieved from this 'valueReference' property form the authentication key/value pair for an HTTP request.",
+                                                    "properties": {
+                                                        "provider": {
+                                                            "type": "string",
+                                                            "description": "The provider from which to retrieve the authentication value. ",
+                                                            "enum": [
+                                                                "AzureKeyVault"
+                                                            ]
+                                                        },
+                                                        "parameters": {
+                                                            "type": "object",
+                                                            "description": "The parameters to retrieve the authentication value.",
+                                                            "properties": {
+                                                                "secretId": {
+                                                                    "type": "string",
+                                                                    "description": "The Azure Key Vault secret identifier from which the authentication value should be fetched."
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "secretId"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "provider",
+                                                        "parameters"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "type",
+                                                "name",
+                                                "in",
+                                                "valueReference"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "method",
+                                        "uri",
+                                        "authentication"
+                                    ]
+                                },
+                                "response": {
+                                    "type": "object",
+                                    "description": "The expected response defined in status codes and regular expression matches.",
+                                    "properties": {
+                                        "successStatusCodes": {
+                                            "type": "array",
+                                            "description": "The enumeration of the HTTP status codes expected to be considered acceptable for a successful health check.",
+                                            "items": {
+                                                "type": "string",
+                                                "description": "The HTTP status codes expected to be considered acceptable for a successful health check. Default value: OK. Examples: OK, NoContent."
+                                            },
+                                            "minLength": 1,
+                                            "uniqueItems": true
+                                        },
+                                        "regex": {
+                                            "type": "object",
+                                            "description": "The regex pattern for required matches contained in the response.",
+                                            "properties": {
+                                                "matches": {
+                                                    "type": "array",
+                                                    "description": "The list of regular expressions to be matched with the response body.",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "description": "The regex matches the body of the response should match with."
+                                                    },
+                                                    "minLength": 1,
+                                                    "uniqueItems": true
+                                                },
+                                                "regexMatchQuantifier": {
+                                                    "type": "string",
+                                                    "description": "\"The type of regex matching to be used. Determines if all or any one of regular expressions should match for the resource to be considered healthy.",
+                                                    "enum": [
+                                                        "all",
+                                                        "any"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "request"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "healthyStateDuration",
+                    "healthChecks"
+                ]
+            }
+        },
+        "extensions": {
+            "description": "List of Extensions and associated name, type and properties.",
+            "type": "array",
+            "minimum": 0,
+            "items": {
+                "type": "object",
+                "description": "Extension and associated name, type and properties.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Extension name uniquely identifying a specific extension invocation.",
+                        "maxLength": 40
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Registered extension type."
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Version of the extension."
+                    },
+                    "connectionProperties": {
+                        "type": "object",
+                        "description": "Connection properties of extension request.",
+                        "properties": {
+                            "endpoint": {
+                                "type": "string",
+                                "description": "One of the registered endpoints of the extension, this is optional if only one endpoint is registered."
+                            },
+                            "maxExecutionTime": {
+                                "type": "string",
+                                "description": "Maximum execution time for the extension request, in Iso8601 format. If the extension does not complete within the specified duration, the request will be abandoned and the action will be designated as Failed."
+                            },
+                            "authentication": {
+                                "type": "object",
+                                "description": "Authentication information for extension request",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "Authentication type, 'CertificateAuthentication'"
+                                    },
+                                    "reference": {
+                                        "type": "object",
+                                        "description": "Parameter reference for authentication",
+                                        "properties": {
+                                            "provider": {
+                                                "type": "string",
+                                                "description": "Secret provider, 'AzureKeyVault'"
+                                            },
+                                            "parameters": {
+                                                "type": "object",
+                                                "description": "Parameters for provider",
+                                                "minimum": 1,
+                                                "properties": {
+                                                    "/^[ A-Za-z0-9_@./#&+-]*$/": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "payloadProperties": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/genericPayload",
+                                "not": {
+                                    "required": [
+                                        "mdsEnvironment"
+                                    ]
+                                }
+                            },
+                            {
+                                "$ref": "./GenevaLogs.Ev2Extension.RolloutParameters.Schema.json#/definitions/genevaLogsPayload"
+                            }
+                        ]
+                    },
+                    "repeatOver": {
+                        "type": "array",
+                        "description": "Representation to invoke a given extension repeatedly within a single action in an orchestratedStepwith small variations in payloadProperties values.",
+                        "minimum": 0,
+                        "items": {
+                            "type": "object",
+                            "description": "place holder and replace value for one extension call",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "Name of this extension call"
+                                }
+                            },
+                            "patternProperties": {
+                                ".*": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "const": "Microsoft.Geneva.Logs/ConfigureLogsAccount"
+                            }
+                        }
+                    },
+                    "then": {}
+                }
+            }
+        },
+        "shellExtensions": {
+            "description": "List of shell extensions and associated name, type and properties.",
+            "type": "array",
+            "minimum": 0,
+            "items": {
+                "type": "object",
+                "description": "Shell extension and associated name, type and properties.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the shell referenced in Orchestrated Step Action in Rollout Specification.",
+                        "maxLength": 40
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Type of shell referenced in Service Resource Definition in Service Model.",
+                        "maxLength": 40
+                    },
+                    "properties": {
+                        "type": "object",
+                        "description": "Properties for shell execution.",
+                        "properties": {
+                            "maxExecutionTime": {
+                                "type": "string",
+                                "description": "Timeout for shell execution. Shell will be terminated if the max time is reached and the shell has not exited."
+                            },
+                            "useFallbackLocations": {
+                                "type": "boolean",
+                                "description": "Boolean flag to enable fall back locations in case of the location not being supported by ACI. Shell container will run in one of the ACI supported regions. Default is true."
+                            }
+                        }
+                    },
+                    "package": {
+                        "type": "object",
+                        "description": "The package containing shell scripts.",
+                        "properties": {
+                            "reference": {
+                                "type": "object",
+                                "description": "Reference to a path.",
+                                "properties": {
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Path relative to the service group root that contains the package."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "launch": {
+                        "type": "object",
+                        "description": "The launch parameters for your shell.",
+                        "properties": {
+                            "command": {
+                                "description": "List of startup commands for your script execution.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "description": "The command for script execution."
+                                }
+                            },
+                            "environmentVariables": {
+                                "description": "List of environment variables.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "description": "The environment variable.",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "description": "The environment variable name."
+                                        },
+                                        "value": {
+                                            "type": "string",
+                                            "description": "The plaintext value."
+                                        },
+                                        "reference": {
+                                            "type": "object",
+                                            "description": "Reference to a path or secret.",
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "description": "The path to a file."
+                                                },
+                                                "enableScopeTagBindings": {
+                                                    "type": "string",
+                                                    "description": "True or False value that determines if Ev2 should look for and replace any scope tags for parameter replacements. This is only applicable when 'path' is defined."
+                                                },
+                                                "provider": {
+                                                    "type": "string",
+                                                    "description": "The provider for secret reference."
+                                                },
+                                                "parameters": {
+                                                    "type": "object",
+                                                    "description": "The identifiers for secret reference. For example, 'https://myvaultvault.azure.net/secrets/mypassword'",
+                                                    "properties": {
+                                                        "/^[ A-Za-z0-9_@./#&+-]*$/": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "asSecureValue": {
+                                            "type": "string",
+                                            "description": "Passes the environment variable as secure value to your shell so that it is not visible on Azure Portal/CLI etc."
+                                        }
+                                    },
+                                    "required": [
+                                        "name"
+                                    ]
+                                }
+                            },
+                            "secretVolumes": {
+                                "description": "The mount containing secrets needed for execution.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "description": "The secret definition containing name, reference, etc.",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "description": "The name of the secret."
+                                        },
+                                        "mountPath": {
+                                            "type": "string",
+                                            "description": "The mount path."
+                                        },
+                                        "secrets": {
+                                            "type": "array",
+                                            "description": "The secret references.",
+                                            "properties": {
+                                                "reference": {
+                                                    "type": "object",
+                                                    "description": "Reference to a secret.",
+                                                    "properties": {
+                                                        "provider": {
+                                                            "type": "string",
+                                                            "description": "The provider for secret reference."
+                                                        },
+                                                        "parameters": {
+                                                            "type": "object",
+                                                            "description": "The identifiers for secret reference.",
+                                                            "properties": {
+                                                                "/^[ A-Za-z0-9_@./#&+-]*$/": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "convertToBase64": {
+                                                    "type": "string",
+                                                    "description": "Converts the secret value to base 64 format before adding it to the mount."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "mountPath",
+                                        "secrets"
+                                    ]
+                                }
+                            },
+                            "fileVolumes": {
+                                "type": "array",
+                                "description": "The mount containing files needed for execution.",
+                                "items": {
+                                    "type": "object",
+                                    "description": "The mount file needed for execution.",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "description": "The mount name."
+                                        },
+                                        "mountPath": {
+                                            "type": "string",
+                                            "description": "The mount path."
+                                        },
+                                        "azureFile": {
+                                            "type": "object",
+                                            "description": "The Azure storage file details.",
+                                            "properties": {
+                                                "storageAccountName": {
+                                                    "type": "string",
+                                                    "description": "The storage account name."
+                                                },
+                                                "storageAccountKey": {
+                                                    "type": "object",
+                                                    "description": "The storage account keys",
+                                                    "properties": {
+                                                        "reference": {
+                                                            "type": "object",
+                                                            "description": "Reference to a secret.",
+                                                            "properties": {
+                                                                "provider": {
+                                                                    "type": "string",
+                                                                    "description": "The provider for secret reference."
+                                                                },
+                                                                "parameters": {
+                                                                    "type": "object",
+                                                                    "description": "The identifiers for secret reference.",
+                                                                    "properties": {
+                                                                        "/^[ A-Za-z0-9_@./#&+-]*$/": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "mountPath",
+                                        "azureFile"
+                                    ]
+                                }
+                            },
+                            "networkProfile": {
+                                "type": "object",
+                                "description": "The network profile Id required for VNet.",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "The network profile Id required for VNet."
+                                    }
+                                }
+                            },
+                            "identity": {
+                                "type": "object",
+                                "description": "The identity referenced required for Managed Identities.",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "Type of identity e.g. userAssigned."
+                                    },
+                                    "userAssignedIdentities": {
+                                        "type": "array",
+                                        "description": "The list of user assigned identities.",
+                                        "items": {
+                                            "type": "string",
+                                            "description": "path to the user assigned identity"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "command"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "package",
+                "launch"
+            ]
+        },
+        "wait": {
+            "description": "The list of wait actions of the associated names, types, and properties.",
+            "type": "array",
+            "items": {
+                "description": "The wait action that either waits for a duration or waits for a manual intervention.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Name of the wait action referenced in Orchestrated Step Action in Rollout Specification.",
+                        "type": "string"
+                    },
+                    "properties": {
+                        "description": "Wait action properties.",
+                        "type": "object",
+                        "properties": {
+                            "duration": {
+                                "description": "The wait duration specified in ISO 8601 format.",
+                                "type": "string"
+                            },
+                            "description": {
+                                "description": "The description of the wait action.",
+                                "type": "string"
+                            },
+                            "category": {
+                                "description": "One of several well-defined categories for services to bucket manual steps. This is used as an objective category to align toward problem areas. For example, 'Buildout and Deployment'",
+                                "type": "string"
+                            },
+                            "topic": {
+                                "description": "Include list of platform gap IDs corresponding to this manual step. If the manual step is due to pending automation by your team include a text description or concept that the manual step is targeted. This is used as a subjective category to align towards owning teams.",
+                                "type": "string"
+                            },
+                            "completeOn": {
+                                "description": "Options to signal completion of the wait.",
+                                "type": "object",
+                                "properties": {
+                                    "triggerOnAny": {
+                                        "description": "The list of trigger(s) to signal completion. Supported value(s): manual, configExists.",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "The trigger condition to signal completion.",
+                                            "type": "string",
+                                            "enum": [
+                                                "manual",
+                                                "configExists",
+                                                "incidentResolution"
+                                            ]
+                                        }
+                                    },
+                                    "configName": {
+                                        "description": "The name of the configuration setting that the wait action is waiting on.",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "triggerOnAny"
+                                ]
+                            },
+                            "notification": {
+                                "description": "The notification properties for the wait action.",
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "description": "The title of the notification message being sent to notify manual intervention.",
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "description": "The content of the notification message being sent to notify manual intervention.",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "content"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "duration"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "properties"
+                ]
+            }
+        },
+        "registrations": {
+            "description": "The list of register actions of the associated names, types, and properties.",
+            "type": "array",
+            "items": {
+                "description": "The register action.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the register action."
+                    },
+                    "specification": {
+                        "type": "object",
+                        "description": "The specification file used for registration.",
+                        "properties": {
+                            "reference": {
+                                "type": "object",
+                                "description": "The file reference of the specification files. HTTP extension, service, rollout policy",
+                                "properties": {
+                                    "path": {
+                                        "type": "string",
+                                        "description": "The path to a the registration specification file, it should be relative to Service Group Root."
+                                    }
+                                },
+                                "required": [
+                                    "path"
+                                ]
+                            },
+                            "serviceIdentifier": {
+                                "type": "string",
+                                "description": "The service identifier. This is required for rollout policy registration."
+                            }
+                        },
+                        "required": [
+                            "reference"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "specification"
+                ]
+            }
+        },
+        "subscriptions": {
+            "description": "The list of parameters for creating a subscription. Only applicable for region-agnostic artifacts.",
+            "type": "array",
+            "items": {
+                "description": "The parameters for each subscription.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Should be set to SubscriptionProvisioning. Indicates that this json block references the SubscriptionProvisioning block in the Service Model.",
+                        "type": "string",
+                        "enum": [
+                            "SubscriptionProvisioning"
+                        ]
+                    },
+                    "displayName": {
+                        "description": "The name with which the subscription shows up in the Azure portal.",
+                        "type": "string"
+                    },
+                    "initialOwnerPrincipalId": {
+                        "description": "The principal Id that will be assigned 'Owner' permissions upon subscription creation. Should be set to your owner security group.",
+                        "type": "string"
+                    },
+                    "workload": {
+                        "description": "This parameter is used to classify the subscription as Non-Prod/Prod in ServiceTree.",
+                        "type": "string",
+                        "enum": [
+                            "DevTest",
+                            "Production"
+                        ]
+                    },
+                    "isServiceScope": {
+                        "description": "Determines if the subscription is shared at the service level across different service groups. Needs to be a boolean string value either explicitly declared or from configuration.",
+                        "type": "string",
+                        "default": "false"
+                    },
+                    "backfilledSubscriptionId": {
+                        "description": "The subscription id for declarative backfill.",
+                        "type": "string"
+                    },
+                    "billing": {
+                        "description": "The billing properties for the subscription.",
+                        "type": "object",
+                        "properties": {
+                            "scope": {
+                                "description": "The billing scope for the subscription. This determines which service the subscription is tied to in ServiceTree.",
+                                "type": "string"
+                            },
+                            "pcCode": {
+                                "description": "The PC Code for the subscription. There is no central place to fetch this value. Reach out to your manager or your team/org's finance contact for this.",
+                                "type": "string"
+                            },
+                            "costCategory": {
+                                "description": "The cost category to be used for the subscription. There is no central place to fetch this value. Reach out to your manager or your team/org's finance contact for this.",
+                                "type": "string"
+                            },
+                            "airsRegisteredUserPrincipalId": {
+                                "description": "The AAD principal object Id of the owner of the AIRS registration. This user is set as the Account Admin of the created subscriptions.",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "scope",
+                            "pcCode",
+                            "costCategory",
+                            "airsRegisteredUserPrincipalId"
+                        ]
+                    },
+                    "certificateIssuance": {
+                        "description": "The provisioned subscriptions can be associated with pre-registered certificate domains in OneCert by defining this section.",
+                        "type": "object",
+                        "properties": {
+                            "domainRegistrationProvider": {
+                                "description": "The registration provider. This is requried if allowedDomains are defined.",
+                                "type": "string",
+                                "enum": [
+                                    "OneCert"
+                                ]
+                            },
+                            "allowedDomains": {
+                                "type": "array",
+                                "description": "The domains for which the subscription should be associated with.",
+                                "items": {
+                                    "type": "string",
+                                    "description": "The domain."
+                                }
+                            }
+                        },
+                        "required": [
+                            "domainRegistrationProvider",
+                            "allowedDomains"
+                        ]
+                    },
+                    "roleAssignment": {
+                        "description": "The role assignment artifacts to be used to configure the provisioned subscription for post-buildout deployments. This runs at the end of the buildout after all steps defined in the Rollout Spec have succeeded.",
+                        "type": "object",
+                        "properties": {
+                            "armTemplatePath": {
+                                "description": "The arm template for the role assignments.",
+                                "type": "string"
+                            },
+                            "armParametersPath": {
+                                "description": "The arm template parameters for role assignments.",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "armTemplatePath",
+                            "armParametersPath"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "displayName",
+                    "initialOwnerPrincipalId",
+                    "workload",
+                    "billing",
+                    "roleAssignment"
+                ]
+            }
+        },
+        "assistedIdentities": {
+            "description": "The list of parameters for assisted identity provisioning. Only applicable for region-agnostic artifacts.",
+            "type": "array",
+            "items": {
+                "description": "The parameters for each assisted identity.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "The assisted identity name. This is name to be used to managed the created assisted identity.",
+                        "type": "string",
+                        "maxLength": 90
+                    },
+                    "type": {
+                        "description": "The type of assisted identity.",
+                        "type": "string",
+                        "enum": [
+                            "AADApplication"
+                        ]
+                    },
+                    "isServiceScope": {
+                        "description": "Determines if the assisted identity is shared at the service level across different service groups. Needs to be a boolean string value either explicitly declared or from configuration.",
+                        "type": "string",
+                        "default": "false"
+                    },
+                    "properties": {
+                        "description": "The properties that correspond to the specified assisted identity 'type' declared above.",
+                        "type": "object",
+                        "properties": {
+                            "displayName": {
+                                "description": "The display name to be used for the creation identity. For an AAD application, this is the display name.",
+                                "type": "string"
+                            },
+                            "ownerObjectIds": {
+                                "type": "array",
+                                "description": "The list of objectIds of the owners of the application. This needs to be the objectId of a user and cannot be set to a security group",
+                                "items": {
+                                    "type": "string",
+                                    "description": "The objectId of the owner."
+                                },
+                                "maxItems": 1,
+                                "uniqueItems": true
+                            },
+                            "trustedCertificates": {
+                                "type": "array",
+                                "description": "The list of certificates to be added as a trusted certificate for the identity. For an AAD application, this is the certificate that can be used to fetch the access token of the application.",
+                                "items": {
+                                    "type": "object",
+                                    "description": "The objectId of the owner.",
+                                    "properties": {
+                                        "subjectName": {
+                                            "description": "The subject name of the certificate to be added as the trusted certificate of the identity.",
+                                            "type": "string"
+                                        },
+                                        "issuer": {
+                                            "description": "The issuer/authority of the certificate. Examples are AME, GME, PME, etc.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "subjectName",
+                                        "issuer"
+                                    ]
+                                },
+                                "maxItems": 1,
+                                "uniqueItems": true
+                            },
+                            "trustedCertificateSecretProvider": {
+                                "type": "object",
+                                "description": "The information about the secret used to authenticate with the identity and the provider where the secret has to be provisioned.",
+                                "properties": {
+                                    "type": {
+                                        "description": "The type of the secret provider where the certificate is hosted.",
+                                        "type": "string",
+                                        "enum": [
+                                            "AzureKeyVault"
+                                        ]
+                                    },
+                                    "properties": {
+                                        "description": "The properties that correspond to the specified assisted identity 'type' declared above.",
+                                        "type": "object",
+                                        "properties": {
+                                            "location": {
+                                                "description": "The location of the Key Vault. This is the Azure region.",
+                                                "type": "string"
+                                            },
+                                            "subscriptionKey": {
+                                                "description": "The subscriptionKey of the subscription where the Key Vault is to be created. It is ideal to place this assisted identity key vault in a global subscription as assisted identity is supposed to be one for the entire cloud.",
+                                                "type": "string"
+                                            },
+                                            "resourceGroup": {
+                                                "description": "The name of the resource group where the Key Vault should be created. A resource group would be created if it does not already exist.",
+                                                "type": "string"
+                                            },
+                                            "vaultName": {
+                                                "description": "The name of the Key Vault. An assisted identity and this associated key vault is supposed to be one for the entire cloud. So ideally this key vault would also be named as such with no regional references like $location().",
+                                                "type": "string"
+                                            },
+                                            "certificateIssuers": {
+                                                "description": "The list of certificate issuers.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "issuerName": {
+                                                            "description": "The name of the issuer of the certificate.",
+                                                            "type": "string"
+                                                        },
+                                                        "issuerProvider": {
+                                                            "description": "The provider of the certificate. The acceptable values are cloud specific (not controlled by Ev2) and can be viewed in the dropdown for provider field under 'Certificate Authorities' in the Key Vault blade of Azure Portal. e.g.: OneCertV2-PrivateCA, OneCertV2-PublicCA, DigiCert, etc.",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "issuerName",
+                                                        "issuerProvider"
+                                                    ]
+                                                },
+                                                "maxItems": 1
+                                            },
+                                            "certificates": {
+                                                "description": "The list of certificates.",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "description": "The name of the certificate as it should appear in the Key Vault in the Azure portal.",
+                                                            "type": "string"
+                                                        },
+                                                        "policy": {
+                                                            "description": "The serialized JSON string as defined by https://docs.microsoft.com/en-us/rest/api/keyvault/createcertificate/createcertificate#certificatepolicy.",
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "name",
+                                                        "policy"
+                                                    ]
+                                                },
+                                                "maxItems": 1
+                                            }
+                                        },
+                                        "required": [
+                                            "location",
+                                            "subscriptionKey",
+                                            "resourceGroup",
+                                            "vaultName",
+                                            "certificateIssuers",
+                                            "certificates"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "properties"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "displayName",
+                            "ownerObjectIds",
+                            "trustedCertificates",
+                            "trustedCertificateSecretProvider"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "type",
+                    "properties"
+                ]
+            }
+        }
+    },
+    "required": [
+        "contentVersion"
+    ],
+    "definitions": {
+        "genericPayload": {
+            "title": "Generic Payload Properties",
+            "type": "object",
+            "description": "Key-value property bag to send to http extension in the request body",
+            "patternProperties": {
+                "^[ A-Za-z0-9_@./#&+-]*$": {
+                    "type": "object",
+                    "description": "Can use eithter 'Value' or 'Reference'",
+                    "properties": {
+                        "value": {
+                            "type": "object",
+                            "description": "Object to send as-is in the extension request body"
+                        },
+                        "reference": {
+                            "type": "object",
+                            "description": "Reference to a property that will be resolved before adding to the extension request body as 'Value'",
+                            "properties": {
+                                "path": {
+                                    "type": "string",
+                                    "description": "Path to a file under ServiceGroupRoot folder that needs to be accessed in the extension. This path must be relative to the ServiceGroupRoot folder. The path will be resolved and transformed into an Azure Storage SAS Uri and passed in as a 'Value' property to the extension."
+                                },
+                                "provider": {
+                                    "type": "string",
+                                    "description": "Secret provider, 'AzureKeyVault'"
+                                },
+                                "parameters": {
+                                    "type": "object",
+                                    "description": "Parameters for provider",
+                                    "minimum": 1,
+                                    "patternProperties": {
+                                        "^[ A-Za-z0-9_@./#&+-]*$": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "enableScopeTagBindings ": {
+                                    "type": "string",
+                                    "description": "True or False value to enable the scope tag parameter replacements feature for the extension."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

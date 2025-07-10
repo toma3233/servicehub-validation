@@ -1,0 +1,3 @@
+CreateOperationStatus.ServiceResources.Template.bicep
+GetOperationStatus.ServiceResources.Template.bicep
+UpdateOperationStatus.ServiceResources.Template.bicep

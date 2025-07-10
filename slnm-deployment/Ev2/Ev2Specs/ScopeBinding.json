@@ -1,0 +1,57 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+{
+    "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/scopeBindings.json",
+    "contentVersion": "1.0.0.0",
+    "scopeBindings": [
+        {
+            "scopeTagName": "genericInputs",
+            "bindings": [
+                {
+                    "find": "{{.subscriptionId}}",
+                    "replaceWith": "$azureSubscriptionId()"
+                },
+                {
+                    "find": "{{.location}}",
+                    "replaceWith": "$location()"
+                },
+                {
+                    "find": "{{.serviceTreeId}}",
+                    "replaceWith": "dfe3a810-861c-44da-9b00-71e57a865194"
+                },
+                {
+                    "find": "{{.tenantId}}",
+                    "replaceWith": "$config(tenantId)"
+                },
+                {
+                    "find": "{{.resourceGroupName}}",
+                    "replaceWith": "$azureResourceGroup()"
+                }
+            ]
+        },
+        {
+            "scopeTagName": "slnm",
+            "bindings": [
+                {
+                    "find": "{{.networkManagerSubscriptionId}}",
+                    "replaceWith": "$config(networkManager.subscription)"
+                },
+                {
+                    "find": "{{.networkManagerResourceGroup}}",
+                    "replaceWith": "$config(networkManager.resourceGroup)"
+                },
+                {
+                    "find": "{{.networkManagerName}}",
+                    "replaceWith": "$config(networkManager.name)"
+                },
+                {
+                    "find": "{{.slnmConfigIds}}",
+                    "replaceWith": "$config(networkManager.configId)"
+                },
+                {
+                    "find": "{{.pipelineIdentityId}}",
+                    "replaceWith": "$config(pipelineIdentityId)"
+                }
+            ]
+        }
+    ]
+}

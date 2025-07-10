@@ -1,0 +1,13 @@
+# Ignore build output directories
+bin/
+obj/
+node_modules/
+
+# Ignore user-specific files
+*.user
+*.suo
+
+# Ignore auto-generated files
+project.assets.json
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets

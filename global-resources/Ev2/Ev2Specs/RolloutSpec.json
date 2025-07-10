@@ -1,0 +1,67 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-04-01/RegionAgnosticRolloutSpecification.json",
+  "contentVersion": "1.0.0",
+  "rolloutMetadata": {
+    "serviceModelPath": "ServiceModel.json",
+    "scopeBindingsPath": "ScopeBinding.json",
+    "name": "Microsoft.Azure.servicehubval.GlobalResources",
+    "buildSource": {
+      "parameters": {
+        "versionFile": "Version.txt"
+      }
+    },
+    "notification": {
+      "email": {
+        "to": "chamakawa@microsoft.com;ksehgal@microsoft.com"
+      }
+    },
+    "configuration": {
+      "serviceScope": {
+        "specPath": "Configurations/$rolloutinfra()/Configuration.json"
+      }
+    }
+  },
+  "orchestratedSteps": [
+    {
+      "name": "RegisterResourceProvider",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "resourceProvider-SRDef",
+      "actions": [
+        "Extension/ResourceProviderExtension"
+      ]
+    },
+    {
+      "name": "DeployGenevaLogsResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "genevaLogsResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "RegisterResourceProvider"
+      ]
+    },
+    {
+      "name": "ProvisionGenevaAccount",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "genevaLogsAccount-SRDef",
+      "actions": [
+        "Extension/ProvisionGenevaAccount"
+      ],
+      "dependsOn": [
+        "DeployGenevaLogsResources"
+      ]
+    },
+    {
+      "name": "DeployGenevaMetricsResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "genevaMetricsResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "RegisterResourceProvider"
+      ]
+    }
+  ]
+}

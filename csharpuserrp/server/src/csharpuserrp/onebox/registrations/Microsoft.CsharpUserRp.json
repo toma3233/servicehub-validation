@@ -1,0 +1,11 @@
+{
+  "properties": {
+    "providerType": "Hidden",
+    "management": {
+      "incidentRoutingService": "CsharpUserRp Resource Provider",
+      "incidentRoutingTeam": "CsharpUserRp Triage",
+      "incidentContactEmail": "helpme@CsharpUserRp.com"
+    },
+    "enableTenantLinkedNotification": false
+  }
+}

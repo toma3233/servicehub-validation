@@ -1,0 +1,41 @@
+# These variables are configured as environment variables in the DaemonSet. They are defined in the mdsd configuration file to ensure they appear as columns in the log table.
+aks_cluster_name: servicehubval-{{.resourcesName}}-cluster
+aks_cluster_resource_id: __AKS_CLUSTER_RESOURCE_ID__
+resource_group: "{{.resourceGroupName}}"
+region: "{{.location}}"
+subscription_id: "{{.subscriptionId}}"
+
+gcs_environment: Test
+gcs_account: AKSGenevaSample
+gcs_region: westus2
+gcs_namespace: AKSGenevaSample
+gcs_config_version: "1.0" # Use string here otherwise helm will convert 1.0 to 1
+# Leave metric_endpoint commented out for PROD environment. Uncomment it for INT environment.
+# metricEndpoint: https://global.ppe.microsoftmetrics.com/
+
+# If set, the mdsdRunVolHostPath variable will make it so the containers use a host-backed volume for /var/run/mdsd,
+# located at the path specified here in the host. This is necessary for the AzSecPack Extension to work.
+# mdsdRunVolHostPath: /var/run/mdsd
+
+#
+# The syntax below (e.g. recommended@sha256) is recommended to allow for [Dependabot Automatic Container Updates](https://eng.ms/docs/products/dependabot/automatic_container_updates).
+# Dependabot will automatically create PRs for updating the image hash when the recommended tag is updated.
+# 
+# Alternatively, you can specify the tag (e.g. tag: mariner_20240711.1) with the latest versions of the Geneva images documented here:
+# https://eng.ms/docs/products/geneva/collect/references/linuxcontainers
+#
+
+mdsd:
+  image:
+    repository: linuxgeneva-microsoft.azurecr.io/distroless/genevamdsd
+    tag: mariner_20250225.2
+
+fluentd:
+  image:
+    repository: linuxgeneva-microsoft.azurecr.io/distroless/genevafluentd
+    tag: mariner_20250225.2
+
+mdm:
+  image:
+    repository: linuxgeneva-microsoft.azurecr.io/distroless/genevamdm
+    tag: 2.2025.404.1254-77220c-20250406t1133

@@ -1,0 +1,31 @@
+// Registers the necessary resource providers for Geneva. This is a prerequisite for the Geneva account to automatically provision necessary resources.
+// Source: https://eng.ms/docs/products/geneva/logs/howtoguides/manageaccount/subscriptionpermissions
+{
+    "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/rolloutParameters.json",
+    "contentVersion": "1.0.0.0",
+    "extensions": [
+        {
+            "name": "ResourceProviderExtension",
+            "type": "Microsoft.AzureGlobal/ResourceProviderRegistration",
+            "version": "2019-04-01",
+            "connectionProperties": {
+                "maxExecutionTime": "PT24H",
+                "authentication": {
+                    "type": "SystemCertificateAuthentication"
+                }
+            },
+            "payloadProperties": {
+                "waitUntilComplete": {
+                    "value": false
+                },
+                "resourceProviderNamespaces": {
+                    "value": [
+                        "Microsoft.Insights",
+                        "Microsoft.Storage",
+                        "Microsoft.EventHub"
+                    ]
+                }
+            }
+        }
+    ]
+}

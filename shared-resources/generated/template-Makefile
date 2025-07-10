@@ -1,0 +1,13 @@
+# (Prerequisite) To deploy the shared resources needed, go to the directory of the shared resources and run the Makefile.
+CURRENT_DIR := $(shell pwd)
+
+#Kube config must exist within server directory to be accessible in docker container when running helm commands
+connect-cluster:
+	az account set --subscription {{.subscriptionId}}
+	az aks get-credentials --resource-group servicehubval-{{.resourcesName}}-rg --name servicehubval-{{.resourcesName}}-cluster --file $(CURRENT_DIR)/.kube/config
+	if grep -qF -- "export KUBECONFIG=$(CURRENT_DIR)/.kube/config" ~/.bashrc; then \
+		echo 'KUBECONFIG exists in ~/.bashrc'; \
+	else \
+		echo 'KUBECONFIG does not exist in ~/.bashrc'; \
+		echo 'export KUBECONFIG=$(CURRENT_DIR)/.kube/config' >> ~/.bashrc; \
+	fi

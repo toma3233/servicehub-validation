@@ -1,0 +1,155 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: geneva-services
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: geneva-services
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      name: geneva-services
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace }}
+      labels:
+        name: geneva-services
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        # MDSD
+        - name: mdsd
+          image: {{ .Values.mdsd.image.repository }}:{{ .Values.mdsd.image.tag }}
+          command: [ "/start_mdsd.sh" ]
+          env:
+          - name: MDSD_AKV_CERTIFICATE_STORE_PATH
+            value: /geneva/geneva_auth
+          - name: MONITORING_GCS_AUTH_ID_TYPE
+            value: AuthKeyVault
+          - name: MDSD_DAEMON_TEMPORARY_ELEVATION_DISABLED
+            value: "true"
+          - name: MONITORING_GCS_AUTH_ID
+            value: {{ .Values.cert.genevaCertSAN | quote }}
+          - name: TENANT
+            value: {{ .Values.gcs_region | quote }}
+          - name: ROLE
+            value: {{ .Values.gcs_account | quote }}
+          - name: ROLEINSTANCE
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: AKSCLUSTERNAME
+            value: {{ .Values.aks_cluster_name | quote }}
+          - name: AKSCLUSTERRESOURCEID
+            value: {{ .Values.aks_cluster_resource_id | quote }}
+          - name: RESOURCEGROUP
+            value: {{ .Values.resource_group | quote }}
+          - name: REGION
+            value: {{ .Values.region | quote }}
+          - name: SUBSCRIPTIONID
+            value: {{ .Values.subscription_id | quote }}
+          - name: MONITORING_TENANT
+            value: {{ .Values.gcs_region | quote }}
+          - name: MONITORING_ROLE
+            value: {{ .Values.gcs_account | quote }}
+          - name: MONITORING_ROLE_INSTANCE
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: MONITORING_GCS_ENVIRONMENT
+            value: {{ .Values.gcs_environment | quote }}
+          - name: MONITORING_GCS_ACCOUNT
+            value: {{ .Values.gcs_account | quote }}
+          - name: MONITORING_GCS_REGION
+            value: {{ .Values.gcs_region | quote }}
+          - name: MONITORING_GCS_NAMESPACE
+            value: {{ .Values.gcs_namespace | quote }}
+          - name: MONITORING_CONFIG_VERSION
+            value: {{ .Values.gcs_config_version | quote }}
+          - name: DOCKER_LOGGING
+            value: "true"
+          volumeMounts:
+            - name: keyvault-auth-vol
+              mountPath: /geneva/geneva_auth
+              readOnly: true
+            - name: var-log-geneva-services-vol
+              mountPath: /geneva/geneva_logs
+            - name: mdsd-run-vol
+              mountPath: /var/run/mdsd
+        # FluentD
+        - name: fluentd
+          image: {{ .Values.fluentd.image.repository }}:{{ .Values.fluentd.image.tag }}
+          args: ["-c", "/etc/fluentd/fluentd.conf", "--log", "/dev/stdout"]
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: fluentd-conf-vol
+              mountPath: /etc/fluentd
+            - name: fluentd-buffer-vol
+              mountPath: "/var/log/td-agent"
+            - name: mdsd-run-vol
+              mountPath: "/var/run/mdsd"
+            - name: docker-log-vol
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: var-log-vol
+              mountPath: /var/log
+            - name: run-journal-vol
+              mountPath: /run/log/journal
+              readOnly: true
+        # MDM
+        # - name: mdm
+        #   image: {{ .Values.mdm.image.repository }}:{{ .Values.mdm.image.tag }}
+        #   env:
+        #   - name: MDM_ACCOUNT
+        #     value: {{ .Values.gcs_account | quote }}
+        #   {{- if .Values.metricEndpoint }}
+        #   - name: METRIC_ENDPOINT
+        #     value: {{ .Values.metricEndpoint | quote }}
+        #   {{- end }}
+        #   - name: MDM_INPUT
+        #     value: statsd_udp
+        #   - name: MDM_LOG_LEVEL
+        #     value: "Info"
+        #   - name: CERT_FILE
+        #     value: /tmp/geneva_mdm/{{ .Values.cert.pemFileName }}
+        #   - name: KEY_FILE
+        #     value: /tmp/geneva_mdm/{{ .Values.cert.pemFileName }}
+        #   volumeMounts:
+        #     - name: keyvault-auth-vol
+        #       mountPath: /tmp/geneva_mdm
+        #       readOnly: true
+      volumes:
+        - name: keyvault-auth-vol
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: geneva-kvcert
+        - name: mdsd-run-vol
+          emptyDir: {}
+        - name: fluentd-conf-vol
+          configMap:
+            name: fluentd-conf
+        - name: fluentd-buffer-vol
+          emptyDir: {}
+        - name: docker-log-vol
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: run-journal-vol
+          hostPath:
+            path: /run/log/journal
+        - name: var-log-vol
+          hostPath:
+            path: /var/log
+        - name: var-log-geneva-services-vol
+          hostPath:
+            path: /var/log/geneva-services
+        - name: etw-vol
+          emptyDir: {}

@@ -1,0 +1,124 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-04-01/RegionAgnosticRolloutSpecification.json",
+  "contentVersion": "1.0.0",
+  "rolloutMetadata": {
+    "serviceModelPath": "ServiceModel.json",
+    "scopeBindingsPath": "ScopeBinding.json",
+    "name": "Microsoft.Azure.servicehubval.SharedResources",
+    "buildSource": {
+      "parameters": {
+        "versionFile": "Version.txt"
+      }
+    },
+    "notification": {
+      "email": {
+        "to": "chamakawa@microsoft.com;ksehgal@microsoft.com"
+      }
+    },
+    "configuration": {
+      "serviceScope": {
+        "specPath": "Configurations/$rolloutinfra()/Configuration.json"
+      }
+    }
+  },
+  "orchestratedSteps": [
+    {
+      "name": "RegisterResourceProvider",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "resourceProvider-SRDef",
+      "actions": [
+        "Extension/ResourceProviderExtension"
+      ]
+    },
+    {
+      "name": "DeploySharedResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "sharedResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "RegisterResourceProvider"
+      ]
+    },
+    {
+      "name": "DeployAcrPushIdentityResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "AcrPushResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "DeploySharedResources"
+      ]
+    },
+    {
+      "name": "KubectlApply-argorolloutsnamespace",
+      "targetType": "applicationDefinition",
+      "applications": {
+        "names": [
+          "argorolloutsnamespace"
+        ],
+        "actions": [
+          "AppDeploy"
+        ],
+        "applyAcrossServiceResources": {
+          "definitionName": "argorolloutsnamespace-SRDef"
+        }
+      },
+      "dependsOn": [
+        "DeployAcrPushIdentityResources"
+      ]
+    },
+    {
+      "name": "KubectlApply-argocontrollerinstall",
+      "targetType": "applicationDefinition",
+      "applications": {
+        "names": [
+          "argocontrollerinstall"
+        ],
+        "actions": [
+          "AppDeploy"
+        ],
+        "applyAcrossServiceResources": {
+          "definitionName": "argocontrollerinstall-SRDef"
+        }
+      },
+      "dependsOn": [
+        "KubectlApply-argorolloutsnamespace"
+      ]
+    },
+    {
+      "name": "DeployGenevaResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "genevaResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "DeploySharedResources",
+        "RegisterResourceProvider"
+      ]
+    
+    },
+    {
+      "name": "HelmDeploy-GenevaServices",
+      "targetType": "ApplicationDefinition",
+      "applications": {
+        "names": [
+          "geneva-services"
+        ],
+        "actions": [
+          "AppDeploy"
+        ],
+        "applyAcrossServiceResources": {
+          "definitionName": "genevaServices-SRDef"
+        }
+      },
+      "dependsOn": [
+        "DeploySharedResources",
+        "DeployGenevaResources"
+      ]
+    }
+  ]
+}

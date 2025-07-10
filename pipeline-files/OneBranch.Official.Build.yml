@@ -1,0 +1,212 @@
+# All services can share this build pipeline yaml file as long as the directories have the expected structure and files.
+# For more information refer to the Ev2_README.md file
+#################################################################################
+# Variables that should be defined in pipeline settings.
+# directoryName: The name of the directory where the service/shared-resources code is located.
+# isService: true if the pipeline is for a service, false if it is for shared-resources.
+# rolloutInfra: Prod or Test based on which configuration file needs to be used.
+# forceReinstallCredentialProvider: true (to avoid credential provider caching issues)
+#################################################################################
+#                               OneBranch Pipelines                             #
+# This pipeline was created by EasyStart from a sample located at:              #
+#   https://aka.ms/obpipelines/easystart/samples                                #
+# Documentation:  https://aka.ms/obpipelines                                    #
+# Yaml Schema:    https://aka.ms/obpipelines/yaml/schema                        #
+# Retail Tasks:   https://aka.ms/obpipelines/tasks                              #
+# Support:        https://aka.ms/onebranchsup                                   #
+#################################################################################
+
+trigger: none
+
+#Variable structure was changed from the default version of OneBranch template yaml file. It is now
+# - name:
+#   value:
+# instead of
+# - name: value
+# to be able tosupport variable groups.
+variables:
+  - group: ADO_PAT
+  - name: CDP_DEFINITION_BUILD_COUNT
+    value: $[counter('', 0)] # needed for onebranch.pipeline.version task https://aka.ms/obpipelines/versioning
+  - name: LinuxContainerImage
+    value: "mcr.microsoft.com/onebranch/azurelinux/build:3.0" # Docker image which is used to build the project https://aka.ms/obpipelines/containers
+  - name: DEBIAN_FRONTEND
+    value: noninteractive
+  - name: DisableGoCliScan
+    value: true
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
+
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates # https://aka.ms/obpipelines/templates
+  parameters:
+    globalSdl: # https://aka.ms/obpipelines/sdl
+      # tsa:
+      #   enabled: true # SDL results of non-official builds aren't uploaded to TSA by default.
+      # credscan:
+      #   suppressionsFile: $(Build.SourcesDirectory)\.config\CredScanSuppressions.json
+      policheck:
+        break: true # always break the build on policheck issues. You can disable it by setting to 'false'
+      # suppression:
+      #   suppressionFile: $(Build.SourcesDirectory)\.gdn\global.gdnsuppress
+    ev2ManagedSdpRolloutConfig:
+      rolloutType: normal
+      overrideManagedValidationDuration: false
+      managedValidationOverrideDurationInHours: 0
+      icmIncidentId: 0
+    featureFlags:
+      LinuxHostVersion:
+        Network: KS3
+      WindowsHostVersion:
+        Network: KS3
+
+    stages:
+      - stage: confirmSharedResources
+        displayName: "Confirm Shared Resources exist"
+        jobs:
+          - job: confirmSharedResources
+            condition: eq(variables['isService'], 'true')
+            pool:
+              type: linux
+            variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+              ob_outputDirectory: "$(Build.SourcesDirectory)"
+            steps:
+              - task: AzureCLI@2
+                displayName: "Check if Shared Resources exist for this deployment"
+                inputs:
+                  azureSubscription: ServiceHubValidation_ServiceConnection
+                  scriptType: "bash"
+                  scriptLocation: scriptPath
+                  scriptPath: "pipeline-files/ev2DeploymentChecks.sh"
+                  arguments: "matchingGroups $(Build.Reason) $(Build.SourceBranch) $(System.PullRequest.PullRequestId) 049e57e6-ff8e-4e8f-91bf-5830bf32d150"
+      - stage: createArtifactsFiles
+        jobs:
+          - job: buildServiceImage
+            condition: eq(variables['isService'], 'true')
+            pool:
+              type: docker
+              os: Linux
+            variables:
+              ob_git_checkout: true
+            steps:
+              - task: onebranch.pipeline.imagebuildinfo@1
+                displayName: Build docker $(directoryName) image
+                inputs:
+                  arguments: " --build-arg PAT=$(READPAT)"
+                  repositoryName: $(directoryName)
+                  dockerFileRelPath: $(directoryName)/server/Dockerfile
+                  dockerFileContextPath: $(directoryName)/server
+                  enable_network: true
+                  enable_isolated_acr_push: false # Isolated ACRs are only in AME tenant, not corp. So, not enabling.
+                  build_tag: $(Build.BuildNumber)
+                  saveImageToPath: $(directoryName)-image.tar
+      - stage: combineArtifacts
+        dependsOn: createArtifactsFiles
+        jobs:
+          - job: prepare
+            pool:
+              type: linux
+            variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+              ob_outputDirectory: "$(Build.SourcesDirectory)/Ev2Artifacts" # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
+            steps: # These steps will be run in unrestricted container's network
+              - task: UseDotNet@2
+                displayName: "Install DotNet 9"
+                inputs:
+                  packageType: "sdk"
+                  version: "9.0.101"
+              - task: DownloadPipelineArtifact@2
+                # This task downloads the published docker image artifact created in the previous stage, only if we are building a service.
+                condition: eq(variables['isService'], 'true')
+                displayName: "Download Image Artifacts"
+                inputs:
+                  targetPath: $(directoryName)/server/Ev2/Ev2Specs/Build
+                  artifact: drop_createArtifactsFiles_buildServiceImage
+              - task: AzureCLI@2
+                displayName: "Prepare Artifacts"
+                inputs:
+                  # azureSubscription corresponds to the name of the azure resource manager service
+                  # connection that is supposed to be used for the pipeline task.
+                  azureSubscription: ServiceHubValidation_ServiceConnection
+                  scriptType: "bash"
+                  scriptLocation: scriptPath
+                  scriptPath: "pipeline-files/buildEv2Artifacts.sh"
+                  arguments: "$(directoryName) $(ob_outputDirectory) $(isService) $(Build.BuildNumber) false $(Build.Reason) $(Build.SourceBranch) $(System.PullRequest.PullRequestId) $(restrictToPR)"
+                env:
+                  READPAT: $(READPAT)
+      - stage: "TEST_Managed_SDP"
+        lockBehavior: sequential
+        displayName: "TEST: Managed SDP"
+        dependsOn:
+          - combineArtifacts
+          - confirmSharedResources
+        variables:
+          - name: ob_release_environment
+            value: TEST
+          - ${{ if eq(variables.directoryName, 'shared-resources') }}:
+              - group: "shared-resources-lock"
+          - ${{ if eq(variables.directoryName, 'basicservice') }}:
+              - group: "basicservice-lock"
+          - ${{ if eq(variables.directoryName, 'csharpuserrp') }}:
+              - group: "csharpuserrp-lock"
+          - ${{ if eq(variables.directoryName, 'mygreeterv3') }}:
+              - group: "mygreeterv3-lock"
+          - ${{ if eq(variables.directoryName, 'mygreeterv3csharp') }}:
+              - group: "mygreeterv3csharp-lock"
+          - ${{ if eq(variables.directoryName, 'operationcontainer') }}:
+              - group: "operationcontainer-lock"
+        jobs:
+          - job: TEST_Managed_SDP
+            displayName: "TEST_Managed_SDP"
+            pool:
+              type: release # read more about custom job types at https://aka.ms/obpipelines/yaml/jobs
+            steps:
+              - task: DownloadPipelineArtifact@2
+                displayName: "Download Build Artifacts"
+                inputs:
+                  targetPath: "$(Pipeline.Workspace)/build-artifacts/drop_combineArtifacts_prepare"
+                  artifact: drop_combineArtifacts_prepare
+              - task: vsrm-ev2.ev2-rollout.ev2-rollout-task.Ev2RARollout@2
+                displayName: "Ev2 Managed SDP Rollout"
+                inputs:
+                  EndpointProviderType: Ev2Endpoint
+                  ConnectedServiceName: "ServiceHubValidation_Ev2TestCorpServiceConnection"
+                  TaskAction: RegisterAndRollout
+                  SkipRegistrationIfExists: true
+                  ServiceRootPath: $(Pipeline.Workspace)/build-artifacts/drop_combineArtifacts_prepare/Ev2Specs
+                  RolloutSpecPath: $(Pipeline.Workspace)/build-artifacts/drop_combineArtifacts_prepare/Ev2Specs/rolloutSpec.json
+                  StageMapName: "Microsoft.Azure.SDP.Standard"
+                  Select: regions($(regionNames))
+                  ForceRegistration: true
+      - stage: "testServiceDeploymentSuccess"
+        displayName: "Test Ev2 Service Deployment Success"
+        dependsOn:
+          - TEST_Managed_SDP
+        condition: eq(variables['isService'], 'true')
+        jobs:
+          - job: testServiceDeploymentSuccess
+            displayName: "Test Service Deployment Success"
+            pool:
+              type: linux
+            variables:
+              ob_outputDirectory: "$(Build.SourcesDirectory)"
+            steps:
+              - task: KubectlInstaller@0
+                displayName: "Install Kubectl"
+                inputs:
+                  kubectlVersion: "latest"
+              - task: AzureCLI@2
+                displayName: "Test Service Deployment Success"
+                inputs:
+                  # Consider moving this check as a part of the rollout itself. By having it as an external
+                  # non-ev2 task, we have no choice but to use normal service connection instead
+                  # of repeating ev2 service connection use.
+                  azureSubscription: ServiceHubValidation_ServiceConnection
+                  scriptType: "bash"
+                  scriptLocation: scriptPath
+                  scriptPath: "pipeline-files/ev2DeploymentChecks.sh"
+                  arguments: "checkDeploymentSuccess $(Build.Reason) $(Build.SourceBranch) $(System.PullRequest.PullRequestId) 049e57e6-ff8e-4e8f-91bf-5830bf32d150 $(directoryName)"

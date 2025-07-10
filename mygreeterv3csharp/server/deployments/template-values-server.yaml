@@ -1,0 +1,40 @@
+# Default values for server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: servicehubval-mygreeterv3csharp-server
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations:
+    azure.workload.identity/client-id: __AZURESDK_WORKLOAD_IDENTITY_CLIENT_ID__ # in make file, generate another file that will replace client id
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+command:
+  - server/Server
+
+args:
+  - start
+  - --json-log
+  - --enable-azureSDK-calls=true
+  - --subscription-id={{.subscriptionId}}
+
+# Info used for authorization policy
+allowedPrincipals:
+  - cluster.local/ns/servicehubval-mygreeterv3csharp-client/sa/servicehubval-mygreeterv3csharp-client
+
+allowedRequests:
+  - /MyGreeterCsharp/SayHello
+  - /MyGreeterCsharp/CreateResourceGroup
+  - /MyGreeterCsharp/ReadResourceGroup
+  - /MyGreeterCsharp/UpdateResourceGroup
+  - /MyGreeterCsharp/ListResourceGroups
+  - /MyGreeterCsharp/DeleteResourceGroup
+  - /v1/hello
+  - /v1/resourcegroups/*
+  - /v1/resourcegroups

@@ -1,0 +1,32 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "server.fullname" . }}
+  namespace: {{ include "server.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "server.fullname" . }}
+  # More actions available: https://istio.io/latest/docs/reference/config/security/authorization-policy/
+  action: ALLOW
+{{- if .Values.allowedPrincipals }}
+  rules:
+  - from:
+      - source:
+          principals:
+          {{- range .Values.allowedPrincipals }}
+            - {{ . | quote }}
+          {{- end }}
+    to:
+      - operation:
+          methods: ["POST", "GET", "DELETE", "PUT"]
+          paths:
+          {{- range .Values.allowedRequests }}
+            - {{ . | quote }}
+          {{- end }}
+{{- else }}
+  # When allowedPrincipals is empty, we set rules to an empty list.
+  # This results in no requests matching the policy, effectively denying all requests
+  # even though the action is configured as ALLOW.
+  rules: []
+{{- end }}

@@ -1,0 +1,35 @@
+# Default values for server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: servicehubval-operationcontainer-server
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations:
+    azure.workload.identity/client-id: __AZURESDK_WORKLOAD_IDENTITY_CLIENT_ID__ # in make file, generate another file that will replace client id
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+command:
+  - /server
+
+args:
+  - start
+  - --json-log
+  - --database-server-url=operationcontainer-{{.resourcesName}}-{{.location}}-sql-server.database.windows.net
+  - --database-name=operationcontainer-{{.resourcesName}}-sql-db
+  - --database-port=1433
+  - --operation-table-name=operations
+
+# Info used for authorization policy
+allowedPrincipals: []
+
+allowedRequests:
+  - /OperationContainer/CreateOperationStatus
+  - /OperatoinContainer/UpdateOperationStatus
+  - /OperationContainer/GetOperationStatus

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/rolloutParameters.json",
+  "contentVersion": "1.0.0.0",
+  "applications": [
+    {
+      "ServiceResourceDefinitionName": "mygreeterv3csharpserver-SRDef",
+      "ApplicationDefinitionName": "mygreeterv3csharpserver",
+      "authentication": {
+        "armResourceName": "servicehubval-{{.resourcesName}}-cluster",
+        "type": "CertificateAuthentication",
+        "properties": {
+          "aksRole": "User"
+        }
+      }
+    },
+    {
+      "ServiceResourceDefinitionName": "mygreeterv3csharpclient-SRDef",
+      "ApplicationDefinitionName": "mygreeterv3csharpclient",
+      "authentication": {
+        "armResourceName": "servicehubval-{{.resourcesName}}-cluster",
+        "type": "CertificateAuthentication",
+        "properties": {
+          "aksRole": "User"
+        }
+      }
+    }
+  ]
+}

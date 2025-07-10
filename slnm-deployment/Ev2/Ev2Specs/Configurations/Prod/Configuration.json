@@ -1,0 +1,15 @@
+{
+    "Settings": {
+        "tenantId": "33e01921-4d64-4f8c-a055-5bdaffd5e33d",
+        "environment": "prod",
+        "backfilledSubId": "",
+        "resourcesName": "ProdAME",
+        "pipelineIdentityId": "/subscriptions/84863f4a-6dec-4d3b-a75a-d52ac4e748b6/resourceGroups/dfe3a810-861c-44da-9b00-71e57a865194.rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/slnm-sh-mi",
+        "networkManager": {
+            "subscription": "84863f4a-6dec-4d3b-a75a-d52ac4e748b6",
+            "configId": "/subscriptions/84863f4a-6dec-4d3b-a75a-d52ac4e748b6/resourceGroups/dfe3a810-861c-44da-9b00-71e57a865194.rg/providers/Microsoft.Network/networkManagers/slnm.dfe3a810-861c-44da-9b00-71e57a865194.pb.ame.pd/securityAdminConfigurations/20250428.302ae31d-54de-44c9-8188-8ebb1217f840",
+            "resourceGroup": "dfe3a810-861c-44da-9b00-71e57a865194.rg",
+            "name": "slnm.dfe3a810-861c-44da-9b00-71e57a865194.pb.ame.pd"
+        }
+    }
+}

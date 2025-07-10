@@ -1,0 +1,21 @@
+###################################
+# User inputs.
+###################################
+serviceInput:
+  # The template name to use for this service.
+  # Only used by internal templating code to determine which template to use.
+  templateName: globalResourcesTemplate
+  ################################
+  # Variables required by both internal templating code and the templates.
+  # The directory name after destination_dir_prefix. It holds the service.
+  directoryName: global-resources
+  # Whether to add this service to the umbrella pipeline
+  runPipeline: false
+  ################################
+  # Variables required only by the service's templates.
+  requiredInputs:
+    # Administrator aliases for the geneva account.
+    genevaAdminAlias1: redmond\\chamakawa
+    genevaAdminAlias2: redmond\\ksehgal
+    # The email address linked to the Geneva account. This is used for the Geneva account creation and for the Geneva account owner.
+    genevaContactEmail: chamakawa@microsoft.com

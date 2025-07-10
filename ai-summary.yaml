@@ -1,0 +1,37 @@
+pool:
+  vmImage: "ubuntu-latest"
+steps:
+  - checkout: self
+    fetchTags: false
+    displayName: 'Checkout Repository'
+    persistCredentials: true
+  - script: |
+      docker run \
+        --mount src=${BUILD_REPOSITORY_LOCALPATH},target=/app/binded-data,type=bind \
+        -e SYSTEM_COLLECTIONURI=${SYSTEM_COLLECTIONURI} \
+        -e SYSTEM_TEAMPROJECT=${SYSTEM_TEAMPROJECT} \
+        -e SYSTEM_PULLREQUEST_PULLREQUESTID=${SYSTEM_PULLREQUEST_PULLREQUESTID} \
+        -e BUILD_REPOSITORY_ID=${BUILD_REPOSITORY_ID} \
+        -e ADO_PAT_TOKEN=${ADO_PAT_TOKEN} \
+        -e AZURE_OPENAI_ENDPOINT="${AZURE_OPENAI_ENDPOINT}" \
+        -e AZURE_OPENAI_DEPLOYMENT_NAME="${AZURE_OPENAI_DEPLOYMENT_NAME}" \
+        -e AZURE_OPENAI_API_VERSION="${AZURE_OPENAI_API_VERSION}" \
+        -e AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY} \
+        -e BUILD_REPOSITORY_LOCALPATH="./binded-data" \
+        -e SKIP_FILE_LIST="${SKIP_FILE_LIST}" \
+        -e SKIP_DIR_LIST="${SKIP_DIR_LIST}" \
+        -e BUILD_REPOSITORY_CONTAINER_PATH="/app/binded-data" \
+        servicehubregistry.azurecr.io/ai-summary:2024111316
+    displayName: 'Generate AI Summaries'
+    env:
+      SYSTEM_COLLECTIONURI: $(SYSTEM_COLLECTIONURI)
+      SYSTEM_TEAMPROJECT: $(SYTEM_TEAMPROJECT)
+      SYSTEM_PULLREQUEST_PULLREQUESTID: $(SYSTEM_PULLREQUEST_PULLREQUESTID)
+      BUILD_REPOSITORY_ID: $(BUILD_REPOSITORY_ID)
+      ADO_PAT_TOKEN: $(System.AccessToken)
+      AZURE_OPENAI_ENDPOINT: $(AZURE_OPENAI_ENDPOINT)
+      AZURE_OPENAI_DEPLOYMENT_NAME: $(AZURE_OPENAI_DEPLOYMENT_NAME)
+      AZURE_OPENAI_API_VERSION: $(AZURE_OPENAI_API_VERSION)
+      AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
+      SKIP_FILE_LIST: "['.gitignore', 'go.mod', 'go.sum', 'go.work', 'go.work.sum', '.md', '.git']"
+      SKIP_DIR_LIST: "['server/deployments/templates']"

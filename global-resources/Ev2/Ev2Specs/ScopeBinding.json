@@ -1,0 +1,132 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+{
+    "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/scopeBindings.json",
+    "contentVersion": "1.0.0.0",
+    "scopeBindings": [
+        {
+            "scopeTagName": "sharedInputs",
+            "bindings": [
+                {
+                    "find": "{{.resourcesName}}",
+                    "replaceWith": "$config(resourcesName)"
+                },
+                {
+                    "find": "{{.subscriptionId}}",
+                    "replaceWith": "$azureSubscriptionId()"
+                },
+                {
+                    "find": "{{.location}}",
+                    "replaceWith": "$location()"
+                },
+                {
+                    "find": "{{.resourceGroupName}}",
+                    "replaceWith": "$azureResourceGroup()"
+                },
+                {
+                    "find": "{{.serviceImageTag}}",
+                    "replaceWith": "$buildVersion()"
+                }
+            ]
+        },
+        {
+            "scopeTagName": "subscriptionInputs",
+            "bindings": [
+                {
+                    "find": "{{.prodAdminSecurityGroupId}}",
+                    "replaceWith": "72dfc0be-0b66-4998-afa2-8b9c4d26bf21"
+                },
+                {
+                    "find": "{{.corpAdminSecurityGroupId}}",
+                    "replaceWith": "adcc434d-5e83-4935-8d81-af89d05aad4c"
+                },
+                {
+                    "find": "{{.serviceTreeId}}",
+                    "replaceWith": "dfe3a810-861c-44da-9b00-71e57a865194"
+                },
+                {
+                    "find": "{{.secondLevelServiceTreeNodeId}}",
+                    "replaceWith": "ef733b4f-da1d-4909-8495-73785ce205aa"
+                },
+                {
+                    "find": "{{.pcCode}}",
+                    "replaceWith": "P84536"
+                },
+                {
+                    "find": "{{.costCategory}}",
+                    "replaceWith": "FR"
+                },
+                {
+                    "find": "{{.airsRegisteredUserPrincipalId}}",
+                    "replaceWith": "23551938-26fb-4713-bb60-456716564972"
+                },
+                {
+                    "find": "{{.tenantId}}",
+                    "replaceWith": "$config(tenantId)"
+                },
+                {
+                    "find": "{{.oneCertRegisteredDomain}}",
+                    "replaceWith": "$config(oneCertRegisteredDomain)"
+                },
+                {
+                    "find": "{{.backfilledSubscriptionId}}",
+                    "replaceWith": "$config(backfilledSubId)"
+                }
+            ]
+        },
+        {
+            "scopeTagName": "genevaLogsResourcesInputs",
+            "bindings": [
+                {
+                    "find": "{{.san}}",
+                    "replaceWith": "$config(oneCertRegisteredDomain)"
+                },
+                {
+                    "find": "{{.genevaRoleDefinitionId}}",
+                    "replaceWith": "$config(genevaRoleDefinitionId)"
+                },
+                {
+                    "find": "{{.genevaServicePrincipalId}}",
+                    "replaceWith": "$config(genevaServicePrincipalId)"
+                },
+                {
+                    "find": "{{.genevaEnvironment}}",
+                    "replaceWith": "$config(genevaEnvironment)"
+                }
+            ]
+        },
+        {
+            "scopeTagName": "genevaLogsAccountInputs",
+            "bindings": [
+                {
+                    "find": "{{.genevaConfigureAccount}}",
+                    "replaceWith": "$config(genevaConfigureAccount)"
+                },
+                {
+                    "find": "{{.mdsEnvironment}}",
+                    "replaceWith": "$config(mdsEnvironment)"
+                },
+                {
+                    "find": "{{.san}}",
+                    "replaceWith": "$config(oneCertRegisteredDomain)"
+                },
+                {
+                    "find": "__AZURE_KEY_VAULT_NAME__",
+                    "replaceWith": "$ServiceResourceDefinition(genevaLogsResources-SRDef).action(deploy).outputs(keyVaultName.value)"
+                },
+                {
+                    "find": "__KUSTO_CLUSTER_NAME__",
+                    "replaceWith": "$ServiceResourceDefinition(genevaLogsResources-SRDef).action(deploy).outputs(kustoClusterName.value)"
+                }
+            ]
+        },
+        {
+            "scopeTagName": "genevaMetricsResourcesInputs",
+            "bindings": [
+                {
+                    "find": "{{.genevaMetricsSecurityGroupId}}",
+                    "replaceWith": "$config(genevaMetricsSecurityGroupId)"
+                }
+            ]
+        }
+    ]
+}

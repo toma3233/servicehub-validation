@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="**\node_modules\**" />
+    <Compile Remove="**\node_modules\**" />
+    <EmbeddedResource Remove="**\node_modules\**" />
+    <None Remove="**\node_modules\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.12" />
+    <PackageReference Include="Microsoft.TypeSpec.MSBuild" Version="0.33.0" />
+    <PackageReference Include="Microsoft.TypeSpec.Providerhub.Controller" Version="0.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeSpecCompile Include="typespec\main.tsp" OutputDir="$(MSBuildProjectDirectory)" Options="arm-types-path=../../../../../common-types/resource-management" />
+  </ItemGroup>
+
+</Project>

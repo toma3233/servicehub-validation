@@ -1,0 +1,80 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-04-01/RegionAgnosticRolloutSpecification.json",
+  "contentVersion": "1.0.0",
+  "rolloutMetadata": {
+    "serviceModelPath": "ServiceModel.json",
+    "scopeBindingsPath": "ScopeBinding.json",
+    "name": "Microsoft.Azure.servicehubval.ServiceResources",
+    "buildSource": {
+      "parameters": {
+        "versionFile": "Version.txt"
+      }
+    },
+    "notification": {
+      "email": {
+        "to": "peiyizhang@microsoft.com"
+      }
+    },
+    "configuration": {
+      "serviceScope": {
+        "specPath": "Configurations/$rolloutinfra()/Configuration.json"
+      }
+    }
+  },
+  "orchestratedSteps": [
+    {
+      "name": "PublishImageToAcr",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "PublishImageShellExtension-SRDef",
+      "actions": [
+        "Shell/push-image-to-acr"
+      ]
+    },
+    {
+      "name": "DeployServiceResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "azureSDKResources-SRDef",
+      "actions": [
+        "deploy"
+      ]
+    },
+    {
+      "name": "HelmDeploy-mygreeterv3csharp-client",
+      "targetType": "ApplicationDefinition",
+      "applications": {
+        "names": [
+          "mygreeterv3csharpclient"
+        ],
+        "actions": [
+          "AppDeploy"
+        ],
+        "applyAcrossServiceResources": {
+          "definitionName": "mygreeterv3csharpclient-SRDef"
+        }
+      },
+      "dependsOn": [
+        "DeployServiceResources",
+        "PublishImageToAcr"
+      ]
+    },
+    {
+      "name": "HelmDeploy-mygreeterv3csharp-server",
+      "targetType": "ApplicationDefinition",
+      "applications": {
+        "names": [
+          "mygreeterv3csharpserver"
+        ],
+        "actions": [
+          "AppDeploy"
+        ],
+        "applyAcrossServiceResources": {
+          "definitionName": "mygreeterv3csharpserver-SRDef"
+        }
+      },
+      "dependsOn": [
+        "DeployServiceResources",
+        "PublishImageToAcr"
+      ]
+    }
+  ]
+}
