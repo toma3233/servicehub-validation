@@ -17,6 +17,9 @@ sharedInput:
     productShortName: servicehubval
     # The back-filled subscription id used for ev2 test infra deployment in corporate tenant.
     backfilledTestSubscriptionId: 049e57e6-ff8e-4e8f-91bf-5830bf32d150
+    # The back-filled subscription id used for ev2 global subscription in Production AME tenant.
+    # Leave this empty if you would like to provision a new subscription
+    backfilledProdGlobalSubscriptionId: a447fa09-82a5-4123-8d83-198b46a21b00
     # The service tree id of your service.
     serviceTreeId: dfe3a810-861c-44da-9b00-71e57a865194
     # The second level service tree node id of your service.
@@ -45,6 +48,9 @@ sharedInput:
     # FR: Research and Development
     # FS: Sales and Marketing
     costCategory: FR
+    # The flag to indicate whether to enable web app routing for the service.
+    # This is used to determine whether to create the ingress controller and related resources.
+    enableWebAppRouting: true
 
 ###################################
 # Shared resources variables

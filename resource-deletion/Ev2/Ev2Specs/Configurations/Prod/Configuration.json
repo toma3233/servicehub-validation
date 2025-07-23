@@ -1,0 +1,11 @@
+{
+    "Settings": {
+        "tenantId": "33e01921-4d64-4f8c-a055-5bdaffd5e33d",
+        "environment": "prod",
+        "resourcesName": "ProdAME",
+        "globalSubscriptionId": "a447fa09-82a5-4123-8d83-198b46a21b00",
+        "globalResourcesName": "ProdAME",
+        "globalLocation": "eastus2",
+        "deleteConfigType": "Manual"
+    }
+}

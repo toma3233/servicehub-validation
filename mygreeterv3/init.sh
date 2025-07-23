@@ -3,7 +3,7 @@
 # The api version is fixed based on the value of the SERVICEHUB_APIV1_VERSION variable.
 # It must be specified in double quotes
 # The automated package versioning logic bumps the PATCH version only
-SERVICEHUB_APIV1_VERSION="0.0.62"
+SERVICEHUB_APIV1_VERSION="0.0.64"
 SERVICEHUB_AKSMIDDLEWARE_VERSION="0.0.40"
 
 # Execute this file under the service directory.

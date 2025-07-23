@@ -1,0 +1,19 @@
+###################################
+# User inputs.
+###################################
+serviceInput:
+  # The template name to use for this service.
+  # Only used by internal templating code to determine which template to use.
+  templateName: resourceDeletionTemplate
+  ################################
+  # Variables required by both internal templating code and the templates.
+  # The directory name after destination_dir_prefix. It holds the service.
+  directoryName: resource-deletion
+  # Whether to add this service to the umbrella pipeline
+  runPipeline: false
+  ################################
+  # Variables required only by the service's templates.
+  requiredInputs:
+    # The primary email address for the service. This is for Ev2 notifications.
+    # To include multiple email addresses, separate them with a comma.
+    contactEmail: ksehgal@microsoft.com

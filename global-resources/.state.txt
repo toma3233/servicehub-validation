@@ -7,6 +7,7 @@ Ev2/Ev2Specs/Configurations/Test
 Ev2/Ev2Specs/Configurations/Test/Configuration.json
 Ev2/Ev2Specs/Parameters
 Ev2/Ev2Specs/Parameters/GenevaLogsAccount.Rollout.Parameters.json
+Ev2/Ev2Specs/Parameters/Main.DeletionResources.Parameters.json
 Ev2/Ev2Specs/Parameters/Main.GenevaLogsResources.Parameters.json
 Ev2/Ev2Specs/Parameters/Main.GenevaMetricsResources.Parameters.json
 Ev2/Ev2Specs/Parameters/RegisterResourceProvider.Parameters.json
@@ -17,6 +18,7 @@ Ev2/Ev2Specs/RolloutSpec.json
 Ev2/Ev2Specs/ScopeBinding.json
 Ev2/Ev2Specs/ServiceModel.json
 Ev2/Ev2Specs/Templates
+Ev2/Ev2Specs/Templates/Main.DeletionResources.Template.bicep
 Ev2/Ev2Specs/Templates/Main.GenevaLogsResources.Template.bicep
 Ev2/Ev2Specs/Templates/Main.GenevaMetricsResources.Template.bicep
 Ev2/Ev2Specs/Templates/RoleAssignment.Subscription.Template.json

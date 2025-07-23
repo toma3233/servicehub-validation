@@ -12,5 +12,7 @@ spec:
       port: {{ .Values.service.port }}
     - name: http
       port: {{ .Values.service.httpPort }}
+    - name: otel-http
+      port: {{ .Values.service.otelAuditHttpPort }}
   selector:
     {{- include "server.selectorLabels" . | nindent 4 }}

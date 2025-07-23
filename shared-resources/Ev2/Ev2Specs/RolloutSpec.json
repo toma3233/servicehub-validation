@@ -42,6 +42,14 @@
       ]
     },
     {
+      "name": "DeployResourcesUsedByDeletion",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "deletionResources-SRDef",
+      "actions": [
+        "deploy"
+      ]
+    },
+    {
       "name": "DeployAcrPushIdentityResources",
       "targetType": "ServiceResourceDefinition",
       "targetName": "AcrPushResources-SRDef",
@@ -88,10 +96,10 @@
         "KubectlApply-argorolloutsnamespace"
       ]
     },
-    {
-      "name": "DeployGenevaResources",
+     {
+      "name": "DeployGenevaLogsResources",
       "targetType": "ServiceResourceDefinition",
-      "targetName": "genevaResources-SRDef",
+      "targetName": "genevaLogsResources-SRDef",
       "actions": [
         "deploy"
       ],
@@ -99,7 +107,6 @@
         "DeploySharedResources",
         "RegisterResourceProvider"
       ]
-    
     },
     {
       "name": "HelmDeploy-GenevaServices",
@@ -117,7 +124,18 @@
       },
       "dependsOn": [
         "DeploySharedResources",
-        "DeployGenevaResources"
+        "DeployGenevaLogsResources"
+      ]
+    },
+    {
+      "name": "DeployGenevaMetricsResources",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "genevaMetricsResources-SRDef",
+      "actions": [
+        "deploy"
+      ],
+      "dependsOn": [
+        "DeploySharedResources",
       ]
     }
   ]

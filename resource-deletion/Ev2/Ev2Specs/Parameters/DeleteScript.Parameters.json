@@ -1,0 +1,62 @@
+// TODO: Add specific tag such as SHA2 to make them unique and secure
+// TODO: This part is generic. Think how to avoid duplicating it in every service
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/rolloutParameters.json",
+  "contentVersion": "1.0.0.0",
+  "shellExtensions": [
+    {
+      "name": "delete-resources",
+      "type": "delete-resources",
+      "properties": {
+        "maxExecutionTime": "PT50M"
+      },
+      "package": {
+        "reference": {
+          "path": "delete-resources.tar"
+        }
+      },
+      "launch": {
+        "command": [
+          "/bin/bash",
+          "/package/unarchive/Shell/delete-resources.sh"
+        ],
+        "environmentVariables": [
+          {
+            "name": "SUBSCRIPTION_ID",
+            "value": "{{.subscriptionId}}"
+          },
+          {
+            "name": "LOCATION",
+            "value": "{{.location}}"
+          },
+          {
+            "name": "GLOBAL_SUBSCRIPTION_ID",
+            "value": "{{.globalSubscriptionId}}"
+          },
+          {
+            "name": "GLOBAL_LOCATION",
+            "value": "{{.globalLocation}}"
+          },
+          {
+            "name": "DELETE_CONFIG_TYPE",
+            "value": "{{.deleteConfigType}}"
+          },
+          {
+            "name": "DAILY_CONFIG_FILE",
+            "value": "Shell/Daily.Delete.config.yaml"
+          },
+          {
+            "name": "MANUAL_CONFIG_FILE",
+            "value": "Shell/Manual.Delete.config.yaml"
+          }
+        ],
+        "identity": {
+          "type": "userAssigned",
+          "userAssignedIdentities": [
+            "/subscriptions/{{.globalSubscriptionId}}/resourcegroups/servicehubval-{{.globalResourcesName}}-global-delete-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/servicehubval-{{.globalResourcesName}}-delete-identity"
+          ]
+        }
+      }
+    }
+  ]
+}

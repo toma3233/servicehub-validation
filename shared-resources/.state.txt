@@ -9,8 +9,10 @@ Ev2/Ev2Specs/Parameters
 Ev2/Ev2Specs/Parameters/AcrPush.SharedResources.Parameters.json
 Ev2/Ev2Specs/Parameters/Helm.Rollout.Parameters.json
 Ev2/Ev2Specs/Parameters/Kubectl.Rollout.Parameters.json
-Ev2/Ev2Specs/Parameters/Main.MsftMonitoring.Parameters.json
+Ev2/Ev2Specs/Parameters/Main.GenevaLogsResources.Parameters.json
+Ev2/Ev2Specs/Parameters/Main.GenevaMetricsResources.Parameters.json
 Ev2/Ev2Specs/Parameters/RegisterResourceProvider.Parameters.json
+Ev2/Ev2Specs/Parameters/RoleAssignment.DeleteIdentity.Parameters.json
 Ev2/Ev2Specs/Parameters/RoleAssignment.Subscription.Parameters.json
 Ev2/Ev2Specs/Parameters/SubscriptionProvisioning.Parameters.json
 Ev2/Ev2Specs/RolloutSpec.json
@@ -18,7 +20,9 @@ Ev2/Ev2Specs/ScopeBinding.json
 Ev2/Ev2Specs/ServiceModel.json
 Ev2/Ev2Specs/Templates
 Ev2/Ev2Specs/Templates/AcrPush.SharedResources.Template.bicep
-Ev2/Ev2Specs/Templates/Main.MsftMonitoring.Template.bicep
+Ev2/Ev2Specs/Templates/Main.GenevaLogsResources.Template.bicep
+Ev2/Ev2Specs/Templates/Main.GenevaMetricsResources.Template.bicep
+Ev2/Ev2Specs/Templates/RoleAssignment.DeleteIdentity.Template.bicep
 Ev2/Ev2Specs/Templates/RoleAssignment.Subscription.Template.json
 Ev2/Ev2Specs/Version.txt
 Makefile

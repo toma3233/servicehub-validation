@@ -22,7 +22,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -64,9 +63,26 @@ func request_MyGreeter_CreateResourceGroup_0(ctx context.Context, marshaler runt
 	var (
 		protoReq CreateResourceGroupRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
+	}
+	protoReq.Name, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "name", err)
 	}
 	msg, err := client.CreateResourceGroup(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -76,9 +92,26 @@ func local_request_MyGreeter_CreateResourceGroup_0(ctx context.Context, marshale
 	var (
 		protoReq CreateResourceGroupRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
+	}
+	protoReq.Name, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "name", err)
 	}
 	msg, err := server.CreateResourceGroup(ctx, &protoReq)
 	return msg, metadata, err
@@ -90,7 +123,15 @@ func request_MyGreeter_ReadResourceGroup_0(ctx context.Context, marshaler runtim
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -108,7 +149,15 @@ func local_request_MyGreeter_ReadResourceGroup_0(ctx context.Context, marshaler 
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -126,7 +175,15 @@ func request_MyGreeter_DeleteResourceGroup_0(ctx context.Context, marshaler runt
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -144,7 +201,15 @@ func local_request_MyGreeter_DeleteResourceGroup_0(ctx context.Context, marshale
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -165,7 +230,15 @@ func request_MyGreeter_UpdateResourceGroup_0(ctx context.Context, marshaler runt
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Tags); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -186,7 +259,15 @@ func local_request_MyGreeter_UpdateResourceGroup_0(ctx context.Context, marshale
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Tags); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["name"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["name"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "name")
 	}
@@ -200,18 +281,36 @@ func local_request_MyGreeter_UpdateResourceGroup_0(ctx context.Context, marshale
 
 func request_MyGreeter_ListResourceGroups_0(ctx context.Context, marshaler runtime.Marshaler, client MyGreeterClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ListResourceGroupsRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
 	msg, err := client.ListResourceGroups(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
 func local_request_MyGreeter_ListResourceGroups_0(ctx context.Context, marshaler runtime.Marshaler, server MyGreeterServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ListResourceGroupsRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
 	msg, err := server.ListResourceGroups(ctx, &protoReq)
 	return msg, metadata, err
 }
@@ -225,13 +324,29 @@ func request_MyGreeter_CreateStorageAccount_0(ctx context.Context, marshaler run
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
 	protoReq.RgName, err = runtime.String(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "rgName", err)
+	}
+	val, ok = pathParams["saName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "saName")
+	}
+	protoReq.SaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "saName", err)
 	}
 	msg, err := client.CreateStorageAccount(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -246,13 +361,29 @@ func local_request_MyGreeter_CreateStorageAccount_0(ctx context.Context, marshal
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
 	protoReq.RgName, err = runtime.String(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "rgName", err)
+	}
+	val, ok = pathParams["saName"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "saName")
+	}
+	protoReq.SaName, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "saName", err)
 	}
 	msg, err := server.CreateStorageAccount(ctx, &protoReq)
 	return msg, metadata, err
@@ -264,7 +395,15 @@ func request_MyGreeter_ReadStorageAccount_0(ctx context.Context, marshaler runti
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -290,7 +429,15 @@ func local_request_MyGreeter_ReadStorageAccount_0(ctx context.Context, marshaler
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -316,7 +463,15 @@ func request_MyGreeter_DeleteStorageAccount_0(ctx context.Context, marshaler run
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -342,7 +497,15 @@ func local_request_MyGreeter_DeleteStorageAccount_0(ctx context.Context, marshal
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -371,7 +534,15 @@ func request_MyGreeter_UpdateStorageAccount_0(ctx context.Context, marshaler run
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Tags); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -400,7 +571,15 @@ func local_request_MyGreeter_UpdateStorageAccount_0(ctx context.Context, marshal
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Tags); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -426,7 +605,15 @@ func request_MyGreeter_ListStorageAccounts_0(ctx context.Context, marshaler runt
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -444,7 +631,15 @@ func local_request_MyGreeter_ListStorageAccounts_0(ctx context.Context, marshale
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["rgName"]
+	val, ok := pathParams["subscriptionId"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "subscriptionId")
+	}
+	protoReq.SubscriptionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "subscriptionId", err)
+	}
+	val, ok = pathParams["rgName"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "rgName")
 	}
@@ -586,7 +781,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/CreateResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/CreateResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -606,7 +801,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ReadResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ReadResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -626,7 +821,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/DeleteResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/DeleteResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -646,7 +841,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/UpdateResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/UpdateResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -666,7 +861,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ListResourceGroups", runtime.WithHTTPPathPattern("/v1/resourcegroups"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ListResourceGroups", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -686,7 +881,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/CreateStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/CreateStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -706,7 +901,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ReadStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ReadStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -726,7 +921,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/DeleteStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/DeleteStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -746,7 +941,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/UpdateStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/UpdateStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -766,7 +961,7 @@ func RegisterMyGreeterHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ListStorageAccounts", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.MyGreeter/ListStorageAccounts", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -881,7 +1076,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/CreateResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/CreateResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -898,7 +1093,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ReadResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ReadResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -915,7 +1110,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/DeleteResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/DeleteResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -932,7 +1127,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/UpdateResourceGroup", runtime.WithHTTPPathPattern("/v1/resourcegroups/{name}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/UpdateResourceGroup", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -949,7 +1144,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ListResourceGroups", runtime.WithHTTPPathPattern("/v1/resourcegroups"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ListResourceGroups", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -966,7 +1161,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/CreateStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/CreateStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -983,7 +1178,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ReadStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ReadStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1000,7 +1195,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/DeleteStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/DeleteStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1017,7 +1212,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/UpdateStorageAccount", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts/{saName}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/UpdateStorageAccount", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1034,7 +1229,7 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ListStorageAccounts", runtime.WithHTTPPathPattern("/v1/resourcegroups/{rgName}/storageaccounts"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.MyGreeter/ListStorageAccounts", runtime.WithHTTPPathPattern("/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1086,16 +1281,16 @@ func RegisterMyGreeterHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 
 var (
 	pattern_MyGreeter_SayHello_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "hello"}, ""))
-	pattern_MyGreeter_CreateResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "resourcegroups"}, ""))
-	pattern_MyGreeter_ReadResourceGroup_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resourcegroups", "name"}, ""))
-	pattern_MyGreeter_DeleteResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resourcegroups", "name"}, ""))
-	pattern_MyGreeter_UpdateResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "resourcegroups", "name"}, ""))
-	pattern_MyGreeter_ListResourceGroups_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "resourcegroups"}, ""))
-	pattern_MyGreeter_CreateStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "resourcegroups", "rgName", "storageaccounts"}, ""))
-	pattern_MyGreeter_ReadStorageAccount_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "resourcegroups", "rgName", "storageaccounts", "saName"}, ""))
-	pattern_MyGreeter_DeleteStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "resourcegroups", "rgName", "storageaccounts", "saName"}, ""))
-	pattern_MyGreeter_UpdateStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1", "resourcegroups", "rgName", "storageaccounts", "saName"}, ""))
-	pattern_MyGreeter_ListStorageAccounts_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "resourcegroups", "rgName", "storageaccounts"}, ""))
+	pattern_MyGreeter_CreateResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"subscriptions", "subscriptionId", "resourceGroups", "name"}, ""))
+	pattern_MyGreeter_ReadResourceGroup_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"subscriptions", "subscriptionId", "resourceGroups", "name"}, ""))
+	pattern_MyGreeter_DeleteResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"subscriptions", "subscriptionId", "resourceGroups", "name"}, ""))
+	pattern_MyGreeter_UpdateResourceGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"subscriptions", "subscriptionId", "resourceGroups", "name"}, ""))
+	pattern_MyGreeter_ListResourceGroups_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"subscriptions", "subscriptionId", "resourceGroups"}, ""))
+	pattern_MyGreeter_CreateStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"subscriptions", "subscriptionId", "resourceGroups", "rgName", "providers", "Microsoft.Storage", "storageAccounts", "saName"}, ""))
+	pattern_MyGreeter_ReadStorageAccount_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"subscriptions", "subscriptionId", "resourceGroups", "rgName", "providers", "Microsoft.Storage", "storageAccounts", "saName"}, ""))
+	pattern_MyGreeter_DeleteStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"subscriptions", "subscriptionId", "resourceGroups", "rgName", "providers", "Microsoft.Storage", "storageAccounts", "saName"}, ""))
+	pattern_MyGreeter_UpdateStorageAccount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"subscriptions", "subscriptionId", "resourceGroups", "rgName", "providers", "Microsoft.Storage", "storageAccounts", "saName"}, ""))
+	pattern_MyGreeter_ListStorageAccounts_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5, 2, 6}, []string{"subscriptions", "subscriptionId", "resourceGroups", "rgName", "providers", "Microsoft.Storage", "storageAccounts"}, ""))
 	pattern_MyGreeter_StartLongRunningOperation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "async", "longrunningoperation"}, ""))
 	pattern_MyGreeter_CancelOperation_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"v1", "entity", "entityType", "entityId", "operation", "operationId", "cancel"}, ""))
 )

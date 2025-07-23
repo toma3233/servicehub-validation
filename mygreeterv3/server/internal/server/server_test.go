@@ -16,7 +16,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	gomock "go.uber.org/mock/gomock"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var _ = Describe("Mock Testing", func() {
@@ -174,7 +173,8 @@ var _ = Describe("Fakes Unit Testing", func() {
 		})
 
 		It("ListResourceGroup() should be successful", func() {
-			_, err := s.ListResourceGroups(context.Background(), &emptypb.Empty{})
+			in := &pb.ListResourceGroupsRequest{}
+			_, err := s.ListResourceGroups(context.Background(), in)
 			Expect(err).ToNot(HaveOccurred())
 		})
 
@@ -210,7 +210,8 @@ var _ = Describe("Fakes Unit Testing", func() {
 		})
 
 		It("ListResourceGroup() should return an error", func() {
-			_, err := s.ListResourceGroups(context.Background(), &emptypb.Empty{})
+			in := &pb.ListResourceGroupsRequest{}
+			_, err := s.ListResourceGroups(context.Background(), in)
 			Expect(err).To(HaveOccurred())
 		})
 	})

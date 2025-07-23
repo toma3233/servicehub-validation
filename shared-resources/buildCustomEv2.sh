@@ -39,3 +39,13 @@ cd $outputDir/Ev2Specs/Build
 echo "Get Argo controller installation yaml"
 curl -fsSL -o install.yaml https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 cd ..
+
+cd $outputDir/Ev2Specs
+
+# Make sure the global subscription IDs are set in the configuration files
+testGlobalSubscriptionId=$(jq -r '.Settings.globalSubscriptionId' Configurations/Test/Configuration.json)
+prodGlobalSubscriptionId=$(jq -r '.Settings.globalSubscriptionId' Configurations/Prod/Configuration.json)
+if [ -z "$testGlobalSubscriptionId" ] || [ -z "$prodGlobalSubscriptionId" ]; then
+    echo "Error: Global subscription IDs (globalSubscriptionId) are not set in the configuration files."
+    exit 1
+fi

@@ -91,6 +91,12 @@
                 {
                     "find": "{{.genevaEnvironment}}",
                     "replaceWith": "$config(genevaEnvironment)"
+                },
+                {
+                    // The var ev2.ipAddresses is provided by Ev2. Users don't need to provide values for this var.
+                    // We need to use this formatting for the find and replace since we expect a proper json array. Without [""], we would replace it with a stringified JSON array which is incorrect
+                    "find": "[\"{{.ev2IPAddresses}}\"]",
+                    "replaceWith": "$config(ev2.ipAddresses)"
                 }
             ]
         },

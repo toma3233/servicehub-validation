@@ -13,6 +13,15 @@
         },
         "resourceGroupName": {
             "value": "{{.resourceGroupName}}"
+        },
+        "san": {
+            "value": "aks-servicehubval-csharpuserrp-test.{{.location}}.cloudapp.azure.com"
+        },
+        "cn": {
+            "value": "aks-servicehubval-csharpuserrp-test.{{.location}}.cloudapp.azure.com"
+        },
+        "dnsLabelPrefix": {
+            "value": "aks-servicehubval-csharpuserrp-test"
         }
     }
 }

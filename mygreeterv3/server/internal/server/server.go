@@ -38,6 +38,22 @@ func (s *Server) Serve(options Options) {
 
 	s.Init(options)
 
+	// Start the HTTP proxy server with OTEL audit middleware
+	if options.OtelAuditHTTPPort > 0 {
+		s.OtelAuditHTTPServer = NewHTTPProxyWithOtelAudit(logger, options.OtelAuditHTTPPort, options.HTTPPort)
+		if s.OtelAuditHTTPServer != nil {
+			err := s.OtelAuditHTTPServer.Start()
+			if err != nil {
+				logger.Error("Failed to start OTEL audit HTTP proxy server", "error", err)
+			} else {
+				logger.Info("OTEL audit HTTP proxy server started",
+					"proxy_port", options.OtelAuditHTTPPort,
+					"target_port", options.HTTPPort)
+				s.OtelAuditHTTPPort = options.OtelAuditHTTPPort
+			}
+		}
+	}
+
 	s.GrpcServer = grpc.NewServer(grpc.ChainUnaryInterceptor(
 		interceptor.DefaultServerInterceptors(interceptor.GetServerInterceptorLogOptions(logger, logattrs.GetAttrs()))...,
 	))
@@ -151,6 +167,20 @@ func (s *Server) IsRunning() bool {
 		return false
 	}
 
+	// Check OTEL audit HTTP port if enabled
+	if s.OtelAuditHTTPPort > 0 {
+		otelAuditAddress := net.JoinHostPort("localhost", strconv.Itoa(s.OtelAuditHTTPPort))
+		otelAuditConn, err := net.DialTimeout("tcp", otelAuditAddress, timeout)
+		if err != nil {
+			return false
+		}
+		if otelAuditConn != nil {
+			defer otelAuditConn.Close()
+		} else {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -166,6 +196,11 @@ func (s *Server) Cleanup() {
 		defer cancel()
 		if err := s.GwServer.Shutdown(ctx); err != nil {
 			log.Error("HTTP server Shutdown: " + err.Error())
+		}
+	}
+	if s.OtelAuditHTTPServer != nil {
+		if err := s.OtelAuditHTTPServer.Stop(); err != nil {
+			log.Error("OTEL audit HTTP server Shutdown: " + err.Error())
 		}
 	}
 }

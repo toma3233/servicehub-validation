@@ -34,12 +34,23 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MDSD_SOCKET_PATH
+              value: "/var/run/mdsd/asa/default_fluent.socket"
           command:
             {{- toYaml .Values.command | nindent 12 }}
           args:
             {{- toYaml .Values.args | nindent 12 }}
           ports:
             - containerPort: {{ .Values.service.port }}
+              name: grpc
+            - containerPort: {{ .Values.service.httpPort }}
+              name: http
+            - containerPort: {{ .Values.service.otelAuditHttpPort }}
+              name: otel-http
+          volumeMounts:
+            - name: mdsd-asa-run-vol
+              mountPath: "/var/run/mdsd/asa/default_fluent.socket"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if eq (include "server.fullname" .) .Values.service.serverName }}
@@ -58,6 +69,10 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: mdsd-asa-run-vol
+          hostPath:
+            path: "/var/run/mdsd/asa/default_fluent.socket"
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

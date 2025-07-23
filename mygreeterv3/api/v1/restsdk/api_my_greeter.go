@@ -133,10 +133,12 @@ MyGreeterApiService Create a resource group
 This operation creates a new resource group.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param body
+  - @param subscriptionId
+  - @param name
 
 @return interface{}
 */
-func (a *MyGreeterApiService) MyGreeterCreateResourceGroup(ctx context.Context, body CreateResourceGroupRequest) (interface{}, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterCreateResourceGroup(ctx context.Context, body MyGreeterCreateResourceGroupBody, subscriptionId string, name string) (interface{}, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -146,7 +148,9 @@ func (a *MyGreeterApiService) MyGreeterCreateResourceGroup(ctx context.Context, 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{name}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"name"+"}", fmt.Sprintf("%v", name), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -231,11 +235,13 @@ MyGreeterApiService Create a storage account
 This operation creates a new storage account.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param body
+  - @param subscriptionId
   - @param rgName
+  - @param saName
 
 @return CreateStorageAccountResponse
 */
-func (a *MyGreeterApiService) MyGreeterCreateStorageAccount(ctx context.Context, body MyGreeterCreateStorageAccountBody, rgName string) (CreateStorageAccountResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterCreateStorageAccount(ctx context.Context, body MyGreeterCreateStorageAccountBody, subscriptionId string, rgName string, saName string) (CreateStorageAccountResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Post")
 		localVarPostBody    interface{}
@@ -245,8 +251,10 @@ func (a *MyGreeterApiService) MyGreeterCreateStorageAccount(ctx context.Context,
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{rgName}/storageaccounts"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"rgName"+"}", fmt.Sprintf("%v", rgName), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"saName"+"}", fmt.Sprintf("%v", saName), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -330,11 +338,12 @@ func (a *MyGreeterApiService) MyGreeterCreateStorageAccount(ctx context.Context,
 MyGreeterApiService Delete a resource group
 This operation deletes a resource group.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
   - @param name
 
 @return interface{}
 */
-func (a *MyGreeterApiService) MyGreeterDeleteResourceGroup(ctx context.Context, name string) (interface{}, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterDeleteResourceGroup(ctx context.Context, subscriptionId string, name string) (interface{}, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Delete")
 		localVarPostBody    interface{}
@@ -344,7 +353,8 @@ func (a *MyGreeterApiService) MyGreeterDeleteResourceGroup(ctx context.Context, 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{name}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{name}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"name"+"}", fmt.Sprintf("%v", name), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -427,12 +437,13 @@ func (a *MyGreeterApiService) MyGreeterDeleteResourceGroup(ctx context.Context, 
 MyGreeterApiService Delete a storage account
 This operation deletes a storage account.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
   - @param rgName
   - @param saName
 
 @return interface{}
 */
-func (a *MyGreeterApiService) MyGreeterDeleteStorageAccount(ctx context.Context, rgName string, saName string) (interface{}, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterDeleteStorageAccount(ctx context.Context, subscriptionId string, rgName string, saName string) (interface{}, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Delete")
 		localVarPostBody    interface{}
@@ -442,7 +453,8 @@ func (a *MyGreeterApiService) MyGreeterDeleteStorageAccount(ctx context.Context,
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"rgName"+"}", fmt.Sprintf("%v", rgName), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"saName"+"}", fmt.Sprintf("%v", saName), -1)
 
@@ -526,10 +538,11 @@ func (a *MyGreeterApiService) MyGreeterDeleteStorageAccount(ctx context.Context,
 MyGreeterApiService List all resource groups
 This operation lists all the resource groups.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
 
 @return ListResourceGroupResponse
 */
-func (a *MyGreeterApiService) MyGreeterListResourceGroups(ctx context.Context) (ListResourceGroupResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterListResourceGroups(ctx context.Context, subscriptionId string) (ListResourceGroupResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
@@ -539,7 +552,8 @@ func (a *MyGreeterApiService) MyGreeterListResourceGroups(ctx context.Context) (
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -621,11 +635,12 @@ func (a *MyGreeterApiService) MyGreeterListResourceGroups(ctx context.Context) (
 MyGreeterApiService List all storage accounts
 This operation lists all the storage accounts.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
   - @param rgName
 
 @return ListStorageAccountResponse
 */
-func (a *MyGreeterApiService) MyGreeterListStorageAccounts(ctx context.Context, rgName string) (ListStorageAccountResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterListStorageAccounts(ctx context.Context, subscriptionId string, rgName string) (ListStorageAccountResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
@@ -635,7 +650,8 @@ func (a *MyGreeterApiService) MyGreeterListStorageAccounts(ctx context.Context, 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{rgName}/storageaccounts"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"rgName"+"}", fmt.Sprintf("%v", rgName), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -718,11 +734,12 @@ func (a *MyGreeterApiService) MyGreeterListStorageAccounts(ctx context.Context, 
 MyGreeterApiService Read a resource group
 This operation reads the details of a resource group.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
   - @param name
 
 @return ReadResourceGroupResponse
 */
-func (a *MyGreeterApiService) MyGreeterReadResourceGroup(ctx context.Context, name string) (ReadResourceGroupResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterReadResourceGroup(ctx context.Context, subscriptionId string, name string) (ReadResourceGroupResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
@@ -732,7 +749,8 @@ func (a *MyGreeterApiService) MyGreeterReadResourceGroup(ctx context.Context, na
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{name}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{name}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"name"+"}", fmt.Sprintf("%v", name), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -815,12 +833,13 @@ func (a *MyGreeterApiService) MyGreeterReadResourceGroup(ctx context.Context, na
 MyGreeterApiService Read a storage account
 This operation reads the details of a storage account.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId
   - @param rgName
   - @param saName
 
 @return ReadStorageAccountResponse
 */
-func (a *MyGreeterApiService) MyGreeterReadStorageAccount(ctx context.Context, rgName string, saName string) (ReadStorageAccountResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterReadStorageAccount(ctx context.Context, subscriptionId string, rgName string, saName string) (ReadStorageAccountResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Get")
 		localVarPostBody    interface{}
@@ -830,7 +849,8 @@ func (a *MyGreeterApiService) MyGreeterReadStorageAccount(ctx context.Context, r
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"rgName"+"}", fmt.Sprintf("%v", rgName), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"saName"+"}", fmt.Sprintf("%v", saName), -1)
 
@@ -1111,11 +1131,12 @@ MyGreeterApiService Update a resource group
 This operation updates the tags of a resource group.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param body
+  - @param subscriptionId
   - @param name
 
 @return UpdateResourceGroupResponse
 */
-func (a *MyGreeterApiService) MyGreeterUpdateResourceGroup(ctx context.Context, body map[string]string, name string) (UpdateResourceGroupResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterUpdateResourceGroup(ctx context.Context, body map[string]string, subscriptionId string, name string) (UpdateResourceGroupResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Put")
 		localVarPostBody    interface{}
@@ -1125,7 +1146,8 @@ func (a *MyGreeterApiService) MyGreeterUpdateResourceGroup(ctx context.Context, 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{name}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{name}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"name"+"}", fmt.Sprintf("%v", name), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -1211,12 +1233,13 @@ MyGreeterApiService Update a storage account
 This operation updates the tags of a storage account.
   - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param body
+  - @param subscriptionId
   - @param rgName
   - @param saName
 
 @return UpdateStorageAccountResponse
 */
-func (a *MyGreeterApiService) MyGreeterUpdateStorageAccount(ctx context.Context, body map[string]string, rgName string, saName string) (UpdateStorageAccountResponse, *http.Response, error) {
+func (a *MyGreeterApiService) MyGreeterUpdateStorageAccount(ctx context.Context, body map[string]string, subscriptionId string, rgName string, saName string) (UpdateStorageAccountResponse, *http.Response, error) {
 	var (
 		localVarHttpMethod  = strings.ToUpper("Put")
 		localVarPostBody    interface{}
@@ -1226,7 +1249,8 @@ func (a *MyGreeterApiService) MyGreeterUpdateStorageAccount(ctx context.Context,
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+	localVarPath := a.client.cfg.BasePath + "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"subscriptionId"+"}", fmt.Sprintf("%v", subscriptionId), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"rgName"+"}", fmt.Sprintf("%v", rgName), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"saName"+"}", fmt.Sprintf("%v", saName), -1)
 

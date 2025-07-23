@@ -1,0 +1,30 @@
+# This file is used to configure the manual deletion of resources in Azure.
+# It specifies the subscriptions and resource groups to be deleted.
+# The subscriptions can be in any region and any tenant/environment.
+# The rollout will handle deletion correctly across environments.
+settings:
+  # Set to true to wait for Key Vault purge or false to start the command but not wait for it.
+  waitForKVPurge: true
+  # Specify the deletion option to use. Options include:
+  # - byTag: Delete resource groups that have a deletionDate tag set to a date thats less than or equal to today.
+  # - byResourceGroupList: Delete resources by a list of resource groups.
+  # - byResourceIdList: Delete resources by a list of resource IDs.
+  deletionOption: "byResourceIdList"
+  # Specify the list of subscriptions and resource groups to delete.
+  # Each entry in the list should contain a subscription ID and a list of resources
+  # The resourceList can either contain resource group names or resource Ids for individual resources.
+  deletionList:
+    # AKS Service Hub Validation (TestCorp)
+    - subscription: "a447fa09-82a5-4123-8d83-198b46a21b00"
+      resourceList:
+        - "/subscriptions/049e57e6-ff8e-4e8f-91bf-5830bf32d150/resourceGroups/servicehubval-700TestCorp-sy-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/servicehubval-700TestCorp-australiaeast-mygreeterv3-managedIdentity"
+        - "/subscriptions/049e57e6-ff8e-4e8f-91bf-5830bf32d150/resourceGroups/servicehubval-700TestCorp-sy-rg/providers/Microsoft.KeyVault/vaults/serviceh700TestCsy"
+    # AKS Service Hub Validation Sub - Sweden Central
+    - subscription: "dab1af7c-1826-4fa2-a8e3-0d72c0d88f13"
+      resourceList:
+        - "/subscriptions/dab1af7c-1826-4fa2-a8e3-0d72c0d88f13/resourceGroups/servicehubval-wait-sec-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/servicehubval-wait-swedencentral-mygreeterv3-managedIdentity"
+    # AKS Service Hub Validation Sub - East US 2
+    - subscription: "4e0dffe1-6aca-446c-84a2-540b8064fdd4"
+      resourceList:
+        - "/subscriptions/4e0dffe1-6aca-446c-84a2-540b8064fdd4/resourceGroups/servicehubval-wait-bn-rg/providers/Microsoft.ContainerService/managedClusters/servicehubval-wait-cluster"
+        - "/subscriptions/4e0dffe1-6aca-446c-84a2-540b8064fdd4/resourceGroups/servicehubval-wait-bn-rg/providers/Microsoft.ContainerRegistry/registries/servicehubvalwaiteastus2acr"

@@ -49,6 +49,24 @@
           ]
         },
         {
+          "name": "deletionResources-SRDef",
+          "composedOf": {
+            "arm": {
+              "templatePath": "Templates\\RoleAssignment.DeleteIdentity.Template.json",
+              "parametersPath": "Parameters\\RoleAssignment.DeleteIdentity.Parameters.json",
+              "deploymentLevel": "Subscription"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "sharedInputs"
+            },
+            {
+              "name": "globalInputs"
+            }
+          ]
+        },
+        {
           "name": "AcrPushResources-SRDef",
           "composedOf": {
             "arm": {
@@ -99,11 +117,11 @@
           ]
         },
         {
-          "name": "genevaResources-SRDef",
+          "name": "genevaLogsResources-SRDef",
           "composedOf": {
             "arm": {
-              "templatePath": "Templates\\Main.MsftMonitoring.Template.json",
-              "parametersPath": "Parameters\\Main.MsftMonitoring.Parameters.json"
+              "templatePath": "Templates\\Main.GenevaLogsResources.Template.json",
+              "parametersPath": "Parameters\\Main.GenevaLogsResources.Parameters.json"
             }
           },
           "scopeTags": [
@@ -111,7 +129,7 @@
               "name": "sharedInputs"
             },
             {
-              "name": "genevaResourcesInputs"
+              "name": "genevaLogsResourcesInputs"
             }
           ]
         },
@@ -135,7 +153,25 @@
               "name": "sharedInputs"
             },
             {
-              "name": "genevaServicesInputs"
+              "name": "genevaLogsServicesInputs"
+            }
+          ]
+        },
+        {
+          "name": "genevaMetricsResources-SRDef",
+          "composedOf": {
+            "arm": {
+              "templatePath": "Templates\\Main.GenevaMetricsResources.Template.json",
+              "parametersPath": "Parameters\\Main.GenevaMetricsResources.Parameters.json",
+              "deploymentLevel": "Subscription"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "sharedInputs"
+            },
+            {
+              "name": "genevaMetricsResourcesInputs"
             }
           ]
         }

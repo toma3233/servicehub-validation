@@ -17,6 +17,7 @@ service:
   type: ClusterIP
   port: 50051
   httpPort: 50061
+  otelAuditHttpPort: 8080
   serverName: servicehubval-mygreeterv3-server
   livenessInitialDelaySeconds: 10
   livenessPeriodSeconds: 10

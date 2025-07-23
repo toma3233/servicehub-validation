@@ -7,6 +7,7 @@ type Options struct {
 	SubscriptionID           string
 	EnableAzureSDKCalls      bool
 	HTTPPort                 int
+	OtelAuditHTTPPort        int
 	RemoteAddr               string
 	IntervalMilliSec         int64
 	IdentityResourceID       string

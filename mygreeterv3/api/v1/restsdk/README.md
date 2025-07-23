@@ -22,29 +22,29 @@ All URIs are relative to */*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *MyGreeterApi* | [**MyGreeterCancelOperation**](docs/MyGreeterApi.md#mygreetercanceloperation) | **Post** /v1/entity/{entityType}/{entityId}/operation/{operationId}/cancel | Cancel an async operation.
-*MyGreeterApi* | [**MyGreeterCreateResourceGroup**](docs/MyGreeterApi.md#mygreetercreateresourcegroup) | **Post** /v1/resourcegroups | Create a resource group
-*MyGreeterApi* | [**MyGreeterCreateStorageAccount**](docs/MyGreeterApi.md#mygreetercreatestorageaccount) | **Post** /v1/resourcegroups/{rgName}/storageaccounts | Create a storage account
-*MyGreeterApi* | [**MyGreeterDeleteResourceGroup**](docs/MyGreeterApi.md#mygreeterdeleteresourcegroup) | **Delete** /v1/resourcegroups/{name} | Delete a resource group
-*MyGreeterApi* | [**MyGreeterDeleteStorageAccount**](docs/MyGreeterApi.md#mygreeterdeletestorageaccount) | **Delete** /v1/resourcegroups/{rgName}/storageaccounts/{saName} | Delete a storage account
-*MyGreeterApi* | [**MyGreeterListResourceGroups**](docs/MyGreeterApi.md#mygreeterlistresourcegroups) | **Get** /v1/resourcegroups | List all resource groups
-*MyGreeterApi* | [**MyGreeterListStorageAccounts**](docs/MyGreeterApi.md#mygreeterliststorageaccounts) | **Get** /v1/resourcegroups/{rgName}/storageaccounts | List all storage accounts
-*MyGreeterApi* | [**MyGreeterReadResourceGroup**](docs/MyGreeterApi.md#mygreeterreadresourcegroup) | **Get** /v1/resourcegroups/{name} | Read a resource group
-*MyGreeterApi* | [**MyGreeterReadStorageAccount**](docs/MyGreeterApi.md#mygreeterreadstorageaccount) | **Get** /v1/resourcegroups/{rgName}/storageaccounts/{saName} | Read a storage account
+*MyGreeterApi* | [**MyGreeterCreateResourceGroup**](docs/MyGreeterApi.md#mygreetercreateresourcegroup) | **Post** /subscriptions/{subscriptionId}/resourceGroups/{name} | Create a resource group
+*MyGreeterApi* | [**MyGreeterCreateStorageAccount**](docs/MyGreeterApi.md#mygreetercreatestorageaccount) | **Post** /subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName} | Create a storage account
+*MyGreeterApi* | [**MyGreeterDeleteResourceGroup**](docs/MyGreeterApi.md#mygreeterdeleteresourcegroup) | **Delete** /subscriptions/{subscriptionId}/resourceGroups/{name} | Delete a resource group
+*MyGreeterApi* | [**MyGreeterDeleteStorageAccount**](docs/MyGreeterApi.md#mygreeterdeletestorageaccount) | **Delete** /subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName} | Delete a storage account
+*MyGreeterApi* | [**MyGreeterListResourceGroups**](docs/MyGreeterApi.md#mygreeterlistresourcegroups) | **Get** /subscriptions/{subscriptionId}/resourceGroups | List all resource groups
+*MyGreeterApi* | [**MyGreeterListStorageAccounts**](docs/MyGreeterApi.md#mygreeterliststorageaccounts) | **Get** /subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts | List all storage accounts
+*MyGreeterApi* | [**MyGreeterReadResourceGroup**](docs/MyGreeterApi.md#mygreeterreadresourcegroup) | **Get** /subscriptions/{subscriptionId}/resourceGroups/{name} | Read a resource group
+*MyGreeterApi* | [**MyGreeterReadStorageAccount**](docs/MyGreeterApi.md#mygreeterreadstorageaccount) | **Get** /subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName} | Read a storage account
 *MyGreeterApi* | [**MyGreeterSayHello**](docs/MyGreeterApi.md#mygreetersayhello) | **Post** /v1/hello | Send a greeting
 *MyGreeterApi* | [**MyGreeterStartLongRunningOperation**](docs/MyGreeterApi.md#mygreeterstartlongrunningoperation) | **Post** /v1/async/longrunningoperation | Start a long running operation.
-*MyGreeterApi* | [**MyGreeterUpdateResourceGroup**](docs/MyGreeterApi.md#mygreeterupdateresourcegroup) | **Put** /v1/resourcegroups/{name} | Update a resource group
-*MyGreeterApi* | [**MyGreeterUpdateStorageAccount**](docs/MyGreeterApi.md#mygreeterupdatestorageaccount) | **Put** /v1/resourcegroups/{rgName}/storageaccounts/{saName} | Update a storage account
+*MyGreeterApi* | [**MyGreeterUpdateResourceGroup**](docs/MyGreeterApi.md#mygreeterupdateresourcegroup) | **Put** /subscriptions/{subscriptionId}/resourceGroups/{name} | Update a resource group
+*MyGreeterApi* | [**MyGreeterUpdateStorageAccount**](docs/MyGreeterApi.md#mygreeterupdatestorageaccount) | **Put** /subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName} | Update a storage account
 
 ## Documentation For Models
 
  - [Address](docs/Address.md)
- - [CreateResourceGroupRequest](docs/CreateResourceGroupRequest.md)
  - [CreateStorageAccountResponse](docs/CreateStorageAccountResponse.md)
  - [HelloReply](docs/HelloReply.md)
  - [HelloRequest](docs/HelloRequest.md)
  - [ListResourceGroupResponse](docs/ListResourceGroupResponse.md)
  - [ListStorageAccountResponse](docs/ListStorageAccountResponse.md)
  - [MyGreeterCancelOperationBody](docs/MyGreeterCancelOperationBody.md)
+ - [MyGreeterCreateResourceGroupBody](docs/MyGreeterCreateResourceGroupBody.md)
  - [MyGreeterCreateStorageAccountBody](docs/MyGreeterCreateStorageAccountBody.md)
  - [ReadResourceGroupResponse](docs/ReadResourceGroupResponse.md)
  - [ReadStorageAccountResponse](docs/ReadStorageAccountResponse.md)

@@ -8,7 +8,7 @@
 # - PublicMSFT (test): This is the domain registration for the MSFT tenant in the Public cloud. This is used for test resources.
 # We currently do not have the domain registration values for the other clouds and tenants. We will add them when we have them.
 
-PublicAME (prod):
+Geneva_PublicAME (prod):
   Domain: prod.ame.servicehubval.azure.net # DO NOT CHANGE. This is immutable and cannot be changed after the domain is registered. Any certificate issued must match a registered domain. This follows certain naming conventions established by the OneCert team. For every cloud, there are certain domain suffixes you must adhere to. We have selected an established naming suffix for the domain name that works in the Azure Public Cloud, "azure.net". Do not change this value. Not adhering to this naming convention will also cause issues with account creation, given that Geneva may likewise validate the domain name.
   Cloud: Public # DO NOT CHANGE. This cannot be changed after the domain is registered.
   Tenants: AME # DO NOT CHANGE. This is also immutable and cannot be changed after the domain is registered. You can only select 1. Note that the OneCert cli, if used, may allow you to select multiple tenants. This is a bug in the OneCert cli and will cause a security flag. Due to new SFI policies, you can only select 1 tenant.
@@ -27,7 +27,7 @@ PublicAME (prod):
     - ame\ksehgal # Please replace with your teammates' AME account.
     - [insert security group name here] # (i.e. ame\ap-aksservicehubvalidation) This name should align with a security group you created. This means that all members of the security group can edit or disable the registration. TODO (Kaahshvi): Use a templated value for this.
 
-PublicMSFT (test):
+Geneva_PublicMSFT (test):
   Domain: test.general.servicehubval.azure-test.net # DO NOT CHANGE. This is immutable and cannot be changed after the domain is registered. Any certificate issued must match a registered domain. This follows certain naming conventions established by the OneCert team. For every cloud, there a certain domain suffixes you must adhere to. We have selected an established naming suffix for the domain name that works in the Azure Public Cloud, "azure-test.net". Do not change this value. Not adhering to this naming convention will also cause issues with account creation, given that Geneva may likewise validate the domain name.
   Cloud: Public # DO NOT CHANGE. This cannot be changed after the domain is registered.
   Tenants: ALL OTHER ENTRA TENANTS # DO NOT CHANGE. This is also immutable and cannot be changed after the domain is registered. You can only select 1. Note that the OneCert cli, if used, may allow you to select multiple tenants. This is a bug in the OneCert cli and will cause a security flag. Due to new SFI policies, you can only select 1 tenant.
@@ -44,4 +44,23 @@ PublicMSFT (test):
   Owners: # we presume you have an AME account. Select "+Add" to add owners. You should also add an AME security group. You should see your AME account automatically added to the list. The security group is currently not required, but it will be in the future. All owners can edit or disable the registration. Owner account must be in format Domain\Username. The usernames show up as all lowercase or uppercase.
     - ame\chamakawa # Please replace with your AME account.
     - ame\ksehgal # Please replace with your teammates' AME account.
+    - [insert security group name here] # (i.e. ame\ap-aksservicehubvalidation) This name should align with a security group you created. This means that all members of the security group can edit or disable the registration. TODO (Kaahshvi): Use a templated value for this.
+
+Userrp_PublicMSFT (test):
+  Domain: aks-servicehubval-README-test.{{.location}}.cloudapp.azure.com # Domain name should match with FQDN. This is immutable and cannot be changed after the domain is registered. Any certificate issued must match a registered domain.
+  Cloud: Public # DO NOT CHANGE. This cannot be changed after the domain is registered.
+  Tenants: ALL OTHER ENTRA TENANTS # DO NOT CHANGE. This is also immutable and cannot be changed after the domain is registered. You can only select 1. Note that the OneCert cli, if used, may allow you to select multiple tenants. This is a bug in the OneCert cli and will cause a security flag. Due to new SFI policies, you can only select 1 tenant.
+  Allow certificate request from dSMS: DoNotSelect # DO NOT CHANGE
+  Service Tree Id: dfe3a810-861c-44da-9b00-71e57a865194 # DO NOT CHANGE
+  Issuer (v1): None # DO NOT CHANGE
+  Public Issuer: Microsoft XS 2028 # DO NOT CHANGE
+  Private Issuer: AME # DO NOT CHANGE
+  Subscription ID (Optional): N/A # This can be updated. In Ev2, we automatically register the subscription ID for you if the subscription has not been provisioned. However, if you are using an existing subscription, you will need to manually register the subscription ID. Registering the subscription ID allows certificates with the domain name as their SAN to be issued in this subscription. If you do not register the subscription ID, you will not be able to issue certificates with the domain name as their SAN in this subscription. Please click "Add" to add the subscription ID to the list.
+  Enable Subscription Validation on Renewal: Select # After enabling this feature, you will not be able to disable it. This feature is used to validate the subscription ID when the certificate is renewed.
+  Domain Sync Settings: # This feature is currently disabled by the OneCert team.
+    USGov: DoNotSelect
+    USSec: DoNotSelect
+  Owners: # we presume you have an AME account. Select "+Add" to add owners. You should also add an AME security group. You should see your AME account automatically added to the list. The security group is currently not required, but it will be in the future. All owners can edit or disable the registration. Owner account must be in format Domain\Username. The usernames show up as all lowercase or uppercase.
+    - ame\peiyizhang # Please replace with your AME account.
+    - ame\chamakawa # Please replace with your teammates' AME account.
     - [insert security group name here] # (i.e. ame\ap-aksservicehubvalidation) This name should align with a security group you created. This means that all members of the security group can edit or disable the registration. TODO (Kaahshvi): Use a templated value for this.

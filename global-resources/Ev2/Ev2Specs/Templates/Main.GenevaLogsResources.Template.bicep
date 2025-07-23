@@ -40,7 +40,13 @@ param prodAdminSecurityGroupId string
 @sys.description('The corp security group ID. This is the security group that will be used to access the production Kusto cluster from their coporate accounts.')
 param corpAdminSecurityGroupId string
 
+@sys.description('JSON string array of Ev2 IP addresses for network access rules.')
+param ev2IpAddresses array
+
 targetScope = 'subscription'
+
+// Convert EV2 IP addresses to CIDR ranges for Network Security Perimeter
+var ev2IpAddressRanges = [for ip in ev2IpAddresses: '${ip}/32']
 
 module rg 'br/public:avm/res/resources/resource-group:0.2.3' = {
   name: '${resourceGroupName}LogsDeploy'
@@ -48,6 +54,50 @@ module rg 'br/public:avm/res/resources/resource-group:0.2.3' = {
   params: {
     name: resourceGroupName
     location: location
+  }
+}
+
+module networkSecurityPerimeter 'br/public:avm/res/network/network-security-perimeter:0.1.0' = {
+  name: 'servicehubval-${resourcesName}-nspDeploy'
+  scope: resourceGroup(subscriptionId, resourceGroupName)
+  params: {
+    // Required parameters
+    name: 'servicehubval-${resourcesName}-nsp'
+    // Non-required parameters
+    location: rg.outputs.location
+    profiles: [
+      {
+        accessRules: [
+          {
+            // Required since deployment script creates an ACI in azure cloud that is used to access key vault
+            // Used traffic analysis tool to determine this is the best service tag to use for access rule
+            // https://dataexplorer.azure.com/dashboards/0799d844-3039-4736-9d1a-9daab2aff826
+            serviceTags: [
+              'AzureCloud.${location}'
+            ]
+            direction: 'Inbound'
+            name: 'rule-inbound-azcloud'
+          }
+          // EV2 best practice for identifying IPs used by ev2 extensions is by referencing the central configuration
+          // The list of IP addresses is provided by the EV2 team, users don't need to hardcode it
+          // https://ev2docs.azure.net/features/rollout-infra/overview.html#best-practice-always-reference-ev2-ip-addresses-from-central-configuration-instead-of-hardcoding
+          // TODO (tomabraham): Monitor best practices doc and update to using service tag once they migrate to that
+          {
+            addressPrefixes: ev2IpAddressRanges
+            direction: 'Inbound'
+            name: 'rule-inbound-ev2'
+          }
+        ]
+        name: 'profile-01'
+      }
+    ]
+    resourceAssociations: [
+      {
+        accessMode: 'Enforced'
+        privateLinkResource: keyvault.outputs.resourceId
+        profile: 'profile-01'
+      }
+    ]
   }
 }
 
@@ -76,6 +126,9 @@ module scriptIdentity 'br/public:avm/res/managed-identity/user-assigned-identity
 var servicePrefix = substring('servicehubval', 0, min(12, length('servicehubval')))
 var resourceNamePrefix = substring(resourcesName, 0, min(12, length(resourcesName)))
 var truncatedKeyVaultName = '${servicePrefix}${resourceNamePrefix}'
+
+// An alternative to securing the key vault via NSP is deleting the key vault after the Geneva account is created
+// This will avoid the NSP setup
 module keyvault 'br/public:avm/res/key-vault/vault:0.9.0' = {
   name: 'servicehubval-${resourcesName}-keyvaultDeploy'
   scope: resourceGroup(subscriptionId, resourceGroupName)

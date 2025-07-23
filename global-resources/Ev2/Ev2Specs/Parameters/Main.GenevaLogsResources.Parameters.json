@@ -32,6 +32,9 @@
         },
         "corpAdminSecurityGroupId": {
             "value": "{{.corpAdminSecurityGroupId}}"
+        },
+        "ev2IpAddresses": {
+            "value": ["{{.ev2IPAddresses}}"]
         }
     }
 }

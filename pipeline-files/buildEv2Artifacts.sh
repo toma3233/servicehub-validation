@@ -17,6 +17,7 @@ buildReason=$6
 sourceBranch=$7
 pullRequestId=$8
 restrictToPR=$9
+deleteConfigType=${10}
 
 # We are artifically restricting this build pipeline to either only run on the default protected branch or from a pull request.
 # This is to ensure that the build pipeline is not run on any other branches as the unique id is tied to either the pull request id or the default branch.
@@ -104,7 +105,7 @@ else
   echo "Building non-service artifacts"
   if [ -f "buildCustomEv2.sh" ]; then
     echo "Running build script"
-    ./buildCustomEv2.sh "$outputDir"
+    ./buildCustomEv2.sh "$outputDir" "$deleteConfigType"
   fi
 fi
 
@@ -151,6 +152,7 @@ else
     echo "No Templates directory at $templatesDir; skipping Bicep conversion"
 fi
 
+cd $outputDir/Ev2Specs
 echo "Package Script and Set Build Version"
 versionContent=$buildNumber
 versionFileName="./Version.txt"

@@ -44,6 +44,9 @@ for NAMESPACE in "${NAMESPACES[@]}"; do
         echo "Checking image tags in: $NAMESPACE"
         IMAGES=$(kubectl get pods -n $NAMESPACE -o jsonpath='{range .items[*]}{.spec.containers[*].image}{"\n"}{end}')
         for IMAGE in $IMAGES; do
+            if [[ $IMAGE == *"busybox"* ]]; then
+                continue
+            fi
             if [[ $IMAGE != *":"$IMAGE_TAG ]]; then
                 echo "ERROR: Image used for pod in $NAMESPACE is $IMAGE and is not using the expected tag $IMAGE_TAG."
                 exit 1

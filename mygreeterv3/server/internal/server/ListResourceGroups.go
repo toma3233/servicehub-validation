@@ -10,10 +10,9 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armresources"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *Server) ListResourceGroups(ctx context.Context, in *emptypb.Empty) (*pb.ListResourceGroupResponse, error) {
+func (s *Server) ListResourceGroups(ctx context.Context, in *pb.ListResourceGroupsRequest) (*pb.ListResourceGroupResponse, error) {
 	logger := ctxlogger.GetLogger(ctx)
 	if s.ResourceGroupClient == nil {
 		logger.Error("ResourceGroupClient is nil in ListResourceGroups(), azuresdk feature is likely disabled")

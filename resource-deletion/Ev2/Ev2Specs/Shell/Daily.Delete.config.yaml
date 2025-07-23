@@ -1,0 +1,11 @@
+# This file is used to configure the daily deletion of resources in the test subscription.
+# It specifies that the deletion will be done byTag which means
+# it will delete resource groups that have a deletionDate tag set to a date that's less than or equal to today.
+settings:
+  # Set to true to wait for Key Vault purge or false to start the command but not wait for it.
+  waitForKVPurge: true
+  # Specify the deletion option to use. Options include:
+  # - byTag: Delete resource groups that have a deletionDate tag set to a date thats less than or equal to today.
+  # - byResourceGroupList: Delete resources by a list of resource groups.
+  # - byResourceIdList: Delete resources by a list of resource IDs.
+  deletionOption: "byTag"

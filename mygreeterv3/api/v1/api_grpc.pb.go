@@ -52,7 +52,7 @@ type MyGreeterClient interface {
 	// Updates a resource group
 	UpdateResourceGroup(ctx context.Context, in *UpdateResourceGroupRequest, opts ...grpc.CallOption) (*UpdateResourceGroupResponse, error)
 	// Lists all resource groups
-	ListResourceGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupResponse, error)
+	ListResourceGroups(ctx context.Context, in *ListResourceGroupsRequest, opts ...grpc.CallOption) (*ListResourceGroupResponse, error)
 	// Creates a storage account
 	CreateStorageAccount(ctx context.Context, in *CreateStorageAccountRequest, opts ...grpc.CallOption) (*CreateStorageAccountResponse, error)
 	// Reads a storage account
@@ -127,7 +127,7 @@ func (c *myGreeterClient) UpdateResourceGroup(ctx context.Context, in *UpdateRes
 	return out, nil
 }
 
-func (c *myGreeterClient) ListResourceGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListResourceGroupResponse, error) {
+func (c *myGreeterClient) ListResourceGroups(ctx context.Context, in *ListResourceGroupsRequest, opts ...grpc.CallOption) (*ListResourceGroupResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListResourceGroupResponse)
 	err := c.cc.Invoke(ctx, MyGreeter_ListResourceGroups_FullMethodName, in, out, cOpts...)
@@ -224,7 +224,7 @@ type MyGreeterServer interface {
 	// Updates a resource group
 	UpdateResourceGroup(context.Context, *UpdateResourceGroupRequest) (*UpdateResourceGroupResponse, error)
 	// Lists all resource groups
-	ListResourceGroups(context.Context, *emptypb.Empty) (*ListResourceGroupResponse, error)
+	ListResourceGroups(context.Context, *ListResourceGroupsRequest) (*ListResourceGroupResponse, error)
 	// Creates a storage account
 	CreateStorageAccount(context.Context, *CreateStorageAccountRequest) (*CreateStorageAccountResponse, error)
 	// Reads a storage account
@@ -264,7 +264,7 @@ func (UnimplementedMyGreeterServer) DeleteResourceGroup(context.Context, *Delete
 func (UnimplementedMyGreeterServer) UpdateResourceGroup(context.Context, *UpdateResourceGroupRequest) (*UpdateResourceGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateResourceGroup not implemented")
 }
-func (UnimplementedMyGreeterServer) ListResourceGroups(context.Context, *emptypb.Empty) (*ListResourceGroupResponse, error) {
+func (UnimplementedMyGreeterServer) ListResourceGroups(context.Context, *ListResourceGroupsRequest) (*ListResourceGroupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListResourceGroups not implemented")
 }
 func (UnimplementedMyGreeterServer) CreateStorageAccount(context.Context, *CreateStorageAccountRequest) (*CreateStorageAccountResponse, error) {
@@ -400,7 +400,7 @@ func _MyGreeter_UpdateResourceGroup_Handler(srv interface{}, ctx context.Context
 }
 
 func _MyGreeter_ListResourceGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListResourceGroupsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -412,7 +412,7 @@ func _MyGreeter_ListResourceGroups_Handler(srv interface{}, ctx context.Context,
 		FullMethod: MyGreeter_ListResourceGroups_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyGreeterServer).ListResourceGroups(ctx, req.(*emptypb.Empty))
+		return srv.(MyGreeterServer).ListResourceGroups(ctx, req.(*ListResourceGroupsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

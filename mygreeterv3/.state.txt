@@ -127,6 +127,7 @@ server/internal/server/StartLongRunningOperation_test.go
 server/internal/server/UpdateResourceGroup.go
 server/internal/server/UpdateStorageAccount.go
 server/internal/server/api.go
+server/internal/server/http_proxy.go
 server/internal/server/options.go
 server/internal/server/server.go
 server/internal/server/server_integration_test.go

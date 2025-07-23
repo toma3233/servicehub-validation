@@ -16,7 +16,6 @@ import (
 	"dev.azure.com/service-hub-flg/service_hub_validation/_git/service_hub_validation_service.git/mygreeterv3/api/v1/restsdk"
 	"github.com/Azure/aks-middleware/grpc/interceptor"
 	"github.com/Azure/aks-middleware/http/client/direct/restlogger"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"strings"
@@ -46,6 +45,7 @@ type Options struct {
 	RgName           string
 	RgRegion         string
 	CallAllRGOps     bool
+	SubscriptionId   string
 }
 
 var options = newOptions()
@@ -65,6 +65,7 @@ func init() {
 	startCmd.Flags().StringVar(&options.RgName, "rg-name", options.RgName, "The name of the resource group")
 	startCmd.Flags().StringVar(&options.RgRegion, "rg-region", options.RgRegion, "The region of the resource group")
 	startCmd.Flags().BoolVar(&options.CallAllRGOps, "call-all-rg-ops", options.CallAllRGOps, "Call all resource group operations")
+	startCmd.Flags().StringVar(&options.SubscriptionId, "subscription-id", options.SubscriptionId, "The Azure subscription ID to use for API calls")
 
 	// Seed at the beginning of the program once, not on every run: https://stackoverflow.com/questions/12321133/how-to-properly-seed-random-number-generator
 	rand.Seed(time.Now().UnixNano())
@@ -72,7 +73,8 @@ func init() {
 
 func newOptions() Options {
 	return Options{
-		RemoteAddr:       "localhost:50051",
+		RemoteAddr: "localhost:50051",
+		// Don't use proxy locally due to audit log validation issues, send REST request directly to grpc gateway port
 		HttpAddr:         "http://localhost:50061",
 		JsonLog:          false,
 		Name:             "MyName",
@@ -83,6 +85,7 @@ func newOptions() Options {
 		RgName:           "MyGreeter-resource-group",
 		RgRegion:         "eastus",
 		CallAllRGOps:     true,
+		SubscriptionId:   "8ecadfc9-d1a3-4ea4-b844-0d9f87e4d7c8",
 	}
 }
 
@@ -148,92 +151,97 @@ func SayHello(client pb.MyGreeterClient, name string, age int32, email string, a
 
 	// Create a new Configuration instance
 	cfg := &restsdk.Configuration{
-		BasePath:      options.HttpAddr,
-		DefaultHeader: make(map[string]string),
-		UserAgent:     "Swagger-Codegen/1.0.0/go",
-		HTTPClient:    restlogger.NewLoggingClient(logger),
+		BasePath: options.HttpAddr,
+		DefaultHeader: map[string]string{
+			"Content-Type":       "application/json",
+			"x-ms-client-app-id": "MyGreeter-Client",
+		},
+		UserAgent:  "Swagger-Codegen/1.0.0/go",
+		HTTPClient: restlogger.NewLoggingClient(logger),
 	}
 
 	apiClient := restsdk.NewAPIClient(cfg)
 
 	service := apiClient.MyGreeterApi
 
+	// Include subID in REST request URL to conform with ARM URL formating (/subscriptions/...) for audit logging
+	subId := options.SubscriptionId
+
 	// Only update resource groups and perform storage account CRUDL ops
 	// in int and stg environments due to current MSI role
 	if !options.CallAllRGOps {
-		_, err = client.UpdateResourceGroup(ctx, &pb.UpdateResourceGroupRequest{Name: options.RgName, Tags: tags})
+		_, err = client.UpdateResourceGroup(ctx, &pb.UpdateResourceGroupRequest{SubscriptionId: subId, Name: options.RgName, Tags: tags})
 		if err != nil {
 			log.Error("Error calling UpdateResourceGroup: " + err.Error())
 		}
-		_, _, err = service.MyGreeterUpdateResourceGroup(context.Background(), tags, options.RgName)
+		_, _, err = service.MyGreeterUpdateResourceGroup(context.Background(), tags, subId, options.RgName)
 		if err != nil {
 			log.Error("Error calling MyGreeterUpdateResourceGroup: " + err.Error())
 		}
-		resp, createSAErr := client.CreateStorageAccount(ctx, &pb.CreateStorageAccountRequest{RgName: options.RgName, Region: options.RgRegion})
+		resp, createSAErr := client.CreateStorageAccount(ctx, &pb.CreateStorageAccountRequest{SubscriptionId: subId, RgName: options.RgName, SaName: "testsa" + strconv.Itoa(rand.Intn(1000)), Region: options.RgRegion})
 		if createSAErr != nil {
 			log.Error("Error calling CreateStorageAccount: " + err.Error())
 		}
 		storageAccountName := resp.Name
-		_, err = client.ReadStorageAccount(ctx, &pb.ReadStorageAccountRequest{RgName: options.RgName, SaName: storageAccountName})
+		_, err = client.ReadStorageAccount(ctx, &pb.ReadStorageAccountRequest{SubscriptionId: subId, RgName: options.RgName, SaName: storageAccountName})
 		if err != nil {
 			log.Error("Error calling ReadStorageAccount: " + err.Error())
 		}
-		_, err = client.UpdateStorageAccount(ctx, &pb.UpdateStorageAccountRequest{RgName: options.RgName, SaName: storageAccountName, Tags: tags})
+		_, err = client.UpdateStorageAccount(ctx, &pb.UpdateStorageAccountRequest{SubscriptionId: subId, RgName: options.RgName, SaName: storageAccountName, Tags: tags})
 		if err != nil {
 			log.Error("Error calling UpdateStorageAccount: " + err.Error())
 		}
-		_, err = client.ListStorageAccounts(ctx, &pb.ListStorageAccountRequest{RgName: options.RgName})
+		_, err = client.ListStorageAccounts(ctx, &pb.ListStorageAccountRequest{SubscriptionId: subId, RgName: options.RgName})
 		if err != nil {
 			log.Error("Error calling ListStorageAccounts: " + err.Error())
 		}
-		_, err = client.DeleteStorageAccount(ctx, &pb.DeleteStorageAccountRequest{RgName: options.RgName, SaName: storageAccountName})
+		_, err = client.DeleteStorageAccount(ctx, &pb.DeleteStorageAccountRequest{SubscriptionId: subId, RgName: options.RgName, SaName: storageAccountName})
 		if err != nil {
 			log.Error("Error calling DeleteStorageAccount: " + err.Error())
 		}
 
 	} else {
-		_, err = client.CreateResourceGroup(ctx, &pb.CreateResourceGroupRequest{Name: options.RgName, Region: options.RgRegion})
+		_, err = client.CreateResourceGroup(ctx, &pb.CreateResourceGroupRequest{SubscriptionId: subId, Name: options.RgName, Region: options.RgRegion})
 		if err != nil {
 			log.Error("Error calling CreateResourceGroup: " + err.Error())
 		}
-		_, err = client.ReadResourceGroup(ctx, &pb.ReadResourceGroupRequest{Name: options.RgName})
+		_, err = client.ReadResourceGroup(ctx, &pb.ReadResourceGroupRequest{SubscriptionId: subId, Name: options.RgName})
 		if err != nil {
 			log.Error("Error calling ReadResourceGroup: " + err.Error())
 		}
-		_, err = client.UpdateResourceGroup(ctx, &pb.UpdateResourceGroupRequest{Name: options.RgName, Tags: tags})
+		_, err = client.UpdateResourceGroup(ctx, &pb.UpdateResourceGroupRequest{SubscriptionId: subId, Name: options.RgName, Tags: tags})
 		if err != nil {
 			log.Error("Error calling UpdateResourceGroup: " + err.Error())
 		}
-		_, err = client.ListResourceGroups(ctx, &emptypb.Empty{})
+		_, err = client.ListResourceGroups(ctx, &pb.ListResourceGroupsRequest{SubscriptionId: subId})
 		if err != nil {
 			log.Error("Error calling ListResourceGroup: " + err.Error())
 		}
-		_, err = client.DeleteResourceGroup(ctx, &pb.DeleteResourceGroupRequest{Name: options.RgName})
+		_, err = client.DeleteResourceGroup(ctx, &pb.DeleteResourceGroupRequest{SubscriptionId: subId, Name: options.RgName})
 		if err != nil {
 			log.Error("Error calling DeleteResourceGroup: " + err.Error())
 		}
 
-		createRequestBody := restsdk.CreateResourceGroupRequest{
-			Name:   options.RgName,
+		createRequestBody := restsdk.MyGreeterCreateResourceGroupBody{
 			Region: options.RgRegion,
 		}
-		_, _, err = service.MyGreeterCreateResourceGroup(context.Background(), createRequestBody)
+		_, _, err = service.MyGreeterCreateResourceGroup(context.Background(), createRequestBody, subId, options.RgName)
 		if err != nil {
 			log.Error("Error calling MyGreeterCreateResourceGroup: " + err.Error())
 		}
-		_, _, err = service.MyGreeterReadResourceGroup(context.Background(), options.RgName)
+		_, _, err = service.MyGreeterReadResourceGroup(context.Background(), subId, options.RgName)
 		if err != nil {
 			log.Error("Error calling MyGreeterReadResourceGroup: " + err.Error())
 		}
-		_, _, err = service.MyGreeterUpdateResourceGroup(context.Background(), tags, options.RgName)
+		_, _, err = service.MyGreeterUpdateResourceGroup(context.Background(), tags, subId, options.RgName)
 		if err != nil {
 			log.Error("Error calling MyGreeterUpdateResourceGroup: " + err.Error())
 		}
-		_, _, err = service.MyGreeterListResourceGroups(context.Background())
+		_, _, err = service.MyGreeterListResourceGroups(context.Background(), subId)
 		if err != nil {
 			log.Error("Error calling MyGreeterListResourceGroups: " + err.Error())
 		}
-		_, _, err = service.MyGreeterDeleteResourceGroup(context.Background(), options.RgName)
+		_, _, err = service.MyGreeterDeleteResourceGroup(context.Background(), subId, options.RgName)
 		if err != nil {
 			log.Error("Error calling MyGreeterDeleteResourceGroup: " + err.Error())
 		}

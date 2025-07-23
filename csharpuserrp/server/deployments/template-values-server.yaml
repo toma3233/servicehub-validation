@@ -4,7 +4,6 @@
 
 nameOverride: ""
 fullnameOverride: servicehubval-csharpuserrp-server
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -15,9 +14,88 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+service:
+  type: ClusterIP
+  httpPort: 80
+  serverName: servicehubval-csharpuserrp-server
+  # livenessInitialDelaySeconds: 10
+  # livenessPeriodSeconds: 10
+  # readinessInitialDelaySeconds: 5
+  # readinessPeriodSeconds: 10
+
+ingress:
+  enabled: true
+  className: servicehubval-custom-nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: aks-servicehubval-csharpuserrp-test.{{.location}}.cloudapp.azure.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+   - secretName: ingress-tls-secret
+     hosts:
+       - aks-servicehubval-csharpuserrp-test.{{.location}}.cloudapp.azure.com
+  controller:
+    resourceGroupName: servicehubval-{{.resourcesName}}-rg
+    ingressIpName: servicehubval-{{.resourcesName}}-csharpuserrp-ingress-ip
+
+image:
+  repository: servicehubval{{.resourcesName}}{{.location}}acr.azurecr.io/csharpuserrp
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "{{.serviceImageTag}}"
+
 command:
   - dotnet
   - csharpuserrp/csharpuserrp.dll
+
+args: []
+
+imagePullSecrets: []
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+replicaCount: 1
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
 
 # Info used for authorization policy
 allowedPrincipals:

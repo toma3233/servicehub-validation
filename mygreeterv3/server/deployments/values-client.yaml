@@ -22,7 +22,8 @@ args:
   - --interval-milli-sec=60000
   - --json-log
   - --remote-addr=servicehubval-mygreeterv3-server.servicehubval-mygreeterv3-server:50051
-  - --http-addr=http://servicehubval-mygreeterv3-server.servicehubval-mygreeterv3-server.svc.cluster.local:50061
+  - --http-addr=http://servicehubval-mygreeterv3-server.servicehubval-mygreeterv3-server.svc.cluster.local:8080 # Send http requests to proxy so they can get audit logged
+  - --subscription-id={{.subscriptionId}}
 
 # Info used for authorization policy
 allowedPrincipals: []

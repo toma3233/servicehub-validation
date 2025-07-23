@@ -1,6 +1,6 @@
 # Build stage I: 
 # FROM golang:1.19 AS build
-FROM mcr.microsoft.com/oss/go/microsoft/golang:1.23.2-1-bullseye AS build
+FROM mcr.microsoft.com/oss/go/microsoft/golang:1.23.8-1-bullseye AS build
 
 WORKDIR /server
 COPY . .

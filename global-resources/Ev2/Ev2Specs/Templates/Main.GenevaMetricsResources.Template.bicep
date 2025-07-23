@@ -37,7 +37,7 @@ module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.3' = {
 // Main Geneva Metrics Resources Deployment
 var monitorWorkspaceLocations array = ['eastus']
 var grafanaWorkspaceLocations array = ['eastus', 'westus']
-module metrics 'br:servicehubregistry.azurecr.io/bicep/modules/first-party-metrics-global:v2' = {
+module metrics 'br:servicehubregistry.azurecr.io/bicep/modules/first-party-metrics-global:v3' = {
   name: 'servicehubval-${resourcesName}-MetricsResourcesDeploy'
   scope: subscription(subscriptionId)
   params: {

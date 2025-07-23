@@ -1,0 +1,11 @@
+{
+    "Settings": {
+        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+        "environment": "test",
+        "resourcesName": "TestCorp",
+        "globalSubscriptionId": "049e57e6-ff8e-4e8f-91bf-5830bf32d150",
+        "globalResourcesName": "TestCorp",
+        "globalLocation": "eastus2",
+        "deleteConfigType": "Daily"
+    }
+}

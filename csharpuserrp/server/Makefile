@@ -44,37 +44,37 @@ push-image: template-files
 	cd generated; make push-image
 
 
-AZURESDK_PATH := artifacts/.Azuresdk_properties_outputs.yaml
+USERRP_PATH := artifacts/.Userrp_properties_outputs.yaml
 
 # The install and uninstall information (k8s secret) is stored in the current namespace.
 install: template-files
 	cd generated; make connect-cluster
-	if [ -f $(AZURESDK_PATH) ]; then \
+	if [ -f $(USERRP_PATH) ]; then \
 		docker run --mount src=$(MAIN_DIR),target=/app/binded-data,type=bind $(REGISTRY_NAME).azurecr.io/$(IMG_NAME):$(IMG_DATE_TAG) /bin/bash -c \
 		"cd binded-data/$(DIR_NAME)/server; export KUBECONFIG=\$$(pwd)/generated/.kube/config; \
 		cd deployments; \
-		helm install servicehubval-csharpuserrp-server . -f values-common.yaml -f values-server.yaml -f ../$(AZURESDK_PATH)"; \
+		helm install servicehubval-csharpuserrp-server . -f values-server.yaml -f ../$(USERRP_PATH)"; \
 	else \
-		echo ".Azuresdk_properties_outputs.yaml file does not exist. Run the make deploy-resources cmd"; \
+		echo ".Userrp_properties_outputs.yaml file does not exist. Run the make deploy-resources cmd"; \
 		docker run --mount src=$(MAIN_DIR),target=/app/binded-data,type=bind $(REGISTRY_NAME).azurecr.io/$(IMG_NAME):$(IMG_DATE_TAG) /bin/bash -c \
 		"cd binded-data/$(DIR_NAME)/server; export KUBECONFIG=\$$(pwd)/generated/.kube/config; \
 		cd deployments; \
-		helm install servicehubval-csharpuserrp-server . -f values-common.yaml -f values-server.yaml"; \
+		helm install servicehubval-csharpuserrp-server . -f values-server.yaml"; \
 	fi
 
 upgrade: template-files
 	cd generated; make connect-cluster
-	if [ -f $(AZURESDK_PATH) ]; then \
+	if [ -f $(USERRP_PATH) ]; then \
 		docker run --mount src=$(MAIN_DIR),target=/app/binded-data,type=bind $(REGISTRY_NAME).azurecr.io/$(IMG_NAME):$(IMG_DATE_TAG) /bin/bash -c \
 		"cd binded-data/$(DIR_NAME)/server; export KUBECONFIG=\$$(pwd)/generated/.kube/config; \
 		cd deployments; \
-		helm upgrade servicehubval-csharpuserrp-server . -f values-common.yaml -f values-server.yaml -f ../$(AZURESDK_PATH); \
+		helm upgrade servicehubval-csharpuserrp-server . -f values-server.yaml -f ../$(USERRP_PATH); \
 	else \
-		echo ".Azuresdk_properties_outputs.yaml file does not exist. Run the make deploy-resources cmd"; \
+		echo ".Userrp_properties_outputs.yaml file does not exist. Run the make deploy-resources cmd"; \
 		docker run --mount src=$(MAIN_DIR),target=/app/binded-data,type=bind $(REGISTRY_NAME).azurecr.io/$(IMG_NAME):$(IMG_DATE_TAG) /bin/bash -c \
 		"cd binded-data/$(DIR_NAME)/server; export KUBECONFIG=\$$(pwd)/generated/.kube/config; \
 		cd deployments; \
-		helm upgrade servicehubval-csharpuserrp-server . -f values-common.yaml -f values-server.yaml; \
+		helm upgrade servicehubval-csharpuserrp-server . -f values-server.yaml; \
 	fi
 
 uninstall: template-files

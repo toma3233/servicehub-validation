@@ -1,0 +1,22 @@
+# This manifest defines a custom NginxIngressController CRD (Custom Resource Definition) resource for Azure Kubernetes Service (AKS) with the Web App Routing add-on enabled.
+# It configures a NGINX ingress controller with a specific ingress class and binds it to a static public IP address in a specified resource group.
+# Use this file to deploy a custom ingress controller when `defaultIngressControllerType` is set to 'None' in your AKS cluster, allowing you to control ingress traffic routing and public IP assignment.
+# The NginxIngressController is a CRD provided by the Web App Routing add-on, enabling custom management of ingress controllers in AKS.
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: default
+spec:
+  controllerNamePrefix: nginx
+  ingressClassName: {{ .Values.ingress.className }}
+  loadBalancerAnnotations:
+    # The annotation 'service.beta.kubernetes.io/azure-load-balancer-resource-group' specifies the Azure resource group containing the static public IP address to be used by the ingress controller's load balancer.
+    # This is required when the public IP is provisioned outside the AKS node resource group, allowing AKS to attach the IP to the ingress load balancer.
+    #
+    # To enable AKS to attach the public IP, the AKS kubelet identity (system-assigned managed identity) must have the 'Network Contributor' role on the resource group containing the public IP.
+    # This role assignment is created in the Main.SharedResources.Template.bicep file as 'aksPublicIpJoinRoleAssignment'.
+    # Without this role, you may encounter errors when AKS tries to associate the IP.
+    
+    # Refer to https://learn.microsoft.com/en-us/azure/aks/app-routing-nginx-configuration?tabs=bicep#create-an-nginx-ingress-controller-with-a-static-ip-address for more details.
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.ingress.controller.resourceGroupName }}
+    service.beta.kubernetes.io/azure-pip-name: {{ .Values.ingress.controller.ingressIpName }}

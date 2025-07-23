@@ -1,9 +1,5 @@
-// Geneva Azure Resource for setup for Geneva agent
-// This file provisions the initial resources for the Geneva setup.
-// Categories:
-// - SUPPLEMENTARY: Resources not used directly in the Geneva pipeline but required for setup.
-// - PRE-REQ: Resources or features that are required for the Geneva setup but not used directly in the pipeline.
-// - REQ: Resources or features that are required for the Geneva setup and used directly in the pipeline.
+// This file provisions specific resources for the Userrp setup.
+// TODO: Most of the resources here are same as Geneva setup, work with Christine to see if we can turn this into a reusable module.
 @sys.description('The name for the resources.')
 param resourcesName string
 
@@ -13,45 +9,41 @@ param subscriptionId string
 @sys.description('The location of the resource group the resources are deployed to.')
 param location string
 
-@sys.description('The short name of the region the resources are deployed to.')
-param regionShortName string
-
 @sys.description('The name of the resource group the resources are deployed to.')
 param resourceGroupName string
 
-@sys.description('Subject alternative name for the certificate. This should satisfy the registered wildcard domain that is registered in OneCert, i.e. test.mygreeterv3.servicehub.sre.azure-prod.net')
+@sys.description('Subject alternative name for the certificate. This should satisfy the registered domain that is registered in OneCert.')
 param san string
 
-@sys.description('Registered wildcard test domain you regstered in OneCert, i.e. *.mygreeterv3.servicehub.sre.azure-prod.net.')
+@sys.description('Registered in OneCert.')
 param cn string
+
+@sys.description('The prefix for the DNS label.')
+param dnsLabelPrefix string
 
 targetScope = 'subscription'
 
-
-// SUPPLEMENTARY: Managed identity to create certificate for geneva agent authentication into Geneva Account
+// Managed identity to create certificate for Userrp service TLS termination.
 module scriptIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.4.0' = {
-  name: 'servicehubval-${resourcesName}-geneva-setup-script-identityDeploy'
+  name: 'servicehubval-${resourcesName}-csharpuserrp-script-identityDeploy'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params: {
-    name: 'servicehubval-${resourcesName}-geneva-setup-script-identity'
+    name: 'servicehubval-${resourcesName}-userrp-setup-script-identity'
     // Non-required parameters
     location: location
   }
 }
 
-
-// REQ: AKS cluster to deploy the Geneva agent
-// TODO (Christine): Migrate this to pass in a cluster name such that it's consistent and not hardcoded.
 resource aks 'Microsoft.ContainerService/managedClusters@2024-09-02-preview' existing = {
   name: 'servicehubval-${resourcesName}-cluster'
   scope: resourceGroup(subscriptionId, resourceGroupName)
 }
 
-// REQ: Key Vault to store the certificate for the Geneva agent authentication into Geneva Account
+// Key Vault to store the certificate for the Userrp service TLS termination.
 // The max length of the name is 24 characters. The name must be globally unique.
 var servicePrefix = substring('servicehubval', 0, min(8, length('servicehubval')))
 var resourceNamePrefix = substring(resourcesName, 0, min(8, length(resourcesName)))
-var regionPrefix = substring(regionShortName, 0, min(8, length(regionShortName)))
+var regionPrefix = substring(location, 0, min(8, length(location)))
 var truncatedKeyVaultName = '${servicePrefix}${resourceNamePrefix}${regionPrefix}'
 
 // Reference the Virtual Network and PE Subnet for private endpoint setup
@@ -84,7 +76,7 @@ resource scriptSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' exi
 }
 
 module keyvault 'br/public:avm/res/key-vault/vault:0.9.0' = {
-  name: 'servicehubval-${resourcesName}-keyvaultDeploy'
+  name: 'servicehubval-${resourcesName}-csharpuserrp-keyvaultDeploy'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params: {
     // Required parameters
@@ -109,32 +101,24 @@ module keyvault 'br/public:avm/res/key-vault/vault:0.9.0' = {
     roleAssignments: [
       {
         principalId: aks.properties.addonProfiles.azureKeyvaultSecretsProvider.identity.objectId
-        roleDefinitionIdOrName: 'Key Vault Certificate User'
+        roleDefinitionIdOrName: 'Key Vault Secrets User' // Allows read access to secrets in the key vault, which is required for the AKS Azure Key Vault Secrets Provider addon.
         principalType: 'ServicePrincipal'
       }
       {
         principalId: scriptIdentity.outputs.principalId
-        roleDefinitionIdOrName: 'Key Vault Certificates Officer' // Perform any action on the certificates of a key vault, excluding reading the secret and key portions, and managing permissions. Only works for key vaults that use the 'Azure role-based access control' permission model. TODO (Christine): Check if this is the correct role to use, or if it's need at all.
-        principalType: 'ServicePrincipal'
-      }
-      {
-        principalId: scriptIdentity.outputs.principalId
-        // This allows the script to create the certificate
-        roleDefinitionIdOrName: 'Key Vault Contributor' // Allow creation and management of key vaults, but not the keys, secrets, or certificates within them. This role is intended for use by applications that need to create and manage key vaults.
+        roleDefinitionIdOrName: 'Key Vault Certificates Officer' // Perform any action on the certificates of a key vault, excluding reading the secret and key portions, and managing permissions. Only works for key vaults that use the 'Azure role-based access control' permission model.
         principalType: 'ServicePrincipal'
       }
     ]
   }
 }
 
-// REQ: Certificate creation using the private deployment script module
-// This replaces manual storage account creation, deployment script, and cleanup script
-var issuer = 'OneCertV2-PrivateCA'
+// Script to create the certificate for the Userrp service TLS termination.
+var issuer = 'OneCertV2-PublicCA'
 var sub = 'CN=${cn}'
-var certName='servicehubval${resourcesName}genevacert'
-
-module certCreationScript 'br:servicehubregistry.azurecr.io/bicep/modules/private-deployment-script:v2' = {
-  name: 'servicehubval-${resourcesName}-cert-script'
+var certName='servicehubval${resourcesName}userrpcert'
+module certCreationScript 'br:servicehubregistry.azurecr.io/bicep/modules/private-deployment-script:v3' = {
+  name: 'servicehubval-${resourcesName}-csharpuserrp-cert-scriptDeploy'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params: {
     scriptName: 'servicehubval-${resourcesName}-cert-script'
@@ -224,6 +208,86 @@ module certCreationScript 'br:servicehubregistry.azurecr.io/bicep/modules/privat
   }
 }
 
+// Microsoft Corp tenant ID
+var corpTenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+// Get the tenant ID from the deployer function
+var tenantId = deployer().tenantId
+// Determine if we should use Microsoft tenant tagging
+var isMicrosoftTenant = tenantId == corpTenantId
+// Public IP address for the Userrp service ingress.
+// This public IP is used for the ingress controller to expose the Userrp service to the internet
+// The DNS label prefix is used to create a unique DNS name for the public IP address.
+module ingressPublicIp 'br/public:avm/res/network/public-ip-address:0.8.0' = {
+  name: 'servicehubval-${resourcesName}-csharpuserrp-ingressIpDeploy'
+  scope: resourceGroup(subscriptionId, resourceGroupName)
+  params: {
+    name: 'servicehubval-${resourcesName}-csharpuserrp-ingress-ip'
+    location: location
+    publicIPAllocationMethod: 'Static'
+    skuName: 'Standard'
+    skuTier: 'Regional'
+    // Conditional tagging based on tenant: NonProd for Microsoft Corp, AKSServiceHubValidation for AME
+    // Ensure you have provisioned service tag for your service by following the steps here: 
+    // https://eng.ms/docs/cloud-ai-platform/azure-core/azure-networking/sdn-dbansal/sdn-buildout-and-deployments/sdn-fundamentals/service-tag-onboarding/onboarding-process
+    // Additionally, ensure your target subscription(s) has the "AllowBringYourOwnPublicIpAddress" AFEC feature flag enabled
+    // Steps can be found here: https://eng.ms/docs/cloud-ai-platform/azure-core/azure-networking/sdn-dbansal/sdn-buildout-and-deployments/sdn-fundamentals/service-tag-onboarding/get-access-and-create-tagged-ips/enable-feature-flag
+    ipTags: [
+      {
+        ipTagType: 'FirstPartyUsage'
+        tag: isMicrosoftTenant ? '/NonProd' : '/AKSServiceHubValidation'
+      }
+    ]
+    dnsSettings: {
+      domainNameLabel: dnsLabelPrefix
+    }
+    zones: []
+  }
+}
+
+// Below resources are not required for Userrp service setup, but are needed to access other Azure resources for real code business logic.
+// This resource is shared and defined in resources/Main.SharedResources.Template.bicep in shared-resources directory; we only reference it here. Do not remove `existing` syntax.
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
+  name: resourceGroupName
+  scope: subscription(subscriptionId)
+}
+
+var serviceAccountNamespace = 'servicehubval-csharpuserrp-server'
+var serviceAccountName = 'servicehubval-csharpuserrp-server'
+module managedIdentity 'br/public:avm/res/managed-identity/user-assigned-identity:0.2.1' = {
+  name: 'servicehubval-csharpuserrp-managed-identityDeploy'
+  scope: resourceGroup(subscriptionId, resourceGroupName)
+  params: {
+    name: 'servicehubval-${resourcesName}-${location}-csharpuserrp-managedIdentity'
+    location: rg.location
+    federatedIdentityCredentials: [
+      {
+        name: 'servicehubval-csharpuserrp-fedIdentity'
+        issuer: aks.properties.oidcIssuerProfile.issuerURL
+        subject: 'system:serviceaccount:${serviceAccountNamespace}:${serviceAccountName}'
+        audiences: ['api://AzureADTokenExchange']
+      }
+    ]
+  }
+}
+
+// TODO: Migrate to use bicep module registry. Current bicep registry module is management group scoped but we use subscription scoped.
+module azureSdkRoleAssignment 'br:servicehubregistry.azurecr.io/bicep/modules/subscription-role-assignment:v6' = {
+  name: 'servicehubval-csharpuserrpazuresdkra${location}Deploy'
+  scope: subscription(subscriptionId)
+  params: {
+    principalId: managedIdentity.outputs.principalId
+    description: 'servicehubval-csharpuserrp-${resourcesName}-contributor-azuresdk-role-assignment'
+    roleDefinitionIdOrName: 'Contributor'
+    principalType: 'ServicePrincipal'
+    subscriptionId: subscriptionId
+  }
+}
+
 output certCreationScriptLogs string[] = certCreationScript.outputs.mainScriptLogs
-output cleanupScriptLogs string[] = certCreationScript.outputs.cleanupScriptLogs
 output keyVaultName string = keyvault.outputs.name
+output tenantId string = subscription().tenantId
+output akvSecretsProviderClientId string = aks.properties.addonProfiles.azureKeyvaultSecretsProvider.identity.clientId
+output certName string = certName
+
+@sys.description('Client Id of the managed identity.')
+output managedIdentityClientId string = managedIdentity.outputs.clientId

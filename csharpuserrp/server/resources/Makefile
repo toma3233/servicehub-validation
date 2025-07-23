@@ -1,6 +1,5 @@
 # TODO: alertrules disabled for now, as method list is not yet available, will add later when new functionality of getting method list for rest APIs is available
-all: 
-	@echo "Nothing to do for now" 
+all: userrp
 
 # This assumes ServiceResources.Parameters.json has already been templated.
 MAKEFLAGS += -j2 # allows Makefile to run targets in parallel
@@ -17,8 +16,8 @@ clean:
 		fi); \
 	done
 
-.PHONY: azuresdk
-azuresdk:
+.PHONY: userrp
+userrp:
 	chmod +x ./deployAzureResources.sh
-	chmod +x ./azuresdk/saveOutputs.sh
-	./deployAzureResources.sh "azuresdk" true
+	chmod +x ./userrp/saveOutputs.sh
+	./deployAzureResources.sh "userrp" true

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-04-01/RegionAgnosticServiceModel.json",
+  "contentVersion": "1.0.0",
+  "serviceMetadata": {
+    "serviceIdentifier": "dfe3a810-861c-44da-9b00-71e57a865194",
+    "serviceGroup": "Microsoft.Azure.servicehubval.Delete",
+    "environment": "$config(environment)",
+    "TenantId": "$config(tenantId)",
+    "displayName": "delete"
+  },
+  "serviceResourceGroupDefinitions": [
+    {
+      "name": "delete-SRGDef",
+      "subscriptionKey": "servicehubval-$config(regionShortName)-sub",
+      "azureResourceGroupName": "servicehubval-$config(resourcesName)-$config(regionShortName)-deleteScript-rg",
+      "ServiceResourceDefinitions": [
+        {
+          "name": "DeleteResourcesShellExtension-SRDef",
+          "composedOf": {
+            "extension": {
+              "rolloutParametersPath": "Parameters\\DeleteScript.Parameters.json",
+              "shell": [
+                {
+                  "type": "delete-resources",
+                  "properties": {
+                    "imageName": "adm-ubuntu-2004-l",
+                    "imageVersion": "v5"
+                  }
+                }
+              ]
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "sharedInputs"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 {
         "Settings": {
-                "tenantId": "33e01921-4d64-4f8c-a055-5bdaffd5e33d", // The tenant id associated with the airs registration
-                "backfilledSubId": "", // Empty so that we create new subscriptions in accordance to parameter file.
+                "tenantId": "33e01921-4d64-4f8c-a055-5bdaffd5e33d",
+                "backfilledSubId": "",
                 "environment": "prod",
                 "resourcesName": "ProdAME",
                 "gcsEnvironment": "DiagnosticsProd",
                 "oneCertRegisteredDomain": "prod.ame.servicehubval.azure.net",
+                "globalResourcesName": "ProdAME",
+                "globalSubscriptionId": "a447fa09-82a5-4123-8d83-198b46a21b00",
                 "deletionDate": ""
         }
 }

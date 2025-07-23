@@ -35,6 +35,15 @@ variables:
   - name: DisableGoCliScan
     value: true
 
+parameters:
+  - name: "deleteConfigType"
+    displayName: "Deletion Config Type (Only relevant for delete pipeline)"
+    type: string
+    default: "Daily-clean-up-by-tag-for-test-env" # Options: Daily, Manual
+    values:
+      - "Daily-clean-up-by-tag-for-test-env"
+      - "Manual-deletion-by-configured-list-for-all-env"
+
 resources:
   repositories:
     - repository: templates
@@ -135,7 +144,7 @@ extends:
                   scriptType: "bash"
                   scriptLocation: scriptPath
                   scriptPath: "pipeline-files/buildEv2Artifacts.sh"
-                  arguments: "$(directoryName) $(ob_outputDirectory) $(isService) $(Build.BuildNumber) false $(Build.Reason) $(Build.SourceBranch) $(System.PullRequest.PullRequestId) $(restrictToPR)"
+                  arguments: "$(directoryName) $(ob_outputDirectory) $(isService) $(Build.BuildNumber) false $(Build.Reason) $(Build.SourceBranch) $(System.PullRequest.PullRequestId) $(restrictToPR) ${{ parameters.deleteConfigType }}"
                 env:
                   READPAT: $(READPAT)
       - stage: "TEST_Managed_SDP"

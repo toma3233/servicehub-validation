@@ -95,7 +95,6 @@
           }
         },
         "valuesPaths": [
-          "Build\\values-common.yaml",
           "Build\\values-server.yaml"
         ]
       }

@@ -1,7 +1,7 @@
 {
     "Settings": {
         "tenantId": "33e01921-4d64-4f8c-a055-5bdaffd5e33d", // The tenant id associated with the airs registration
-        "backfilledSubId": "", // Empty so that we create new subscriptions in accordance to parameter file.
+        "backfilledSubId": "a447fa09-82a5-4123-8d83-198b46a21b00", // User can choose if they want to provision a new subscription or not. If they want to provision a new subscription, this should be empty. If they want to use an existing subscription, this should be the subscription ID of the existing subscription.
         "environment": "prod",
         "resourcesName": "ProdAME",
         "genevaConfigureAccount": "ConfigureLogsAccount", // For Test, Stage, Canary endpoints: this is "ConfigureLogsTestAccount". For all other endpoints: the type is "Microsoft.Geneva.Logs/ConfigureLogsAccount". This indicates which endpoint to use to create/configure the Geneva account.
@@ -10,6 +10,6 @@
         "genevaRoleDefinitionId": "2a79f82f-7cc2-46d1-9b2e-1fda89c71bab", // The Geneva role definition ID. This is the role definition ID associated with the GenevaWarmPathResourceContributor role. It differs by tenant. Instructions on how to obtain this value: https://eng.ms/docs/products/geneva/logs/howtoguides/manageaccount/subscriptionpermissions
         "genevaServicePrincipalId": "92f388ee-7cfe-4aa2-95da-95fd8522f6b4", // The Geneva service principal ID. This service principal is used to create the resources for the Geneva account. Instructions on how to obtain this value: https://eng.ms/docs/products/geneva/logs/howtoguides/manageaccount/subscriptionpermissions
         "genevaEnvironment": "diagnosticsprod", // This is the genevaEnvironment value that is used in the Kusto data connection. Assumed valid values are: diagnosticsprod, billingprod, firstpartyprod, externalprod, cafairfax, camooncake, usnat, ussec, test, stage, canary. Should match the mdsEnvironment value. Based on examples, this is lowercase.
-        "genevaMetricsSecurityGroupId": "72dfc0be-0b66-4998-afa2-8b9c4d26bf21"  // The security group ID for the Grafana admin group. This is used to control access to the Grafana dashboard.
+        "genevaMetricsSecurityGroupId": "72dfc0be-0b66-4998-afa2-8b9c4d26bf21" // The security group ID for the Grafana admin group. This is used to control access to the Grafana dashboard.
     }
 }

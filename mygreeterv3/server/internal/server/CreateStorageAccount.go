@@ -22,13 +22,13 @@ func generateID() string {
 	return fmt.Sprintf("%05d", uid)
 }
 
-func (s *Server) generateUniqueStorageAccountName() (string, error) {
+func (s *Server) generateUniqueStorageAccountName(ctx context.Context) (string, error) {
 	maxIterations := 10
 	delayMilliseconds := 100
 	name := ""
 	for i := 0; i < maxIterations; i++ {
 		name = "sa" + generateID()
-		res, checkErr := s.AccountsClient.CheckNameAvailability(context.Background(), armstorage.AccountCheckNameAvailabilityParameters{
+		res, checkErr := s.AccountsClient.CheckNameAvailability(ctx, armstorage.AccountCheckNameAvailabilityParameters{
 			Name: to.Ptr(name),
 			Type: to.Ptr("Microsoft.Storage/storageAccounts"),
 		}, nil)
@@ -52,10 +52,32 @@ func (s *Server) CreateStorageAccount(ctx context.Context, in *pb.CreateStorageA
 		return nil, status.Errorf(codes.Unimplemented, "AccountsClient is nil in CreateStorageAccount(), azuresdk feature is likely disabled")
 	}
 
-	name, checkErr := s.generateUniqueStorageAccountName()
-	if checkErr != nil {
-		logger.Error("CheckNameAvailability() error: " + checkErr.Error())
-		return nil, HandleError(checkErr, "CheckNameAvailability()")
+	// Use the storage account name from the request, or generate one if not provided
+	var name string
+	var checkErr error
+
+	if in.GetSaName() != "" {
+		// Use the provided name and check its availability
+		name = in.GetSaName()
+		res, err := s.AccountsClient.CheckNameAvailability(ctx, armstorage.AccountCheckNameAvailabilityParameters{
+			Name: to.Ptr(name),
+			Type: to.Ptr("Microsoft.Storage/storageAccounts"),
+		}, nil)
+		if err != nil {
+			logger.Error("CheckNameAvailability() error for provided name: " + err.Error())
+			return nil, HandleError(err, "CheckNameAvailability()")
+		}
+		if !*res.NameAvailable {
+			logger.Error("Provided storage account name is not available: " + name)
+			return nil, status.Errorf(codes.AlreadyExists, "Storage account name (%s) is not available: %s", name, *res.Message)
+		}
+	} else {
+		// Generate a unique name if none was provided
+		name, checkErr = s.generateUniqueStorageAccountName(ctx)
+		if checkErr != nil {
+			logger.Error("CheckNameAvailability() error: " + checkErr.Error())
+			return nil, HandleError(checkErr, "CheckNameAvailability()")
+		}
 	}
 
 	params := armstorage.AccountCreateParameters{
@@ -68,13 +90,13 @@ func (s *Server) CreateStorageAccount(ctx context.Context, in *pb.CreateStorageA
 			AllowBlobPublicAccess: to.Ptr(false),
 		},
 	}
-	poller, err := s.AccountsClient.BeginCreate(context.Background(), in.GetRgName(), name, params, nil)
+	poller, err := s.AccountsClient.BeginCreate(ctx, in.GetRgName(), name, params, nil)
 	if err != nil {
 		logger.Error("BeginCreate() error: " + err.Error())
 		return nil, HandleError(err, "BeginCreate()")
 	}
 
-	_, err = poller.PollUntilDone(context.Background(), nil)
+	_, err = poller.PollUntilDone(ctx, nil)
 	if err != nil {
 		logger.Error("PollUntilDone() error: " + err.Error())
 		return nil, HandleError(err, "PollUntilDone()")

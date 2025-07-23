@@ -29,11 +29,13 @@ import (
 )
 
 type ServerInfo struct {
-	GrpcServer *grpc.Server
-	GwServer   *http.Server
-	GrpcPort   int
-	HttpPort   int
-	conn       *grpc.ClientConn
+	GrpcServer          *grpc.Server
+	GwServer            *http.Server
+	OtelAuditHTTPServer *HTTPProxyWithOtelAudit
+	GrpcPort            int
+	HttpPort            int
+	OtelAuditHTTPPort   int
+	conn                *grpc.ClientConn
 }
 
 type Server struct {

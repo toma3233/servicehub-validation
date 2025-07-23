@@ -102,6 +102,28 @@
           ]
         }
       ]
+    },
+    {
+      "name": "globalDeleteResources-SRGDef",
+      "subscriptionKey": "servicehubval-global-sub",
+      "azureResourceGroupName": "servicehubval-$config(resourcesName)-global-delete-rg",
+      "ServiceResourceDefinitions": [
+        {
+          "name": "deletionResources-SRDef",
+          "composedOf": {
+            "arm": {
+              "templatePath": "Templates\\Main.DeletionResources.Template.json",
+              "parametersPath": "Parameters\\Main.DeletionResources.Parameters.json",
+              "deploymentLevel": "Subscription"
+            }
+          },
+          "scopeTags": [
+            {
+              "name": "sharedInputs"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

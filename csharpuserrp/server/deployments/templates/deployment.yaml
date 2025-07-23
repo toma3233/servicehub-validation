@@ -56,7 +56,7 @@ spec:
           #     port: {{ .Values.service.httpPort }}
           #   initialDelaySeconds: {{ .Values.service.readinessInitialDelaySeconds }}
           #   periodSeconds: {{ .Values.service.readinessPeriodSeconds }}
-          # {{- end }}
+          # {{- end }}          
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -161,6 +161,9 @@ Currently, everything for global-resources is specific to the automation of the 
     4. `RegisterResourceProvider.Parameters.json`: Parameters file used for registering resource providers, specifically Microsoft.Compute such that clusters are able to deploy successfully.
     5. `Kubectl.Rollout.Parameters.json`: Defines the process to cluster for kubectl
 
+### Delete specific
+Please refer to the [Deletion Automation Explained doc](./DeletionAutomationExplained.md) for more detailed information.
+
 ### Service specific
 
 1. **Templates**: This directory does not exist in the microservice directories. It is added in by the build pipeline during the build process. The build pipeline takes bicep files stored in serviceDirectoryName/resources and converts them to arm json files.

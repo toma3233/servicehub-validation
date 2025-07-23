@@ -208,11 +208,12 @@ func (x *Address) GetStreet() string {
 }
 
 type CreateResourceGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Region        string                 `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Region         string                 `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,3,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateResourceGroupRequest) Reset() {
@@ -259,11 +260,19 @@ func (x *CreateResourceGroupRequest) GetRegion() string {
 	return ""
 }
 
+func (x *CreateResourceGroupRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type ReadResourceGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,2,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ReadResourceGroupRequest) Reset() {
@@ -299,6 +308,13 @@ func (*ReadResourceGroupRequest) Descriptor() ([]byte, []int) {
 func (x *ReadResourceGroupRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *ReadResourceGroupRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
 	}
 	return ""
 }
@@ -348,10 +364,11 @@ func (x *ReadResourceGroupResponse) GetResourceGroup() *ResourceGroup {
 }
 
 type DeleteResourceGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,2,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *DeleteResourceGroupRequest) Reset() {
@@ -391,12 +408,20 @@ func (x *DeleteResourceGroupRequest) GetName() string {
 	return ""
 }
 
+func (x *DeleteResourceGroupRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type UpdateResourceGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Tags          map[string]string      `protobuf:"bytes,2,rep,name=tags,proto3" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Tags           map[string]string      `protobuf:"bytes,2,rep,name=tags,proto3" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SubscriptionId string                 `protobuf:"bytes,3,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateResourceGroupRequest) Reset() {
@@ -443,6 +468,13 @@ func (x *UpdateResourceGroupRequest) GetTags() map[string]string {
 	return nil
 }
 
+func (x *UpdateResourceGroupRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type UpdateResourceGroupResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ResourceGroup *ResourceGroup         `protobuf:"bytes,1,opt,name=resourceGroup,proto3" json:"resourceGroup,omitempty"`
@@ -487,6 +519,50 @@ func (x *UpdateResourceGroupResponse) GetResourceGroup() *ResourceGroup {
 	return nil
 }
 
+type ListResourceGroupsRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SubscriptionId string                 `protobuf:"bytes,1,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ListResourceGroupsRequest) Reset() {
+	*x = ListResourceGroupsRequest{}
+	mi := &file_api_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListResourceGroupsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListResourceGroupsRequest) ProtoMessage() {}
+
+func (x *ListResourceGroupsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListResourceGroupsRequest.ProtoReflect.Descriptor instead.
+func (*ListResourceGroupsRequest) Descriptor() ([]byte, []int) {
+	return file_api_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ListResourceGroupsRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type ListResourceGroupResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RgList        []*ResourceGroup       `protobuf:"bytes,1,rep,name=rgList,proto3" json:"rgList,omitempty"`
@@ -496,7 +572,7 @@ type ListResourceGroupResponse struct {
 
 func (x *ListResourceGroupResponse) Reset() {
 	*x = ListResourceGroupResponse{}
-	mi := &file_api_proto_msgTypes[9]
+	mi := &file_api_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -508,7 +584,7 @@ func (x *ListResourceGroupResponse) String() string {
 func (*ListResourceGroupResponse) ProtoMessage() {}
 
 func (x *ListResourceGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[9]
+	mi := &file_api_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -521,7 +597,7 @@ func (x *ListResourceGroupResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResourceGroupResponse.ProtoReflect.Descriptor instead.
 func (*ListResourceGroupResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{9}
+	return file_api_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListResourceGroupResponse) GetRgList() []*ResourceGroup {
@@ -542,7 +618,7 @@ type ResourceGroup struct {
 
 func (x *ResourceGroup) Reset() {
 	*x = ResourceGroup{}
-	mi := &file_api_proto_msgTypes[10]
+	mi := &file_api_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -554,7 +630,7 @@ func (x *ResourceGroup) String() string {
 func (*ResourceGroup) ProtoMessage() {}
 
 func (x *ResourceGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[10]
+	mi := &file_api_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +643,7 @@ func (x *ResourceGroup) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResourceGroup.ProtoReflect.Descriptor instead.
 func (*ResourceGroup) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{10}
+	return file_api_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ResourceGroup) GetId() string {
@@ -592,16 +668,18 @@ func (x *ResourceGroup) GetLocation() string {
 }
 
 type CreateStorageAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RgName        string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
-	Region        string                 `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RgName         string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
+	SaName         string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
+	Region         string                 `protobuf:"bytes,3,opt,name=region,proto3" json:"region,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,4,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateStorageAccountRequest) Reset() {
 	*x = CreateStorageAccountRequest{}
-	mi := &file_api_proto_msgTypes[11]
+	mi := &file_api_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -613,7 +691,7 @@ func (x *CreateStorageAccountRequest) String() string {
 func (*CreateStorageAccountRequest) ProtoMessage() {}
 
 func (x *CreateStorageAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[11]
+	mi := &file_api_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -626,7 +704,7 @@ func (x *CreateStorageAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateStorageAccountRequest.ProtoReflect.Descriptor instead.
 func (*CreateStorageAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{11}
+	return file_api_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CreateStorageAccountRequest) GetRgName() string {
@@ -636,9 +714,23 @@ func (x *CreateStorageAccountRequest) GetRgName() string {
 	return ""
 }
 
+func (x *CreateStorageAccountRequest) GetSaName() string {
+	if x != nil {
+		return x.SaName
+	}
+	return ""
+}
+
 func (x *CreateStorageAccountRequest) GetRegion() string {
 	if x != nil {
 		return x.Region
+	}
+	return ""
+}
+
+func (x *CreateStorageAccountRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
 	}
 	return ""
 }
@@ -652,7 +744,7 @@ type CreateStorageAccountResponse struct {
 
 func (x *CreateStorageAccountResponse) Reset() {
 	*x = CreateStorageAccountResponse{}
-	mi := &file_api_proto_msgTypes[12]
+	mi := &file_api_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -664,7 +756,7 @@ func (x *CreateStorageAccountResponse) String() string {
 func (*CreateStorageAccountResponse) ProtoMessage() {}
 
 func (x *CreateStorageAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[12]
+	mi := &file_api_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -677,7 +769,7 @@ func (x *CreateStorageAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateStorageAccountResponse.ProtoReflect.Descriptor instead.
 func (*CreateStorageAccountResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{12}
+	return file_api_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateStorageAccountResponse) GetName() string {
@@ -688,16 +780,17 @@ func (x *CreateStorageAccountResponse) GetName() string {
 }
 
 type ReadStorageAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RgName        string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
-	SaName        string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RgName         string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
+	SaName         string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,3,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ReadStorageAccountRequest) Reset() {
 	*x = ReadStorageAccountRequest{}
-	mi := &file_api_proto_msgTypes[13]
+	mi := &file_api_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -709,7 +802,7 @@ func (x *ReadStorageAccountRequest) String() string {
 func (*ReadStorageAccountRequest) ProtoMessage() {}
 
 func (x *ReadStorageAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[13]
+	mi := &file_api_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -722,7 +815,7 @@ func (x *ReadStorageAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadStorageAccountRequest.ProtoReflect.Descriptor instead.
 func (*ReadStorageAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{13}
+	return file_api_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ReadStorageAccountRequest) GetRgName() string {
@@ -739,6 +832,13 @@ func (x *ReadStorageAccountRequest) GetSaName() string {
 	return ""
 }
 
+func (x *ReadStorageAccountRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type ReadStorageAccountResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	StorageAccount *StorageAccount        `protobuf:"bytes,1,opt,name=storageAccount,proto3" json:"storageAccount,omitempty"`
@@ -748,7 +848,7 @@ type ReadStorageAccountResponse struct {
 
 func (x *ReadStorageAccountResponse) Reset() {
 	*x = ReadStorageAccountResponse{}
-	mi := &file_api_proto_msgTypes[14]
+	mi := &file_api_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -760,7 +860,7 @@ func (x *ReadStorageAccountResponse) String() string {
 func (*ReadStorageAccountResponse) ProtoMessage() {}
 
 func (x *ReadStorageAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[14]
+	mi := &file_api_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -773,7 +873,7 @@ func (x *ReadStorageAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadStorageAccountResponse.ProtoReflect.Descriptor instead.
 func (*ReadStorageAccountResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{14}
+	return file_api_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ReadStorageAccountResponse) GetStorageAccount() *StorageAccount {
@@ -784,16 +884,17 @@ func (x *ReadStorageAccountResponse) GetStorageAccount() *StorageAccount {
 }
 
 type DeleteStorageAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RgName        string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
-	SaName        string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RgName         string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
+	SaName         string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,3,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *DeleteStorageAccountRequest) Reset() {
 	*x = DeleteStorageAccountRequest{}
-	mi := &file_api_proto_msgTypes[15]
+	mi := &file_api_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -805,7 +906,7 @@ func (x *DeleteStorageAccountRequest) String() string {
 func (*DeleteStorageAccountRequest) ProtoMessage() {}
 
 func (x *DeleteStorageAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[15]
+	mi := &file_api_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -818,7 +919,7 @@ func (x *DeleteStorageAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteStorageAccountRequest.ProtoReflect.Descriptor instead.
 func (*DeleteStorageAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{15}
+	return file_api_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteStorageAccountRequest) GetRgName() string {
@@ -835,18 +936,26 @@ func (x *DeleteStorageAccountRequest) GetSaName() string {
 	return ""
 }
 
+func (x *DeleteStorageAccountRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type UpdateStorageAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RgName        string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
-	SaName        string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
-	Tags          map[string]string      `protobuf:"bytes,3,rep,name=tags,proto3" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RgName         string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
+	SaName         string                 `protobuf:"bytes,2,opt,name=saName,proto3" json:"saName,omitempty"`
+	Tags           map[string]string      `protobuf:"bytes,3,rep,name=tags,proto3" json:"tags,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SubscriptionId string                 `protobuf:"bytes,4,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateStorageAccountRequest) Reset() {
 	*x = UpdateStorageAccountRequest{}
-	mi := &file_api_proto_msgTypes[16]
+	mi := &file_api_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -858,7 +967,7 @@ func (x *UpdateStorageAccountRequest) String() string {
 func (*UpdateStorageAccountRequest) ProtoMessage() {}
 
 func (x *UpdateStorageAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[16]
+	mi := &file_api_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -871,7 +980,7 @@ func (x *UpdateStorageAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateStorageAccountRequest.ProtoReflect.Descriptor instead.
 func (*UpdateStorageAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{16}
+	return file_api_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateStorageAccountRequest) GetRgName() string {
@@ -895,6 +1004,13 @@ func (x *UpdateStorageAccountRequest) GetTags() map[string]string {
 	return nil
 }
 
+func (x *UpdateStorageAccountRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
+	}
+	return ""
+}
+
 type UpdateStorageAccountResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	StorageAccount *StorageAccount        `protobuf:"bytes,1,opt,name=storageAccount,proto3" json:"storageAccount,omitempty"`
@@ -904,7 +1020,7 @@ type UpdateStorageAccountResponse struct {
 
 func (x *UpdateStorageAccountResponse) Reset() {
 	*x = UpdateStorageAccountResponse{}
-	mi := &file_api_proto_msgTypes[17]
+	mi := &file_api_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -916,7 +1032,7 @@ func (x *UpdateStorageAccountResponse) String() string {
 func (*UpdateStorageAccountResponse) ProtoMessage() {}
 
 func (x *UpdateStorageAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[17]
+	mi := &file_api_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -929,7 +1045,7 @@ func (x *UpdateStorageAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateStorageAccountResponse.ProtoReflect.Descriptor instead.
 func (*UpdateStorageAccountResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{17}
+	return file_api_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *UpdateStorageAccountResponse) GetStorageAccount() *StorageAccount {
@@ -940,15 +1056,16 @@ func (x *UpdateStorageAccountResponse) GetStorageAccount() *StorageAccount {
 }
 
 type ListStorageAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RgName        string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RgName         string                 `protobuf:"bytes,1,opt,name=rgName,proto3" json:"rgName,omitempty"`
+	SubscriptionId string                 `protobuf:"bytes,2,opt,name=subscriptionId,proto3" json:"subscriptionId,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ListStorageAccountRequest) Reset() {
 	*x = ListStorageAccountRequest{}
-	mi := &file_api_proto_msgTypes[18]
+	mi := &file_api_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -960,7 +1077,7 @@ func (x *ListStorageAccountRequest) String() string {
 func (*ListStorageAccountRequest) ProtoMessage() {}
 
 func (x *ListStorageAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[18]
+	mi := &file_api_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -973,12 +1090,19 @@ func (x *ListStorageAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStorageAccountRequest.ProtoReflect.Descriptor instead.
 func (*ListStorageAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{18}
+	return file_api_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ListStorageAccountRequest) GetRgName() string {
 	if x != nil {
 		return x.RgName
+	}
+	return ""
+}
+
+func (x *ListStorageAccountRequest) GetSubscriptionId() string {
+	if x != nil {
+		return x.SubscriptionId
 	}
 	return ""
 }
@@ -992,7 +1116,7 @@ type ListStorageAccountResponse struct {
 
 func (x *ListStorageAccountResponse) Reset() {
 	*x = ListStorageAccountResponse{}
-	mi := &file_api_proto_msgTypes[19]
+	mi := &file_api_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1004,7 +1128,7 @@ func (x *ListStorageAccountResponse) String() string {
 func (*ListStorageAccountResponse) ProtoMessage() {}
 
 func (x *ListStorageAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[19]
+	mi := &file_api_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1017,7 +1141,7 @@ func (x *ListStorageAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStorageAccountResponse.ProtoReflect.Descriptor instead.
 func (*ListStorageAccountResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{19}
+	return file_api_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *ListStorageAccountResponse) GetSaList() []*StorageAccount {
@@ -1038,7 +1162,7 @@ type StorageAccount struct {
 
 func (x *StorageAccount) Reset() {
 	*x = StorageAccount{}
-	mi := &file_api_proto_msgTypes[20]
+	mi := &file_api_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1050,7 +1174,7 @@ func (x *StorageAccount) String() string {
 func (*StorageAccount) ProtoMessage() {}
 
 func (x *StorageAccount) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[20]
+	mi := &file_api_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1063,7 +1187,7 @@ func (x *StorageAccount) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StorageAccount.ProtoReflect.Descriptor instead.
 func (*StorageAccount) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{20}
+	return file_api_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *StorageAccount) GetId() string {
@@ -1099,7 +1223,7 @@ type StartLongRunningOperationRequest struct {
 
 func (x *StartLongRunningOperationRequest) Reset() {
 	*x = StartLongRunningOperationRequest{}
-	mi := &file_api_proto_msgTypes[21]
+	mi := &file_api_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1111,7 +1235,7 @@ func (x *StartLongRunningOperationRequest) String() string {
 func (*StartLongRunningOperationRequest) ProtoMessage() {}
 
 func (x *StartLongRunningOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[21]
+	mi := &file_api_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1124,7 +1248,7 @@ func (x *StartLongRunningOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StartLongRunningOperationRequest.ProtoReflect.Descriptor instead.
 func (*StartLongRunningOperationRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{21}
+	return file_api_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *StartLongRunningOperationRequest) GetEntityId() string {
@@ -1157,7 +1281,7 @@ type StartLongRunningOperationResponse struct {
 
 func (x *StartLongRunningOperationResponse) Reset() {
 	*x = StartLongRunningOperationResponse{}
-	mi := &file_api_proto_msgTypes[22]
+	mi := &file_api_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1169,7 +1293,7 @@ func (x *StartLongRunningOperationResponse) String() string {
 func (*StartLongRunningOperationResponse) ProtoMessage() {}
 
 func (x *StartLongRunningOperationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[22]
+	mi := &file_api_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1182,7 +1306,7 @@ func (x *StartLongRunningOperationResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use StartLongRunningOperationResponse.ProtoReflect.Descriptor instead.
 func (*StartLongRunningOperationResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{22}
+	return file_api_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *StartLongRunningOperationResponse) GetOperationId() string {
@@ -1203,7 +1327,7 @@ type CancelOperationRequest struct {
 
 func (x *CancelOperationRequest) Reset() {
 	*x = CancelOperationRequest{}
-	mi := &file_api_proto_msgTypes[23]
+	mi := &file_api_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1215,7 +1339,7 @@ func (x *CancelOperationRequest) String() string {
 func (*CancelOperationRequest) ProtoMessage() {}
 
 func (x *CancelOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_msgTypes[23]
+	mi := &file_api_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1228,7 +1352,7 @@ func (x *CancelOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelOperationRequest.ProtoReflect.Descriptor instead.
 func (*CancelOperationRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_rawDescGZIP(), []int{23}
+	return file_api_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *CancelOperationRequest) GetEntityId() string {
@@ -1271,54 +1395,66 @@ const file_api_proto_rawDesc = "" +
 	"\x04city\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04city\x12!\n" +
 	"\x05state\x18\x02 \x01(\tB\v\xbaH\x04r\x02\x10\x01\x88\xb5\x18\x00R\x05state\x12&\n" +
 	"\azipcode\x18\x03 \x01(\x05B\f\xbaH\t\x1a\a\x10\x9f\x8d\x06(\x90NR\azipcode\x12#\n" +
-	"\x06street\x18\x04 \x01(\tB\v\xbaH\x04r\x02\x10\x01\x88\xb5\x18\x00R\x06street\"H\n" +
+	"\x06street\x18\x04 \x01(\tB\v\xbaH\x04r\x02\x10\x01\x88\xb5\x18\x00R\x06street\"p\n" +
 	"\x1aCreateResourceGroupRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06region\x18\x02 \x01(\tR\x06region\".\n" +
+	"\x06region\x18\x02 \x01(\tR\x06region\x12&\n" +
+	"\x0esubscriptionId\x18\x03 \x01(\tR\x0esubscriptionId\"V\n" +
 	"\x18ReadResourceGroupRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"Q\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12&\n" +
+	"\x0esubscriptionId\x18\x02 \x01(\tR\x0esubscriptionId\"Q\n" +
 	"\x19ReadResourceGroupResponse\x124\n" +
-	"\rresourceGroup\x18\x01 \x01(\v2\x0e.ResourceGroupR\rresourceGroup\"0\n" +
+	"\rresourceGroup\x18\x01 \x01(\v2\x0e.ResourceGroupR\rresourceGroup\"X\n" +
 	"\x1aDeleteResourceGroupRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"\xa4\x01\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12&\n" +
+	"\x0esubscriptionId\x18\x02 \x01(\tR\x0esubscriptionId\"\xcc\x01\n" +
 	"\x1aUpdateResourceGroupRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x129\n" +
-	"\x04tags\x18\x02 \x03(\v2%.UpdateResourceGroupRequest.TagsEntryR\x04tags\x1a7\n" +
+	"\x04tags\x18\x02 \x03(\v2%.UpdateResourceGroupRequest.TagsEntryR\x04tags\x12&\n" +
+	"\x0esubscriptionId\x18\x03 \x01(\tR\x0esubscriptionId\x1a7\n" +
 	"\tTagsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"S\n" +
 	"\x1bUpdateResourceGroupResponse\x124\n" +
 	"\rresourceGroup\x18\x01 \x01(\v2\x0e.ResourceGroupR\rresourceGroup\"C\n" +
+	"\x19ListResourceGroupsRequest\x12&\n" +
+	"\x0esubscriptionId\x18\x01 \x01(\tR\x0esubscriptionId\"C\n" +
 	"\x19ListResourceGroupResponse\x12&\n" +
 	"\x06rgList\x18\x01 \x03(\v2\x0e.ResourceGroupR\x06rgList\"O\n" +
 	"\rResourceGroup\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
-	"\blocation\x18\x03 \x01(\tR\blocation\"M\n" +
+	"\blocation\x18\x03 \x01(\tR\blocation\"\x8d\x01\n" +
 	"\x1bCreateStorageAccountRequest\x12\x16\n" +
 	"\x06rgName\x18\x01 \x01(\tR\x06rgName\x12\x16\n" +
-	"\x06region\x18\x02 \x01(\tR\x06region\"2\n" +
+	"\x06saName\x18\x02 \x01(\tR\x06saName\x12\x16\n" +
+	"\x06region\x18\x03 \x01(\tR\x06region\x12&\n" +
+	"\x0esubscriptionId\x18\x04 \x01(\tR\x0esubscriptionId\"2\n" +
 	"\x1cCreateStorageAccountResponse\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"K\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"s\n" +
 	"\x19ReadStorageAccountRequest\x12\x16\n" +
 	"\x06rgName\x18\x01 \x01(\tR\x06rgName\x12\x16\n" +
-	"\x06saName\x18\x02 \x01(\tR\x06saName\"U\n" +
+	"\x06saName\x18\x02 \x01(\tR\x06saName\x12&\n" +
+	"\x0esubscriptionId\x18\x03 \x01(\tR\x0esubscriptionId\"U\n" +
 	"\x1aReadStorageAccountResponse\x127\n" +
-	"\x0estorageAccount\x18\x01 \x01(\v2\x0f.StorageAccountR\x0estorageAccount\"M\n" +
+	"\x0estorageAccount\x18\x01 \x01(\v2\x0f.StorageAccountR\x0estorageAccount\"u\n" +
 	"\x1bDeleteStorageAccountRequest\x12\x16\n" +
 	"\x06rgName\x18\x01 \x01(\tR\x06rgName\x12\x16\n" +
-	"\x06saName\x18\x02 \x01(\tR\x06saName\"\xc2\x01\n" +
+	"\x06saName\x18\x02 \x01(\tR\x06saName\x12&\n" +
+	"\x0esubscriptionId\x18\x03 \x01(\tR\x0esubscriptionId\"\xea\x01\n" +
 	"\x1bUpdateStorageAccountRequest\x12\x16\n" +
 	"\x06rgName\x18\x01 \x01(\tR\x06rgName\x12\x16\n" +
 	"\x06saName\x18\x02 \x01(\tR\x06saName\x12:\n" +
-	"\x04tags\x18\x03 \x03(\v2&.UpdateStorageAccountRequest.TagsEntryR\x04tags\x1a7\n" +
+	"\x04tags\x18\x03 \x03(\v2&.UpdateStorageAccountRequest.TagsEntryR\x04tags\x12&\n" +
+	"\x0esubscriptionId\x18\x04 \x01(\tR\x0esubscriptionId\x1a7\n" +
 	"\tTagsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"W\n" +
 	"\x1cUpdateStorageAccountResponse\x127\n" +
-	"\x0estorageAccount\x18\x01 \x01(\v2\x0f.StorageAccountR\x0estorageAccount\"3\n" +
+	"\x0estorageAccount\x18\x01 \x01(\v2\x0f.StorageAccountR\x0estorageAccount\"[\n" +
 	"\x19ListStorageAccountRequest\x12\x16\n" +
-	"\x06rgName\x18\x01 \x01(\tR\x06rgName\"E\n" +
+	"\x06rgName\x18\x01 \x01(\tR\x06rgName\x12&\n" +
+	"\x0esubscriptionId\x18\x02 \x01(\tR\x0esubscriptionId\"E\n" +
 	"\x1aListStorageAccountResponse\x12'\n" +
 	"\x06saList\x18\x01 \x03(\v2\x0f.StorageAccountR\x06saList\"P\n" +
 	"\x0eStorageAccount\x12\x0e\n" +
@@ -1338,19 +1474,19 @@ const file_api_proto_rawDesc = "" +
 	"\n" +
 	"entityType\x18\x02 \x01(\tR\n" +
 	"entityType\x12 \n" +
-	"\voperationId\x18\x03 \x01(\tR\voperationId2\xe5\x14\n" +
+	"\voperationId\x18\x03 \x01(\tR\voperationId2\xa2\x18\n" +
 	"\tMyGreeter\x12~\n" +
-	"\bSayHello\x12\r.HelloRequest\x1a\v.HelloReply\"V\x92A?\x12\x0fSend a greeting\x1a,This operation sends a greeting to the user.\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/hello\x12\xb3\x01\n" +
-	"\x13CreateResourceGroup\x12\x1b.CreateResourceGroupRequest\x1a\x16.google.protobuf.Empty\"g\x92AG\x12\x17Create a resource group\x1a,This operation creates a new resource group.\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/resourcegroups\x12\xbe\x01\n" +
-	"\x11ReadResourceGroup\x12\x19.ReadResourceGroupRequest\x1a\x1a.ReadResourceGroupResponse\"r\x92AN\x12\x15Read a resource group\x1a5This operation reads the details of a resource group.\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/resourcegroups/{name}\x12\xb3\x01\n" +
-	"\x13DeleteResourceGroup\x12\x1b.DeleteResourceGroupRequest\x1a\x16.google.protobuf.Empty\"g\x92AC\x12\x17Delete a resource group\x1a(This operation deletes a resource group.\x82\xd3\xe4\x93\x02\x1b*\x19/v1/resourcegroups/{name}\x12\xcb\x01\n" +
-	"\x13UpdateResourceGroup\x12\x1b.UpdateResourceGroupRequest\x1a\x1c.UpdateResourceGroupResponse\"y\x92AO\x12\x17Update a resource group\x1a4This operation updates the tags of a resource group.\x82\xd3\xe4\x93\x02!:\x04tags\x1a\x19/v1/resourcegroups/{name}\x12\xb0\x01\n" +
-	"\x12ListResourceGroups\x12\x16.google.protobuf.Empty\x1a\x1a.ListResourceGroupResponse\"f\x92AI\x12\x18List all resource groups\x1a-This operation lists all the resource groups.\x82\xd3\xe4\x93\x02\x14\x12\x12/v1/resourcegroups\x12\xd8\x01\n" +
-	"\x14CreateStorageAccount\x12\x1c.CreateStorageAccountRequest\x1a\x1d.CreateStorageAccountResponse\"\x82\x01\x92AI\x12\x18Create a storage account\x1a-This operation creates a new storage account.\x82\xd3\xe4\x93\x020:\x01*\"+/v1/resourcegroups/{rgName}/storageaccounts\x12\xdf\x01\n" +
-	"\x12ReadStorageAccount\x12\x1a.ReadStorageAccountRequest\x1a\x1b.ReadStorageAccountResponse\"\x8f\x01\x92AP\x12\x16Read a storage account\x1a6This operation reads the details of a storage account.\x82\xd3\xe4\x93\x026\x124/v1/resourcegroups/{rgName}/storageaccounts/{saName}\x12\xd3\x01\n" +
-	"\x14DeleteStorageAccount\x12\x1c.DeleteStorageAccountRequest\x1a\x16.google.protobuf.Empty\"\x84\x01\x92AE\x12\x18Delete a storage account\x1a)This operation deletes a storage account.\x82\xd3\xe4\x93\x026*4/v1/resourcegroups/{rgName}/storageaccounts/{saName}\x12\xec\x01\n" +
-	"\x14UpdateStorageAccount\x12\x1c.UpdateStorageAccountRequest\x1a\x1d.UpdateStorageAccountResponse\"\x96\x01\x92AQ\x12\x18Update a storage account\x1a5This operation updates the tags of a storage account.\x82\xd3\xe4\x93\x02<:\x04tags\x1a4/v1/resourcegroups/{rgName}/storageaccounts/{saName}\x12\xd2\x01\n" +
-	"\x13ListStorageAccounts\x12\x1a.ListStorageAccountRequest\x1a\x1b.ListStorageAccountResponse\"\x81\x01\x92AK\x12\x19List all storage accounts\x1a.This operation lists all the storage accounts.\x82\xd3\xe4\x93\x02-\x12+/v1/resourcegroups/{rgName}/storageaccounts\x12\xe5\x01\n" +
+	"\bSayHello\x12\r.HelloRequest\x1a\v.HelloReply\"V\x92A?\x12\x0fSend a greeting\x1a,This operation sends a greeting to the user.\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/hello\x12\xd7\x01\n" +
+	"\x13CreateResourceGroup\x12\x1b.CreateResourceGroupRequest\x1a\x16.google.protobuf.Empty\"\x8a\x01\x92AG\x12\x17Create a resource group\x1a,This operation creates a new resource group.\x82\xd3\xe4\x93\x02::\x01*\"5/subscriptions/{subscriptionId}/resourceGroups/{name}\x12\xdb\x01\n" +
+	"\x11ReadResourceGroup\x12\x19.ReadResourceGroupRequest\x1a\x1a.ReadResourceGroupResponse\"\x8e\x01\x92AN\x12\x15Read a resource group\x1a5This operation reads the details of a resource group.\x82\xd3\xe4\x93\x027\x125/subscriptions/{subscriptionId}/resourceGroups/{name}\x12\xd0\x01\n" +
+	"\x13DeleteResourceGroup\x12\x1b.DeleteResourceGroupRequest\x1a\x16.google.protobuf.Empty\"\x83\x01\x92AC\x12\x17Delete a resource group\x1a(This operation deletes a resource group.\x82\xd3\xe4\x93\x027*5/subscriptions/{subscriptionId}/resourceGroups/{name}\x12\xe8\x01\n" +
+	"\x13UpdateResourceGroup\x12\x1b.UpdateResourceGroupRequest\x1a\x1c.UpdateResourceGroupResponse\"\x95\x01\x92AO\x12\x17Update a resource group\x1a4This operation updates the tags of a resource group.\x82\xd3\xe4\x93\x02=:\x04tags\x1a5/subscriptions/{subscriptionId}/resourceGroups/{name}\x12\xd1\x01\n" +
+	"\x12ListResourceGroups\x12\x1a.ListResourceGroupsRequest\x1a\x1a.ListResourceGroupResponse\"\x82\x01\x92AI\x12\x18List all resource groups\x1a-This operation lists all the resource groups.\x82\xd3\xe4\x93\x020\x12./subscriptions/{subscriptionId}/resourceGroups\x12\x99\x02\n" +
+	"\x14CreateStorageAccount\x12\x1c.CreateStorageAccountRequest\x1a\x1d.CreateStorageAccountResponse\"\xc3\x01\x92AI\x12\x18Create a storage account\x1a-This operation creates a new storage account.\x82\xd3\xe4\x93\x02q:\x01*\"l/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}\x12\x97\x02\n" +
+	"\x12ReadStorageAccount\x12\x1a.ReadStorageAccountRequest\x1a\x1b.ReadStorageAccountResponse\"\xc7\x01\x92AP\x12\x16Read a storage account\x1a6This operation reads the details of a storage account.\x82\xd3\xe4\x93\x02n\x12l/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}\x12\x8b\x02\n" +
+	"\x14DeleteStorageAccount\x12\x1c.DeleteStorageAccountRequest\x1a\x16.google.protobuf.Empty\"\xbc\x01\x92AE\x12\x18Delete a storage account\x1a)This operation deletes a storage account.\x82\xd3\xe4\x93\x02n*l/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}\x12\xa4\x02\n" +
+	"\x14UpdateStorageAccount\x12\x1c.UpdateStorageAccountRequest\x1a\x1d.UpdateStorageAccountResponse\"\xce\x01\x92AQ\x12\x18Update a storage account\x1a5This operation updates the tags of a storage account.\x82\xd3\xe4\x93\x02t:\x04tags\x1al/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}\x12\x8a\x02\n" +
+	"\x13ListStorageAccounts\x12\x1a.ListStorageAccountRequest\x1a\x1b.ListStorageAccountResponse\"\xb9\x01\x92AK\x12\x19List all storage accounts\x1a.This operation lists all the storage accounts.\x82\xd3\xe4\x93\x02e\x12c/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts\x12\xe5\x01\n" +
 	"\x19StartLongRunningOperation\x12!.StartLongRunningOperationRequest\x1a\".StartLongRunningOperationResponse\"\x80\x01\x92AT\x12\x1fStart a long running operation.\x1a1This call starts an async long running operation.\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1/async/longrunningoperation\x12\xea\x01\n" +
 	"\x0fCancelOperation\x12\x17.CancelOperationRequest\x1a\x16.google.protobuf.Empty\"\xa5\x01\x92AV\x12\x1aCancel an async operation.\x1a8This operation will set an async operation to cancelled.\x82\xd3\xe4\x93\x02F:\x01*\"A/v1/entity/{entityType}/{entityId}/operation/{operationId}/cancelB}B\bApiProtoP\x01Zodev.azure.com/service-hub-flg/service_hub_validation/_git/service_hub_validation_service.git/mygreeterv3/api/v1b\x06proto3"
 
@@ -1366,7 +1502,7 @@ func file_api_proto_rawDescGZIP() []byte {
 	return file_api_proto_rawDescData
 }
 
-var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_api_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_api_proto_goTypes = []any{
 	(*HelloRequest)(nil),                      // 0: HelloRequest
 	(*HelloReply)(nil),                        // 1: HelloReply
@@ -1377,63 +1513,64 @@ var file_api_proto_goTypes = []any{
 	(*DeleteResourceGroupRequest)(nil),        // 6: DeleteResourceGroupRequest
 	(*UpdateResourceGroupRequest)(nil),        // 7: UpdateResourceGroupRequest
 	(*UpdateResourceGroupResponse)(nil),       // 8: UpdateResourceGroupResponse
-	(*ListResourceGroupResponse)(nil),         // 9: ListResourceGroupResponse
-	(*ResourceGroup)(nil),                     // 10: ResourceGroup
-	(*CreateStorageAccountRequest)(nil),       // 11: CreateStorageAccountRequest
-	(*CreateStorageAccountResponse)(nil),      // 12: CreateStorageAccountResponse
-	(*ReadStorageAccountRequest)(nil),         // 13: ReadStorageAccountRequest
-	(*ReadStorageAccountResponse)(nil),        // 14: ReadStorageAccountResponse
-	(*DeleteStorageAccountRequest)(nil),       // 15: DeleteStorageAccountRequest
-	(*UpdateStorageAccountRequest)(nil),       // 16: UpdateStorageAccountRequest
-	(*UpdateStorageAccountResponse)(nil),      // 17: UpdateStorageAccountResponse
-	(*ListStorageAccountRequest)(nil),         // 18: ListStorageAccountRequest
-	(*ListStorageAccountResponse)(nil),        // 19: ListStorageAccountResponse
-	(*StorageAccount)(nil),                    // 20: StorageAccount
-	(*StartLongRunningOperationRequest)(nil),  // 21: StartLongRunningOperationRequest
-	(*StartLongRunningOperationResponse)(nil), // 22: StartLongRunningOperationResponse
-	(*CancelOperationRequest)(nil),            // 23: CancelOperationRequest
-	nil,                                       // 24: UpdateResourceGroupRequest.TagsEntry
-	nil,                                       // 25: UpdateStorageAccountRequest.TagsEntry
-	(*timestamppb.Timestamp)(nil),             // 26: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                     // 27: google.protobuf.Empty
+	(*ListResourceGroupsRequest)(nil),         // 9: ListResourceGroupsRequest
+	(*ListResourceGroupResponse)(nil),         // 10: ListResourceGroupResponse
+	(*ResourceGroup)(nil),                     // 11: ResourceGroup
+	(*CreateStorageAccountRequest)(nil),       // 12: CreateStorageAccountRequest
+	(*CreateStorageAccountResponse)(nil),      // 13: CreateStorageAccountResponse
+	(*ReadStorageAccountRequest)(nil),         // 14: ReadStorageAccountRequest
+	(*ReadStorageAccountResponse)(nil),        // 15: ReadStorageAccountResponse
+	(*DeleteStorageAccountRequest)(nil),       // 16: DeleteStorageAccountRequest
+	(*UpdateStorageAccountRequest)(nil),       // 17: UpdateStorageAccountRequest
+	(*UpdateStorageAccountResponse)(nil),      // 18: UpdateStorageAccountResponse
+	(*ListStorageAccountRequest)(nil),         // 19: ListStorageAccountRequest
+	(*ListStorageAccountResponse)(nil),        // 20: ListStorageAccountResponse
+	(*StorageAccount)(nil),                    // 21: StorageAccount
+	(*StartLongRunningOperationRequest)(nil),  // 22: StartLongRunningOperationRequest
+	(*StartLongRunningOperationResponse)(nil), // 23: StartLongRunningOperationResponse
+	(*CancelOperationRequest)(nil),            // 24: CancelOperationRequest
+	nil,                                       // 25: UpdateResourceGroupRequest.TagsEntry
+	nil,                                       // 26: UpdateStorageAccountRequest.TagsEntry
+	(*timestamppb.Timestamp)(nil),             // 27: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                     // 28: google.protobuf.Empty
 }
 var file_api_proto_depIdxs = []int32{
 	2,  // 0: HelloRequest.address:type_name -> Address
-	10, // 1: ReadResourceGroupResponse.resourceGroup:type_name -> ResourceGroup
-	24, // 2: UpdateResourceGroupRequest.tags:type_name -> UpdateResourceGroupRequest.TagsEntry
-	10, // 3: UpdateResourceGroupResponse.resourceGroup:type_name -> ResourceGroup
-	10, // 4: ListResourceGroupResponse.rgList:type_name -> ResourceGroup
-	20, // 5: ReadStorageAccountResponse.storageAccount:type_name -> StorageAccount
-	25, // 6: UpdateStorageAccountRequest.tags:type_name -> UpdateStorageAccountRequest.TagsEntry
-	20, // 7: UpdateStorageAccountResponse.storageAccount:type_name -> StorageAccount
-	20, // 8: ListStorageAccountResponse.saList:type_name -> StorageAccount
-	26, // 9: StartLongRunningOperationRequest.expirationTimestamp:type_name -> google.protobuf.Timestamp
+	11, // 1: ReadResourceGroupResponse.resourceGroup:type_name -> ResourceGroup
+	25, // 2: UpdateResourceGroupRequest.tags:type_name -> UpdateResourceGroupRequest.TagsEntry
+	11, // 3: UpdateResourceGroupResponse.resourceGroup:type_name -> ResourceGroup
+	11, // 4: ListResourceGroupResponse.rgList:type_name -> ResourceGroup
+	21, // 5: ReadStorageAccountResponse.storageAccount:type_name -> StorageAccount
+	26, // 6: UpdateStorageAccountRequest.tags:type_name -> UpdateStorageAccountRequest.TagsEntry
+	21, // 7: UpdateStorageAccountResponse.storageAccount:type_name -> StorageAccount
+	21, // 8: ListStorageAccountResponse.saList:type_name -> StorageAccount
+	27, // 9: StartLongRunningOperationRequest.expirationTimestamp:type_name -> google.protobuf.Timestamp
 	0,  // 10: MyGreeter.SayHello:input_type -> HelloRequest
 	3,  // 11: MyGreeter.CreateResourceGroup:input_type -> CreateResourceGroupRequest
 	4,  // 12: MyGreeter.ReadResourceGroup:input_type -> ReadResourceGroupRequest
 	6,  // 13: MyGreeter.DeleteResourceGroup:input_type -> DeleteResourceGroupRequest
 	7,  // 14: MyGreeter.UpdateResourceGroup:input_type -> UpdateResourceGroupRequest
-	27, // 15: MyGreeter.ListResourceGroups:input_type -> google.protobuf.Empty
-	11, // 16: MyGreeter.CreateStorageAccount:input_type -> CreateStorageAccountRequest
-	13, // 17: MyGreeter.ReadStorageAccount:input_type -> ReadStorageAccountRequest
-	15, // 18: MyGreeter.DeleteStorageAccount:input_type -> DeleteStorageAccountRequest
-	16, // 19: MyGreeter.UpdateStorageAccount:input_type -> UpdateStorageAccountRequest
-	18, // 20: MyGreeter.ListStorageAccounts:input_type -> ListStorageAccountRequest
-	21, // 21: MyGreeter.StartLongRunningOperation:input_type -> StartLongRunningOperationRequest
-	23, // 22: MyGreeter.CancelOperation:input_type -> CancelOperationRequest
+	9,  // 15: MyGreeter.ListResourceGroups:input_type -> ListResourceGroupsRequest
+	12, // 16: MyGreeter.CreateStorageAccount:input_type -> CreateStorageAccountRequest
+	14, // 17: MyGreeter.ReadStorageAccount:input_type -> ReadStorageAccountRequest
+	16, // 18: MyGreeter.DeleteStorageAccount:input_type -> DeleteStorageAccountRequest
+	17, // 19: MyGreeter.UpdateStorageAccount:input_type -> UpdateStorageAccountRequest
+	19, // 20: MyGreeter.ListStorageAccounts:input_type -> ListStorageAccountRequest
+	22, // 21: MyGreeter.StartLongRunningOperation:input_type -> StartLongRunningOperationRequest
+	24, // 22: MyGreeter.CancelOperation:input_type -> CancelOperationRequest
 	1,  // 23: MyGreeter.SayHello:output_type -> HelloReply
-	27, // 24: MyGreeter.CreateResourceGroup:output_type -> google.protobuf.Empty
+	28, // 24: MyGreeter.CreateResourceGroup:output_type -> google.protobuf.Empty
 	5,  // 25: MyGreeter.ReadResourceGroup:output_type -> ReadResourceGroupResponse
-	27, // 26: MyGreeter.DeleteResourceGroup:output_type -> google.protobuf.Empty
+	28, // 26: MyGreeter.DeleteResourceGroup:output_type -> google.protobuf.Empty
 	8,  // 27: MyGreeter.UpdateResourceGroup:output_type -> UpdateResourceGroupResponse
-	9,  // 28: MyGreeter.ListResourceGroups:output_type -> ListResourceGroupResponse
-	12, // 29: MyGreeter.CreateStorageAccount:output_type -> CreateStorageAccountResponse
-	14, // 30: MyGreeter.ReadStorageAccount:output_type -> ReadStorageAccountResponse
-	27, // 31: MyGreeter.DeleteStorageAccount:output_type -> google.protobuf.Empty
-	17, // 32: MyGreeter.UpdateStorageAccount:output_type -> UpdateStorageAccountResponse
-	19, // 33: MyGreeter.ListStorageAccounts:output_type -> ListStorageAccountResponse
-	22, // 34: MyGreeter.StartLongRunningOperation:output_type -> StartLongRunningOperationResponse
-	27, // 35: MyGreeter.CancelOperation:output_type -> google.protobuf.Empty
+	10, // 28: MyGreeter.ListResourceGroups:output_type -> ListResourceGroupResponse
+	13, // 29: MyGreeter.CreateStorageAccount:output_type -> CreateStorageAccountResponse
+	15, // 30: MyGreeter.ReadStorageAccount:output_type -> ReadStorageAccountResponse
+	28, // 31: MyGreeter.DeleteStorageAccount:output_type -> google.protobuf.Empty
+	18, // 32: MyGreeter.UpdateStorageAccount:output_type -> UpdateStorageAccountResponse
+	20, // 33: MyGreeter.ListStorageAccounts:output_type -> ListStorageAccountResponse
+	23, // 34: MyGreeter.StartLongRunningOperation:output_type -> StartLongRunningOperationResponse
+	28, // 35: MyGreeter.CancelOperation:output_type -> google.protobuf.Empty
 	23, // [23:36] is the sub-list for method output_type
 	10, // [10:23] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -1453,7 +1590,7 @@ func file_api_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_proto_rawDesc), len(file_api_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

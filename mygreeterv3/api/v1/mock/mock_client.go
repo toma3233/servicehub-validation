@@ -144,7 +144,7 @@ func (mr *MockMyGreeterClientMockRecorder) DeleteStorageAccount(ctx, in any, opt
 }
 
 // ListResourceGroups mocks base method.
-func (m *MockMyGreeterClient) ListResourceGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.ListResourceGroupResponse, error) {
+func (m *MockMyGreeterClient) ListResourceGroups(ctx context.Context, in *v1.ListResourceGroupsRequest, opts ...grpc.CallOption) (*v1.ListResourceGroupResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []any{ctx, in}
 	for _, a := range opts {

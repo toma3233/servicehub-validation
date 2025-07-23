@@ -8,7 +8,6 @@
  */
 package restsdk
 
-type CreateResourceGroupRequest struct {
-	Name   string `json:"name,omitempty"`
+type MyGreeterCreateResourceGroupBody struct {
 	Region string `json:"region,omitempty"`
 }

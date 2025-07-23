@@ -31,6 +31,14 @@
       ]
     },
     {
+      "name": "DeployResourcesUsedByDeletion",
+      "targetType": "ServiceResourceDefinition",
+      "targetName": "deletionResources-SRDef",
+      "actions": [
+        "deploy"
+      ]
+    },
+    {
       "name": "DeployGenevaLogsResources",
       "targetType": "ServiceResourceDefinition",
       "targetName": "genevaLogsResources-SRDef",

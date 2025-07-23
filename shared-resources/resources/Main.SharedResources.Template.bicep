@@ -30,6 +30,9 @@ param scriptSubnetPrefix string = '10.1.30.0/24'
 @sys.description('Whether or not to use geneva monitoring.') // We need to add conditionals such that we deploy the correct monitoring resources. We use Geneva monitoring when deploying via ev2.
 param useGenevaMonitoring bool = true
 
+@sys.description('Enable AKS Web App Routing add-on (NGINX ingress controller)')
+param enableWebAppRouting bool = true
+
 @sys.description('The date this resource group will be deleted on, with format YYYY-MM-DD. This is used to tag the resource group for deletion.')
 param deletionDate string
 
@@ -128,7 +131,41 @@ module storageFilePrivateDnsZone 'br/public:avm/res/network/private-dns-zone:0.7
 var aksSubnetIndex = indexOf(vnet.outputs.subnetNames, 'aks-subnet')
 var aksSubnetId = vnet.outputs.subnetResourceIds[aksSubnetIndex]
 
-module aks 'br/public:avm/res/container-service/managed-cluster:0.8.1' = {
+// Microsoft Corp tenant ID
+var corpTenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+
+// Get the tenant ID from the deployer function
+var tenantId = deployer().tenantId
+
+// Determine if we should use Microsoft tenant tagging
+var isMicrosoftTenant = tenantId == corpTenantId
+
+// Public IP Address with conditional tagging based on tenant
+module publicIp 'br/public:avm/res/network/public-ip-address:0.7.0' = {
+  name: 'servicehubval-${resourcesName}-publicIpDeploy'
+  scope: resourceGroup(subscriptionId, resourceGroupName)
+  params: {
+    name: 'servicehubval-${resourcesName}-public-ip'
+    location: rg.outputs.location
+    publicIPAllocationMethod: 'Static'
+    skuName: 'Standard'
+    skuTier: 'Regional'
+    // Conditional tagging based on tenant: NonProd for Microsoft Corp, AKSServiceHubValidation for AME
+    // Ensure you have provisioned service tag for your service by following the steps here: 
+    // https://eng.ms/docs/cloud-ai-platform/azure-core/azure-networking/sdn-dbansal/sdn-buildout-and-deployments/sdn-fundamentals/service-tag-onboarding/onboarding-process
+    // Additionally, ensure your target subscription(s) has the "AllowBringYourOwnPublicIpAddress" AFEC feature flag enabled
+    // Steps can be found here: https://eng.ms/docs/cloud-ai-platform/azure-core/azure-networking/sdn-dbansal/sdn-buildout-and-deployments/sdn-fundamentals/service-tag-onboarding/get-access-and-create-tagged-ips/enable-feature-flag
+    ipTags: [
+      {
+        ipTagType: 'FirstPartyUsage'
+        tag: isMicrosoftTenant ? '/NonProd' : '/AKSServiceHubValidation'
+      }
+    ]
+    zones: []
+  }
+}
+
+module aks 'br/public:avm/res/container-service/managed-cluster:0.10.0' = {
   name: 'servicehubval-${resourcesName}-shared-resources-clusterDeploy'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params: {
@@ -140,8 +177,8 @@ module aks 'br/public:avm/res/container-service/managed-cluster:0.8.1' = {
     primaryAgentPoolProfiles: [
       {
         name: 'agentpool'
-        count: 3 // agentCount
-        vmSize: 'standard_d2s_v3'
+        count: 2 // agentCount
+        vmSize: 'standard_d4s_v3'
         osType: 'Linux'
         osSKU: 'AzureLinux'
         mode: 'System'
@@ -160,8 +197,30 @@ module aks 'br/public:avm/res/container-service/managed-cluster:0.8.1' = {
     enableOidcIssuerProfile: true
     enableWorkloadIdentity: true
     istioServiceMeshEnabled: true
-    enableKeyvaultSecretsProvider: useGenevaMonitoring ? true : false
+    enableKeyvaultSecretsProvider: useGenevaMonitoring || enableWebAppRouting ? true : false    
     istioServiceMeshRevisions: ['asm-1-24']
+    webApplicationRoutingEnabled: enableWebAppRouting
+    defaultIngressControllerType: 'None' // Set to None to allow custom ingress controller deployment so that we can manage DNS and ipTags(SFI requirement) through static public IP resource
+    enableAzureMonitorProfileMetrics: true // This enables 1P metrics (Geneva monitoring)'
+    metricLabelsAllowlist: ''
+    metricAnnotationsAllowList: ''
+    // Configure the load balancer created by AKS to use the public IP address we provision
+    outboundPublicIPResourceIds: [
+      publicIp.outputs.resourceId
+    ]
+  }
+}
+
+// Network Contributor role assignment for AKS kubelet identity to join public IP addresses
+// Grants 'Microsoft.Network/publicIPAddresses/join/action' permission to resolve LinkedAuthorizationFailed errors
+module aksPublicIpJoinRoleAssignment 'br/public:avm/res/authorization/role-assignment/rg-scope:0.1.0' = {
+  name: '${resourcesName}-aksPublicIpJoinRoleAssignmentDeploy'
+  // using RG scope in case more than one public IP is provisioned in the future
+  scope: resourceGroup(subscriptionId, resourceGroupName)
+  params: {
+    principalId: aks.outputs.systemAssignedMIPrincipalId!
+    roleDefinitionIdOrName: '4d97b98b-1d4f-4787-a291-c67834d212e7' // Network Contributor GUID
+    principalType: 'ServicePrincipal'
   }
 }
 
@@ -260,7 +319,10 @@ module serviceBusNamespace 'br/public:avm/res/service-bus/namespace:0.9.0' = {
   }
 }
 
-output aksSecretStoreClientId string = useGenevaMonitoring
-  ? aks.outputs.addonProfiles.azureKeyvaultSecretsProvider.identity.clientId
+output aksSecretStoreClientId string = useGenevaMonitoring || enableWebAppRouting 
+  ? aks.outputs.addonProfiles.azureKeyvaultSecretsProvider.identity.clientId 
   : ''
 output aksResourceId string = aks.outputs.resourceId
+output aksClusterName string = aks.outputs.name
+output publicIpAddress string = publicIp.outputs.ipAddress
+output publicIpResourceId string = publicIp.outputs.resourceId

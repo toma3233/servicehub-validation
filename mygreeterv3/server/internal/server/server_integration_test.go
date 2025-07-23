@@ -36,7 +36,7 @@ func sayHello(buf *bytes.Buffer, port int, req *pb.HelloRequest) {
 
 	defer conn.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client.SayHello(ctx, req)
 }

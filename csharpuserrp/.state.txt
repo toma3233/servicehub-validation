@@ -29,7 +29,6 @@ server/artifacts/.gitignore
 server/deployments
 server/deployments/.helmignore
 server/deployments/Chart.yaml
-server/deployments/template-values-common.yaml
 server/deployments/template-values-server.yaml
 server/deployments/templates
 server/deployments/templates/NOTES.txt
@@ -39,7 +38,10 @@ server/deployments/templates/deployment.yaml
 server/deployments/templates/hpa.yaml
 server/deployments/templates/ingress.yaml
 server/deployments/templates/namespace.yaml
+server/deployments/templates/nginx-ingress-controller.yaml
 server/deployments/templates/peerauth.yaml
+server/deployments/templates/secretproviderclass.yaml
+server/deployments/templates/secretssyncpod.yaml
 server/deployments/templates/service.yaml
 server/deployments/templates/serviceaccount.yaml
 server/generated
@@ -57,6 +59,9 @@ server/resources/alert-rules/.method_template_bicep.txt
 server/resources/alert-rules/.methods_state.txt
 server/resources/deployAzureResources.sh
 server/resources/template-ServiceResources.Parameters.json
+server/resources/userrp
+server/resources/userrp/Userrp.ServiceResources.Template.bicep
+server/resources/userrp/saveOutputs.sh
 server/setup.sh
 server/src
 server/src/csharpuserrp
@@ -106,6 +111,7 @@ server/test
 server/test/buildImage.sh
 server/test/checkServicePodLogs.sh
 server/test/checkServicePodStatus.sh
+server/test/checkServiceStatus.sh
 server/test/deployService.sh
 server/test/provisionServiceResources.sh
 server/test/pushImage.sh

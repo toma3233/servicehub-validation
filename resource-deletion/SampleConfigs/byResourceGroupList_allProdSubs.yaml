@@ -1,0 +1,52 @@
+# This file is used to configure the manual deletion of resources in Azure.
+# It specifies the subscriptions and resource groups to be deleted.
+# The subscriptions can be in any region and any tenant/environment.
+# The rollout will handle deletion correctly across environments.
+settings:
+  # Set to true to wait for Key Vault purge or false to start the command but not wait for it.
+  waitForKVPurge: false
+  # Specify the deletion option to use. Options include:
+  # - byTag: Delete resource groups that have a deletionDate tag set to a date thats less than or equal to today.
+  # - byResourceGroupList: Delete resources by a list of resource groups.
+  # - byResourceIdList: Delete resources by a list of resource IDs.
+  deletionOption: "byResourceGroupList"
+  # Specify the list of subscriptions and resource groups to delete.
+  # Each entry in the list should contain a subscription ID and a list of resources
+  # The resourceList can either contain resource group names or resource Ids for individual resources.
+  deletionList:
+    # AKS Service Hub Validation Sub - global
+    - subscription: "a447fa09-82a5-4123-8d83-198b46a21b00"
+      resourceList:
+        - "servicehubval-ev2-sec-rg"
+        - "servicehubval-ev2-sg-rg"
+        - "servicehubval-ev2-sy-rg"
+        - "servicehubval-ev2-bn-rg"
+        - "servicehubval-ev2-global-rg"
+    # AKS Service Hub Validation Sub - Sweden Central
+    - subscription: "dab1af7c-1826-4fa2-a8e3-0d72c0d88f13"
+      resourceList:
+        - "servicehubval-ev2-sec-rg"
+        - "servicehubval-ev2ta2-sec-rg"
+        - "servicehubval-ProdAME-sec-rg"
+        - "servicehubval-wait-sec-rg"
+    # AKS Service Hub Validation Sub - East US 2
+    - subscription: "4e0dffe1-6aca-446c-84a2-540b8064fdd4"
+      resourceList:
+        - "servicehubval-ev2-bn-rg"
+        - "servicehubval-ev2ta2-bn-rg"
+        - "servicehubval-ProdAME-bn-rg"
+        - "servicehubval-wait-bn-rg"
+    # AKS Service Hub Validation Sub - Southeast Asia
+    - subscription: "dfe496bb-3458-441b-a1e5-79df3e1891e8"
+      resourceList:
+        - "servicehubval-ev2-sg-rg"
+        - "servicehubval-ev2ta2-sg-rg"
+        - "servicehubval-ProdAME-sg-rg"
+        - "servicehubval-wait-sg-rg"
+    # AKS Service Hub Validation Sub - Australia East
+    - subscription: "7b32728e-6311-49ae-9669-1891eeeadc8f"
+      resourceList:
+        - "servicehubval-ev2-sy-rg"
+        - "servicehubval-ev2ta2-sy-rg"
+        - "servicehubval-ProdAME-sy-rg"
+        - "servicehubval-wait-sy-rg"

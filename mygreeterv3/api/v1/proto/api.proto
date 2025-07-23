@@ -29,7 +29,7 @@ service MyGreeter {
   // Creates a resource group
   rpc CreateResourceGroup (CreateResourceGroupRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/resourcegroups"
+      post: "/subscriptions/{subscriptionId}/resourceGroups/{name}"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -40,7 +40,7 @@ service MyGreeter {
   // Reads a resource group
   rpc ReadResourceGroup (ReadResourceGroupRequest) returns (ReadResourceGroupResponse) {
     option (google.api.http) = {
-      get: "/v1/resourcegroups/{name}"
+      get: "/subscriptions/{subscriptionId}/resourceGroups/{name}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Read a resource group"
@@ -50,7 +50,7 @@ service MyGreeter {
   // Deletes a resource group
   rpc DeleteResourceGroup (DeleteResourceGroupRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/resourcegroups/{name}"
+      delete: "/subscriptions/{subscriptionId}/resourceGroups/{name}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Delete a resource group"
@@ -60,7 +60,7 @@ service MyGreeter {
   // Updates a resource group
   rpc UpdateResourceGroup (UpdateResourceGroupRequest) returns (UpdateResourceGroupResponse) {
     option (google.api.http) = {
-      put: "/v1/resourcegroups/{name}"
+      put: "/subscriptions/{subscriptionId}/resourceGroups/{name}"
       body: "tags"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -69,9 +69,9 @@ service MyGreeter {
     };
   }
   // Lists all resource groups
-  rpc ListResourceGroups (google.protobuf.Empty) returns (ListResourceGroupResponse) {
+  rpc ListResourceGroups (ListResourceGroupsRequest) returns (ListResourceGroupResponse) {
     option (google.api.http) = {
-      get: "/v1/resourcegroups"
+      get: "/subscriptions/{subscriptionId}/resourceGroups"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "List all resource groups"
@@ -82,7 +82,7 @@ service MyGreeter {
    // Creates a storage account
   rpc CreateStorageAccount (CreateStorageAccountRequest) returns (CreateStorageAccountResponse) {
     option (google.api.http) = {
-      post: "/v1/resourcegroups/{rgName}/storageaccounts"
+      post: "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -93,7 +93,7 @@ service MyGreeter {
   // Reads a storage account
   rpc ReadStorageAccount (ReadStorageAccountRequest) returns (ReadStorageAccountResponse) {
     option (google.api.http) = {
-      get: "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+      get: "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Read a storage account"
@@ -103,7 +103,7 @@ service MyGreeter {
   // Deletes a storage account
   rpc DeleteStorageAccount (DeleteStorageAccountRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+      delete: "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Delete a storage account"
@@ -113,7 +113,7 @@ service MyGreeter {
   // Updates a storage account
   rpc UpdateStorageAccount (UpdateStorageAccountRequest) returns (UpdateStorageAccountResponse) {
     option (google.api.http) = {
-      put: "/v1/resourcegroups/{rgName}/storageaccounts/{saName}"
+      put: "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts/{saName}"
       body: "tags"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -124,7 +124,7 @@ service MyGreeter {
   // Lists all storage accounts
   rpc ListStorageAccounts (ListStorageAccountRequest) returns (ListStorageAccountResponse) {
     option (google.api.http) = {
-      get: "/v1/resourcegroups/{rgName}/storageaccounts"
+      get: "/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Storage/storageAccounts"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "List all storage accounts"
@@ -187,10 +187,12 @@ message Address {
 message CreateResourceGroupRequest {
   string name = 1;
   string region = 2;
+  string subscriptionId = 3;
 }
 
 message ReadResourceGroupRequest {
   string name = 1;
+  string subscriptionId = 2;
 }
 
 message ReadResourceGroupResponse {
@@ -199,15 +201,21 @@ message ReadResourceGroupResponse {
 
 message DeleteResourceGroupRequest {
   string name = 1;
+  string subscriptionId = 2;
 }
 
 message UpdateResourceGroupRequest {
   string name = 1;
   map<string, string> tags = 2;
+  string subscriptionId = 3;
 }
 
 message UpdateResourceGroupResponse {
   ResourceGroup resourceGroup = 1;
+}
+
+message ListResourceGroupsRequest {
+  string subscriptionId = 1;
 }
 
 message ListResourceGroupResponse {
@@ -222,7 +230,9 @@ message ResourceGroup {
 
 message CreateStorageAccountRequest {
   string rgName = 1;
-  string region = 2;
+  string saName = 2;
+  string region = 3;
+  string subscriptionId = 4;
 }
 
 message CreateStorageAccountResponse {
@@ -232,6 +242,7 @@ message CreateStorageAccountResponse {
 message ReadStorageAccountRequest {
   string rgName = 1;
   string saName = 2;
+  string subscriptionId = 3;
 }
 
 message ReadStorageAccountResponse {
@@ -241,13 +252,14 @@ message ReadStorageAccountResponse {
 message DeleteStorageAccountRequest {
   string rgName = 1;
   string saName = 2;
+  string subscriptionId = 3;
 }
-
 
 message UpdateStorageAccountRequest {
   string rgName = 1;
   string saName = 2;
   map<string, string> tags = 3;
+  string subscriptionId = 4;
 }
 
 message UpdateStorageAccountResponse {
@@ -256,6 +268,7 @@ message UpdateStorageAccountResponse {
 
 message ListStorageAccountRequest {
   string rgName = 1;
+  string subscriptionId = 2;
 }
 
 message ListStorageAccountResponse {

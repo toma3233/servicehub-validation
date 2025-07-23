@@ -1,0 +1,41 @@
+# This file is used to configure the manual deletion of resources in Azure.
+# It specifies the subscriptions and resource groups to be deleted.
+# The subscriptions can be in any region and any tenant/environment.
+# The rollout will handle deletion correctly across environments.
+settings:
+  # Set to true to wait for Key Vault purge or false to start the command but not wait for it.
+  waitForKVPurge: false
+  # Specify the deletion option to use. Options include:
+  # - byTag: Delete resource groups that have a deletionDate tag set to a date thats less than or equal to today.
+  # - byResourceGroupList: Delete resources by a list of resource groups.
+  # - byResourceIdList: Delete resources by a list of resource IDs.
+  deletionOption: "byResourceGroupList"
+  # Specify the list of subscriptions and resource groups to delete.
+  # Each entry in the list should contain a subscription ID and a list of resources
+  # The resourceList can either contain resource group names or resource Ids for individual resources.
+  deletionList:
+    # AKS Service Hub Validation (TestCorp)
+    - subscription: "049e57e6-ff8e-4e8f-91bf-5830bf32d150"
+      resourceList:
+        - "servicehubval-769TestCorp-sg-rg"
+        - "servicehubval-769TestCorp-sy-rg"
+        - "servicehubval-762TestCorp-sg-rg"
+        - "servicehubval-762TestCorp-sy-rg"
+    # AKS Service Hub Validation Sub - Sweden Central
+    - subscription: "dab1af7c-1826-4fa2-a8e3-0d72c0d88f13"
+      resourceList:
+        - "servicehubval-ev2-sec-rg"
+        - "servicehubval-ev2ks-sec-rg"
+        - "servicehubval-ev2ta-sec-rg"
+    # AKS Service Hub Validation Sub - East US 2
+    - subscription: "4e0dffe1-6aca-446c-84a2-540b8064fdd4"
+      resourceList:
+        - "servicehubval-ev2-bn-rg"
+    # AKS Service Hub Validation Sub - Southeast Asia
+    - subscription: "dfe496bb-3458-441b-a1e5-79df3e1891e8"
+      resourceList:
+        - "servicehubval-ev2-sg-rg"
+    # AKS Service Hub Validation Sub - Australia East
+    - subscription: "7b32728e-6311-49ae-9669-1891eeeadc8f"
+      resourceList:
+        - "servicehubval-ev2-sy-rg"

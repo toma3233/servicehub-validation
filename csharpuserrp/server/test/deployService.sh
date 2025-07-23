@@ -36,4 +36,15 @@ then
     echo -e "${RED}Service deployment FAILED!${NC}"
     exit 1
 fi
+
+#--------------------------------------------------------
+# Check service status (e.g., LoadBalancer IP assignment)
+chmod +x ./checkServiceStatus.sh
+./checkServiceStatus.sh
+if [ $? -ne 0 ]
+then
+    echo -e "${RED}Service status check failed, please check output.${NC}"
+    echo -e "${RED}Service deployment FAILED!${NC}"
+    exit 1
+fi
 echo -e "${GREEN}Service deployment was successful!${NC}"
