@@ -211,7 +211,7 @@ module aks 'br/public:avm/res/container-service/managed-cluster:0.10.0' = {
   }
 }
 
-// Network Contributor role assignment for AKS kubelet identity to join public IP addresses
+// Network Contributor role assignment for AKS system assigned MI to join public IP addresses
 // Grants 'Microsoft.Network/publicIPAddresses/join/action' permission to resolve LinkedAuthorizationFailed errors
 module aksPublicIpJoinRoleAssignment 'br/public:avm/res/authorization/role-assignment/rg-scope:0.1.0' = {
   name: '${resourcesName}-aksPublicIpJoinRoleAssignmentDeploy'
